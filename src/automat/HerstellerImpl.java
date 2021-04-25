@@ -1,9 +1,9 @@
 package automat;
 
-public class ManufacturerImpl implements Manufacturer {
+public class HerstellerImpl implements Hersteller {
     private String name;
 
-    public ManufacturerImpl(String name) {
+    public HerstellerImpl(String name) {
         this.name = name;
     }
 

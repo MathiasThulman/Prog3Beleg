@@ -1,5 +1,5 @@
 package automat;
 
-public interface Manufacturer {
+public interface Hersteller {
     String getName();
 }

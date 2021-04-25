@@ -1,29 +1,21 @@
 package automat;
 
 import exceptions.AlreadyExistsException;
+import exceptions.EmptyListException;
+import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
-import kuchen.Allergen;
 import kuchen.KuchenVerkaufsObjekt;
 import kuchen.KuchenVerkaufsObjektImpl;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public interface Automat {
+
     /**
-     * add a herrsteller
-     * @param manufacturer
-     * @throws AlreadyExistsException when a herrsteller with the same name exists
-     */
-    void addManufacturer(Manufacturer manufacturer) throws AlreadyExistsException;
-    /**
-     * add a Kuchen-Object with the given fachnummer
-     * @param fachnummer
+     * add a new kuchen to the automat
      * @throws AlreadyExistsException when the fachnummer is already taken
      */
-    void addKuchen(int fachnummer, KuchenVerkaufsObjektImpl kuchen)throws AlreadyExistsException, InvalidInputException;
+    void addKuchen(KuchenVerkaufsObjektImpl kuchen) throws NoSuchElementException, FullAutomatException;
 
     /**
      * @param fachnummer place in the automat
@@ -47,22 +39,36 @@ public interface Automat {
     void changeKuchen(int fachnummer, KuchenVerkaufsObjektImpl kuchen) throws NoSuchElementException, InvalidInputException;
 
     /**
+     * add a herrsteller
+     * @param hersteller
+     * @throws AlreadyExistsException when a herrsteller with the same name exists
+     */
+    void addHersteller(Hersteller hersteller) throws AlreadyExistsException;
+
+    /**
+     * remove a hersteller from the automat
+     * @param hersteller name
+     * @throws NoSuchElementException when the name could not be found
+     */
+    void removeHersteller(String hersteller) throws NoSuchElementException;
+
+    /**
      * @return the list of all available manufacturers
      * @throws NullPointerException when no manufacturers are in the list
      */
-    LinkedList<Manufacturer> getManurfacturer() throws NullPointerException;
+    LinkedList<Hersteller> getHersteller() throws EmptyListException;
 
     /**
      * @return a list of all manufacturers with the number of cakes they have
      * @throws NoSuchElementException when manufacturer doesnt exist
      */
-    HashMap checkManufacturers() throws NullPointerException;
+    HashMap<String, Integer> checkHersteller() throws EmptyListException;
 
     /**
      * checks every cake in the automat
      * @return all available cakes as a list
      */
-    LinkedList<KuchenVerkaufsObjekt> checkKuchen() throws NullPointerException;
+    KuchenVerkaufsObjektImpl[] checkKuchen() throws EmptyListException;
 
     /**
      * checks all available cakes
@@ -70,12 +76,18 @@ public interface Automat {
      * @return all cakes of chosen type as a list
      * @throws NoSuchElementException when chosen cake is not in the list
      */
-    LinkedList<KuchenVerkaufsObjekt> checkKuchen(KuchenVerkaufsObjekt kuchen) throws NoSuchElementException;
+    LinkedList<KuchenVerkaufsObjektImpl> checkKuchen(KuchenVerkaufsObjekt kuchen) throws NoSuchElementException, EmptyListException;
 
     /**
      * checks the whole automat
-     * @return the list if every allergen currently in the automat
-     * @throws NullPointerException when the list is empty
+     * @return the list if every allergen currently in the automat, returns an emtpylist when no allergen have been found
+     * @throws EmptyListException there are no kuchen in the automate
      */
-    Collection<Allergen> checkAllergen() throws NullPointerException ;
+    Collection<Allergen> checkAllergen() throws EmptyListException;
+
+    /**
+     * changes the inspection date of all cakes in the automat
+     * @param date
+     */
+    void setInspectionDate(Date date);
 }

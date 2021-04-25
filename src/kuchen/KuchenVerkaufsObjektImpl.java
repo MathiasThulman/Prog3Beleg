@@ -1,6 +1,7 @@
 package kuchen;
 
-import automat.Manufacturer;
+import automat.Allergen;
+import automat.Hersteller;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -8,16 +9,16 @@ import java.util.Collection;
 import java.util.Date;
 
 public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt {
-    private Manufacturer manufacturer;
-    private Collection<Allergen> allergene;
-    private int naehrwert;
-    private Duration haltbarkeit;
-    private BigDecimal preis;
+    private final Hersteller hersteller;
+    private final Collection<Allergen> allergene;
+    private final int naehrwert;
+    private final Duration haltbarkeit;
+    private final BigDecimal preis;
     private Date inspektionsDatum;
     private int fachNummer;
 
-    public KuchenVerkaufsObjektImpl(Manufacturer manufacturer, Collection<Allergen> allergene, int naehrwert, Duration haltbarkeit, BigDecimal preis) {
-        this.manufacturer = manufacturer;
+    public KuchenVerkaufsObjektImpl(Hersteller hersteller, Collection<Allergen> allergene, int naehrwert, Duration haltbarkeit, BigDecimal preis) {
+        this.hersteller = hersteller;
         this.allergene = allergene;
         this.naehrwert = naehrwert;
         this.haltbarkeit = haltbarkeit;
@@ -26,8 +27,8 @@ public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt {
 
 
     @Override
-    public Manufacturer getHersteller() {
-        return this.manufacturer;
+    public Hersteller getHersteller() {
+        return this.hersteller;
     }
 
     @Override
@@ -58,26 +59,6 @@ public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt {
     @Override
     public int getFachnummer() {
         return this.fachNummer;
-    }
-
-    public void setManufacturer(Manufacturer manufacturer) {
-        this.manufacturer = manufacturer;
-    }
-
-    public void setAllergene(Collection<Allergen> allergene) {
-        this.allergene = allergene;
-    }
-
-    public void setNaehrwert(int naehrwert) {
-        this.naehrwert = naehrwert;
-    }
-
-    public void setHaltbarkeit(Duration haltbarkeit) {
-        this.haltbarkeit = haltbarkeit;
-    }
-
-    public void setPreis(BigDecimal preis) {
-        this.preis = preis;
     }
 
     public void setInspektionsDatum(Date inspektionsDatum) {

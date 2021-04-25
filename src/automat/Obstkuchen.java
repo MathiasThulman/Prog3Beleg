@@ -1,7 +1,7 @@
-package kuchen;
+package automat;
 
 import automat.Verkaufsobjekt;
-import kuchen.Kuchen;
+import automat.Kuchen;
 
 public interface Obstkuchen extends Kuchen, Verkaufsobjekt {
     String getObstsorte();

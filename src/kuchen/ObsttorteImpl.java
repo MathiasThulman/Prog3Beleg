@@ -1,6 +1,8 @@
 package kuchen;
 
-import automat.Manufacturer;
+import automat.Allergen;
+import automat.Hersteller;
+import automat.Obsttorte;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -10,8 +12,8 @@ public class ObsttorteImpl extends KuchenVerkaufsObjektImpl implements Obsttorte
     private String kremsorte;
     private String obstsorte;
 
-    public ObsttorteImpl(Manufacturer manufacturer, Collection<Allergen> allergene, int naehrwert, Duration haltbarkeit, BigDecimal preis, String kremsorte, String obstsorte) {
-        super(manufacturer, allergene, naehrwert, haltbarkeit, preis);
+    public ObsttorteImpl(Hersteller hersteller, Collection<Allergen> allergene, int naehrwert, Duration haltbarkeit, BigDecimal preis, String kremsorte, String obstsorte) {
+        super(hersteller, allergene, naehrwert, haltbarkeit, preis);
         this.kremsorte = kremsorte;
         this.obstsorte = obstsorte;
     }
@@ -26,11 +28,4 @@ public class ObsttorteImpl extends KuchenVerkaufsObjektImpl implements Obsttorte
         return this.obstsorte;
     }
 
-    public void setKremsorte(String kremsorte) {
-        this.kremsorte = kremsorte;
-    }
-
-    public void setObstsorte(String obstsorte) {
-        this.obstsorte = obstsorte;
-    }
 }

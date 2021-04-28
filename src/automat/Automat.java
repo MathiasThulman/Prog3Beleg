@@ -83,11 +83,11 @@ public interface Automat {
      * @return the list if every allergen currently in the automat, returns an emtpylist when no allergen have been found
      * @throws EmptyListException there are no kuchen in the automate
      */
-    Collection<Allergen> checkAllergen() throws EmptyListException;
+    Set<Allergen> checkAllergen() throws EmptyListException;
 
     /**
      * changes the inspection date of all cakes in the automat
      * @param date
      */
-    void setInspectionDate(Date date);
+    void setInspectionDate(Date date, int fachnummer) throws InvalidInputException;
 }

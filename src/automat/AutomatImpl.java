@@ -1,18 +1,22 @@
 package automat;
 
-import cli.InputEventListener;
 import exceptions.AlreadyExistsException;
 import exceptions.EmptyListException;
 import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
 import kuchen.KuchenVerkaufsObjekt;
 import kuchen.KuchenVerkaufsObjektImpl;
+import observer.Observable;
+import observer.Observer;
+
 
 import java.util.*;
 
-public class AutomatImpl implements Automat {
-    private LinkedList<Hersteller> herstellerList = new LinkedList<>();
-    private KuchenVerkaufsObjektImpl[] kuchenList;
+public class AutomatImpl implements Automat, Observable {
+    private final LinkedList<Hersteller> herstellerList = new LinkedList<>();
+    private final KuchenVerkaufsObjektImpl[] kuchenList;
+    private final LinkedList<Observer> oberverList = new LinkedList<>();
+    private int kuchenCounter = 0;
 
     public AutomatImpl(int fachzahl) {
         this.kuchenList = new KuchenVerkaufsObjektImpl[fachzahl];
@@ -71,7 +75,9 @@ public class AutomatImpl implements Automat {
                     kuchen.setInspektionsDatum(Calendar.getInstance().getTime());
                     this.kuchenList[i] = kuchen;
                     fullFlag = false;
+                    this.kuchenCounter++;
                     break;
+                    //TODO notify
                 }
             }
         if(fullFlag){
@@ -99,6 +105,7 @@ public class AutomatImpl implements Automat {
         }
 
         this.kuchenList[fachnummer] = null;
+        this.kuchenCounter--;
     }
 
     @Override
@@ -180,17 +187,17 @@ public class AutomatImpl implements Automat {
     }
 
     @Override
-    public Collection<Allergen> checkAllergen() throws EmptyListException {
+    public Set<Allergen> checkAllergen() throws EmptyListException {
         kuchListEmpty();
 
-        LinkedList<Allergen> res = new LinkedList<>();
+       HashSet<Allergen> res = new HashSet<Allergen>();
 
         for (KuchenVerkaufsObjekt kuch : kuchenList) {
             if(kuch != null){
                 for (Allergen allergen : kuch.getAllergene()) {
-                    if (!res.contains(allergen)) {
+                    //if (!res.contains(allergen)) { does hashet work?
                         res.add(allergen);
-                    }
+                    //}
                 }
             }
         }
@@ -198,12 +205,10 @@ public class AutomatImpl implements Automat {
     }
 
     @Override
-    public void setInspectionDate(Date date) {
-        for (KuchenVerkaufsObjektImpl kuch : this.kuchenList) {
-            if (kuch != null) {
-                kuch.setInspektionsDatum(date);
-            }
-        }
+    public void setInspectionDate(Date date, int fachnummer) throws InvalidInputException {
+        checkNumber(fachnummer);
+
+        this.kuchenList[fachnummer].setInspektionsDatum(date);
     }
 
     //function to check if the fachnummer is negative
@@ -222,8 +227,32 @@ public class AutomatImpl implements Automat {
             }
         }
         if (!flag) {
-            throw new EmptyListException("there is no cake in the automat");
+            throw new EmptyListException();
         }
     }
 
+    public int getSize(){
+        return this.kuchenList.length;
+    }
+
+    @Override
+    public void addObserver(Observer observer) {
+        this.oberverList.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        this.oberverList.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() throws EmptyListException, FullAutomatException, InvalidInputException, AlreadyExistsException {
+        for(Observer observer : this.oberverList){
+            observer.update();
+        }
+    }
+
+    public int getKuchenCounter() {
+        return kuchenCounter;
+    }
 }

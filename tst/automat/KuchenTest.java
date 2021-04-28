@@ -1,4 +1,4 @@
-package tests;
+package automat;
 
 import automat.Allergen;
 import automat.Hersteller;

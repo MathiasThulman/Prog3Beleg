@@ -1,4 +1,4 @@
-package tests;
+package automat;
 
 import automat.*;
 import exceptions.AlreadyExistsException;
@@ -408,7 +408,9 @@ class AutomatTests {
 
         Date date = new Date(2069, 6,9);
 
-        auto.setInspectionDate(date);
+        auto.setInspectionDate(date, 0);
+        auto.setInspectionDate(date, 1);
+        auto.setInspectionDate(date, 2);
 
         //check if the date in all the objects has haven changed
         Assertions.assertEquals(date, auto.getKuchen(0).getInspektionsdatum());

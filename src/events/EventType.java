@@ -11,4 +11,6 @@ public enum EventType {
     removeKuchen,
     setDate,
     getOneKuchen,
+    collectionOutput,
+    error
 }

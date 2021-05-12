@@ -3,18 +3,18 @@ package events;
 import java.util.LinkedList;
 import java.util.List;
 
-public class InputIntEventHandler {
-    List<InputIntListener> listenerList = new LinkedList<>();
+public class InputIntEventHandler <T extends Event>{
+    List<EventListener<T>> listenerList = new LinkedList<>();
 
-    public void add(InputIntListener listener){
+    public void add(EventListener<T> listener){
         this.listenerList.add(listener);
     }
-    public void remove(InputIntListener listener){
+    public void remove(EventListener<T> listener){
         this.listenerList.remove(listener);
     }
 
-    public void handle(InputIntEvent event){
-        for(InputIntListener listener : this.listenerList){
+    public void handle(T event){
+        for(EventListener<T> listener : this.listenerList){
             listener.addEvent(event);
         }
     }

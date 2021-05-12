@@ -2,18 +2,13 @@ package cli;
 
 
 import events.*;
-import exceptions.AlreadyExistsException;
-import exceptions.EmptyListException;
-import exceptions.FullAutomatException;
-import exceptions.InvalidInputException;
 
-import java.util.Collection;
 import java.util.LinkedList;
 
 public class Console {
-    private GetEventHandler getHandler;
-    private InputIntEventHandler intHandler;
-    private InputStringEventHandler stringHandler;
+    private GetEventHandler<GetEvent> getHandler;
+    private InputIntEventHandler<InputIntEvent> intHandler;
+    private InputStringEventHandler<InputStringEvent> stringHandler;
 
     public Console(){
     }
@@ -57,36 +52,37 @@ public class Console {
     public void printError(ErrorEvent error){
         System.out.println(error.getError());
     }
+
     public void printCollectionEvent(CollectionOutputEvent event){
 
-        for(Object object : event.getEventColletion()){
+        for(Object object : event.getEventCollection()){
             if(object != null) {
                 System.out.println(object.toString());
             }
         }
     }
 
-    public void setGetHandler(GetEventHandler getHandler) {
+    public void setGetHandler(GetEventHandler<GetEvent> getHandler) {
         this.getHandler = getHandler;
     }
 
-    public GetEventHandler getGetHandler() {
+    public GetEventHandler<GetEvent> getGetHandler() {
         return getHandler;
     }
 
-    public void setIntHandler(InputIntEventHandler intHandler) {
+    public void setIntHandler(InputIntEventHandler<InputIntEvent> intHandler) {
         this.intHandler = intHandler;
     }
 
-    public InputIntEventHandler getIntHandler() {
+    public InputIntEventHandler<InputIntEvent> getIntHandler() {
         return intHandler;
     }
 
-    public InputStringEventHandler getStringHandler() {
+    public InputStringEventHandler<InputStringEvent> getStringHandler() {
         return stringHandler;
     }
 
-    public void setStringHandler(InputStringEventHandler stringHandler) {
+    public void setStringHandler(InputStringEventHandler<InputStringEvent> stringHandler) {
         this.stringHandler = stringHandler;
     }
 }

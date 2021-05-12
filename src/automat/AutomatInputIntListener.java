@@ -14,10 +14,10 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
-public class AutomatInputIntListener implements InputIntListener {
+public class AutomatInputIntListener implements EventListener<InputIntEvent> {
     private AutomatImpl automat;
-    private ErrorEventHandler errorhandler;
-    private CollectionOutputHandler collectionHandler;
+    private ErrorEventHandler<ErrorEvent> errorhandler;
+    private CollectionOutputHandler<CollectionOutputEvent> collectionHandler;
 
 
     @Override
@@ -78,11 +78,11 @@ public class AutomatInputIntListener implements InputIntListener {
         this.automat = automat;
     }
 
-    public void setErrorhandler(ErrorEventHandler errorhandler) {
+    public void setErrorhandler(ErrorEventHandler<ErrorEvent> errorhandler) {
         this.errorhandler = errorhandler;
     }
 
-    public void setCollectionHandler(CollectionOutputHandler collectionHandler) {
+    public void setCollectionHandler(CollectionOutputHandler<CollectionOutputEvent> collectionHandler) {
         this.collectionHandler = collectionHandler;
     }
 }

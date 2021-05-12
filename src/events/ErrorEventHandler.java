@@ -3,19 +3,19 @@ package events;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ErrorEventHandler {
-    private List<ErrorEventListener> listenerList = new LinkedList<>();
+public class ErrorEventHandler <T extends Event> {
+    private List<EventListener<T>> listenerList = new LinkedList<>();
 
-    public void add(ErrorEventListener listener){
+    public void add(EventListener<T> listener){
         this.listenerList.add(listener);
     }
 
-    public void remove(ErrorEventListener listener){
+    public void remove(EventListener<T> listener){
         this.listenerList.remove(listener);
     }
 
-    public void handle(ErrorEvent event){
-        for(ErrorEventListener listener : this.listenerList){
+    public void handle(T event){
+        for(EventListener<T> listener : this.listenerList){
             listener.addEvent(event);
         }
     }

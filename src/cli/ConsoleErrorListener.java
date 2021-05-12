@@ -1,10 +1,10 @@
 package cli;
 
 import events.ErrorEvent;
-import events.ErrorEventListener;
+import events.EventListener;
 
-public class ConsoleErrorListener implements ErrorEventListener {
-    private Console console;
+public class ConsoleErrorListener implements EventListener<ErrorEvent> {
+    private final Console console;
 
     public ConsoleErrorListener(Console console) {
         this.console = console;
@@ -14,4 +14,11 @@ public class ConsoleErrorListener implements ErrorEventListener {
     public void addEvent(ErrorEvent event) {
         this.console.printError(event);
     }
+
+//    @Override
+//    public void addEvent(ErrorEvent event) {
+//        this.console.printError(event);
+//    }
+
+
 }

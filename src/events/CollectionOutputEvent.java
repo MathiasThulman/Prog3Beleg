@@ -2,8 +2,8 @@ package events;
 
 import java.util.*;
 
-public class CollectionOutputEvent extends EventObject {
-    Collection eventColletion;
+public class CollectionOutputEvent extends Event {
+    Collection eventCollection;
 
     /**
      * Constructs a prototypical Event.
@@ -11,13 +11,13 @@ public class CollectionOutputEvent extends EventObject {
      * @param source the object on which the Event initially occurred
      * @throws IllegalArgumentException if source is null
      */
-    public CollectionOutputEvent(Object source, Collection eventColletion) {
-        super(source);
-        this.eventColletion = eventColletion;
+    public CollectionOutputEvent(Object source, Collection eventCollection) {
+        super(source, EventType.collectionOutput);
+        this.eventCollection = eventCollection;
     }
 
-    public Iterable getEventColletion() {
-            return eventColletion;
+    public Collection getEventCollection() {
+            return eventCollection;
 
     }
 }

@@ -1,9 +1,6 @@
 package automat;
 
-import events.ErrorEvent;
-import events.ErrorEventHandler;
-import events.InputStringEvent;
-import events.InputStringListener;
+import events.*;
 import exceptions.AlreadyExistsException;
 import exceptions.EmptyListException;
 import exceptions.FullAutomatException;
@@ -11,9 +8,9 @@ import exceptions.InvalidInputException;
 
 import java.util.NoSuchElementException;
 
-public class AutomatInputStringListener implements InputStringListener {
+public class AutomatInputStringListener implements EventListener<InputStringEvent> {
     private AutomatImpl automat;
-    private ErrorEventHandler errorHandler;
+    private ErrorEventHandler<ErrorEvent> errorHandler;
 
 
     @Override
@@ -39,7 +36,7 @@ public class AutomatInputStringListener implements InputStringListener {
         this.automat = automat;
     }
 
-    public void setErrorHandler(ErrorEventHandler errorHandler) {
+    public void setErrorHandler(ErrorEventHandler<ErrorEvent> errorHandler) {
         this.errorHandler = errorHandler;
     }
 }

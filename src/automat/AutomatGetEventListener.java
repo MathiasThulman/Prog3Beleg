@@ -1,6 +1,7 @@
 package automat;
 
 import events.*;
+import events.EventListener;
 import exceptions.AlreadyExistsException;
 import exceptions.EmptyListException;
 import exceptions.FullAutomatException;
@@ -8,10 +9,10 @@ import exceptions.InvalidInputException;
 
 import java.util.*;
 
-public class AutomatGetEventListener implements events.GetEventListener {
+public class AutomatGetEventListener implements EventListener<GetEvent> {
     private AutomatImpl automat;
-    private ErrorEventHandler errorHandler;
-    private CollectionOutputHandler collectionHandler;
+    private ErrorEventHandler<ErrorEvent> errorHandler;
+    private CollectionOutputHandler<CollectionOutputEvent> collectionHandler;
 
     @Override
     public void addEvent(GetEvent event) {
@@ -20,7 +21,6 @@ public class AutomatGetEventListener implements events.GetEventListener {
             case getHersteller:
                 try {
                     this.collectionHandler.handle(new CollectionOutputEvent(this, hashmapToList(this.automat.checkHersteller())));
-                    //TODO put this in a list as a new object
                 } catch (EmptyListException e) {
                     this.errorHandler.handle(new ErrorEvent(this, "Der Automat is leer"));
                 }
@@ -41,7 +41,7 @@ public class AutomatGetEventListener implements events.GetEventListener {
         }
     }
 
-    public void setErrorHandler(ErrorEventHandler errorHandler) {
+    public void setErrorHandler(ErrorEventHandler<ErrorEvent> errorHandler) {
         this.errorHandler = errorHandler;
     }
 
@@ -49,7 +49,7 @@ public class AutomatGetEventListener implements events.GetEventListener {
         this.automat = automat;
     }
 
-    public void setCollectionHandler(CollectionOutputHandler collectionHandler) {
+    public void setCollectionHandler(CollectionOutputHandler<CollectionOutputEvent> collectionHandler) {
         this.collectionHandler = collectionHandler;
     }
 

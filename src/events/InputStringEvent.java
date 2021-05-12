@@ -1,14 +1,12 @@
 package events;
 
-import java.util.EventObject;
 
-public class InputStringEvent extends EventObject {
+public class InputStringEvent extends Event {
     private final String message;
-    private final EventType type;
+
 
     public InputStringEvent(Object source, EventType type, String message) {
-        super(source);
-        this.type = type;
+        super(source, type);
         this.message = message;
     }
 
@@ -16,7 +14,4 @@ public class InputStringEvent extends EventObject {
         return message;
     }
 
-    public EventType getType() {
-        return type;
-    }
 }

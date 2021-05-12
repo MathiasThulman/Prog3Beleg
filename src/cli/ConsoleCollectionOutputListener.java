@@ -2,8 +2,9 @@ package cli;
 
 import events.CollectionOutputEvent;
 import events.CollectionOutputListener;
+import events.EventListener;
 
-public class ConsoleCollectionOutputListener implements CollectionOutputListener {
+public class ConsoleCollectionOutputListener implements EventListener<CollectionOutputEvent> {
     Console console;
 
     public ConsoleCollectionOutputListener(Console console) {

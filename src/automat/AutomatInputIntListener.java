@@ -4,7 +4,6 @@ import events.*;
 import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
 import kuchen.KremkuchenImpl;
-import kuchen.KuchenVerkaufsObjektImpl;
 import kuchen.ObstkuchenImpl;
 
 import java.math.BigDecimal;
@@ -15,7 +14,7 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 public class AutomatInputIntListener implements EventListener<InputIntEvent> {
-    private AutomatImpl automat;
+    private Automat automat;
     private ErrorEventHandler<ErrorEvent> errorhandler;
     private CollectionOutputHandler<CollectionOutputEvent> collectionHandler;
 
@@ -74,7 +73,7 @@ public class AutomatInputIntListener implements EventListener<InputIntEvent> {
         }
     }
 
-    public void setAutomat(AutomatImpl automat) {
+    public void setAutomat(Automat automat) {
         this.automat = automat;
     }
 

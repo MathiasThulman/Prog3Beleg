@@ -1,7 +1,7 @@
 package simulation;
 
 import automat.Allergen;
-import automat.AutomatImpl;
+import automat.Automat;
 import automat.Hersteller;
 import automat.HerstellerImpl;
 import exceptions.FullAutomatException;
@@ -15,7 +15,7 @@ import java.time.Duration;
 import java.util.*;
 
 public class CreateThread extends Thread {
-    private AutomatImpl automat;
+    private Automat automat;
     private final String MASCARPONE = "Mascarpone";
     private final String SENF = "Senf";
     private final String KIRSCHE = "Kirsche";
@@ -53,7 +53,7 @@ public class CreateThread extends Thread {
         }
     }
 
-    public void setAutomat(AutomatImpl automat) {
+    public void setAutomat(Automat automat) {
         this.automat = automat;
     }
 }

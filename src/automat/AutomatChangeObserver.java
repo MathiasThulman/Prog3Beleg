@@ -3,11 +3,11 @@ import observer.Observer;
 
 public class AutomatChangeObserver implements Observer {
     private final String evenString = "Automat is over 90% capacity";
-    private final AutomatImpl automat;
+    private final Automat automat;
     int capacity;
     int obsCounter;
 
-    public AutomatChangeObserver(AutomatImpl automat) {
+    public AutomatChangeObserver(Automat automat) {
         this.automat = automat;
         this.automat.addObserver(this);
         this.capacity = this.automat.getSize();

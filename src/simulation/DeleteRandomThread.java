@@ -1,14 +1,13 @@
 package simulation;
 
-import automat.AutomatImpl;
-import exceptions.EmptyListException;
+import automat.Automat;
 import exceptions.InvalidInputException;
 
 import java.util.NoSuchElementException;
 import java.util.Random;
 
 public class DeleteRandomThread extends Thread {
-    private AutomatImpl automat;
+    private Automat automat;
 
     public void run(){
         int domain = this.automat.getSize();
@@ -16,9 +15,7 @@ public class DeleteRandomThread extends Thread {
             Random rand = new Random();
             try {
                 this.automat.removeKuchen((int) (Math.random()* domain));
-                System.out.println("Simulation hat kuchen entfernt");
-           // } catch (EmptyListException e) {
-            //    System.out.println("simulation simulation: list empty");
+                System.out.println("Simulation removed cake");
             } catch (InvalidInputException e) {
                 System.out.println("simulation: invalid input");
             } catch (NoSuchElementException e){
@@ -27,7 +24,7 @@ public class DeleteRandomThread extends Thread {
         }
     }
 
-    public void setAutomat(AutomatImpl automat) {
+    public void setAutomat(Automat automat) {
         this.automat = automat;
     }
 }

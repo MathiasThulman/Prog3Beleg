@@ -2,7 +2,6 @@ package automat;
 
 import events.EventType;
 import events.InputIntEvent;
-import events.InputIntEventHandler;
 import exceptions.AlreadyExistsException;
 import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
@@ -21,7 +20,7 @@ public class AutomatInputIntListenerTests {
 
     @Test
     public void addKuchenListenerTest() throws InvalidInputException, AlreadyExistsException {
-        AutomatImpl auto = new AutomatImpl(20);
+        Automat auto = new Automat(20);
         AutomatInputIntListener listener = new AutomatInputIntListener();
 
         listener.setAutomat(auto);
@@ -35,7 +34,7 @@ public class AutomatInputIntListenerTests {
 
     @Test
     public void removeKuchenListenerTest() throws AlreadyExistsException, FullAutomatException {
-        AutomatImpl auto = new AutomatImpl(20);
+        Automat auto = new Automat(20);
         AutomatInputIntListener listener = new AutomatInputIntListener();
 
         listener.setAutomat(auto);
@@ -51,7 +50,7 @@ public class AutomatInputIntListenerTests {
 
     @Test
     public void getOneKuchenListenerTest(){
-        AutomatImpl auto = new AutomatImpl(20);
+        Automat auto = new Automat(20);
         AutomatInputIntListener listener = new AutomatInputIntListener();
 
         //TODO
@@ -59,7 +58,7 @@ public class AutomatInputIntListenerTests {
 
     @Test
     public void setInspectionDateListenerTest() throws AlreadyExistsException, FullAutomatException, InvalidInputException {
-        AutomatImpl auto = new AutomatImpl(20);
+        Automat auto = new Automat(20);
         AutomatInputIntListener listener = new AutomatInputIntListener();
 
         listener.setAutomat(auto);

@@ -2,11 +2,9 @@ import automat.*;
 import cli.*;
 import events.*;
 
-import java.util.LinkedList;
-
 public class App {
     public static void main(String[] args) {
-        AutomatImpl automat = new AutomatImpl(10);
+        Automat automat = new Automat(10);
         Console console = new Console();
         InputStringEventHandler stringHandler = new InputStringEventHandler();
         InputIntEventHandler intHandler = new InputIntEventHandler();

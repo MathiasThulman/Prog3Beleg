@@ -16,7 +16,7 @@ public class Console {
     private static String buildCLIMenu(LinkedList<ICommand> cmds) {
         StringBuilder builder = new StringBuilder();
         builder.append(System.lineSeparator());
-       builder.append("Welcome to the Cake Zone" + System.lineSeparator());
+       //builder.append("Welcome to the Cake Zone" + System.lineSeparator());
         builder.append(System.lineSeparator());
         for(int i = 1; i < cmds.size(); i++){
             ICommand cmd = cmds.get(i);

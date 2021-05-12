@@ -2,15 +2,12 @@ package automat;
 
 import events.*;
 import events.EventListener;
-import exceptions.AlreadyExistsException;
 import exceptions.EmptyListException;
-import exceptions.FullAutomatException;
-import exceptions.InvalidInputException;
 
 import java.util.*;
 
 public class AutomatGetEventListener implements EventListener<GetEvent> {
-    private AutomatImpl automat;
+    private Automat automat;
     private ErrorEventHandler<ErrorEvent> errorHandler;
     private CollectionOutputHandler<CollectionOutputEvent> collectionHandler;
 
@@ -45,7 +42,7 @@ public class AutomatGetEventListener implements EventListener<GetEvent> {
         this.errorHandler = errorHandler;
     }
 
-    public void setAutomat(AutomatImpl automat) {
+    public void setAutomat(Automat automat) {
         this.automat = automat;
     }
 

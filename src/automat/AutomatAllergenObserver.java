@@ -4,14 +4,13 @@ import exceptions.EmptyListException;
 import observer.Observer;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
 
 public class AutomatAllergenObserver implements Observer {
-    AutomatImpl automat;
+    Automat automat;
     Set<Allergen> allergenList = new HashSet<>();
 
-    public AutomatAllergenObserver(AutomatImpl automat) {
+    public AutomatAllergenObserver(Automat automat) {
         this.automat = automat;
         this.automat.addObserver(this);
     }

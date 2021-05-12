@@ -1,19 +1,17 @@
 package simulation;
 
-import automat.AutomatImpl;
+import automat.Automat;
 import exceptions.EmptyListException;
 import exceptions.InvalidInputException;
 
-import java.util.Random;
-
 public class DeleteThread extends Thread {
-    private AutomatImpl automat;
+    private Automat automat;
 
     public void run(){
         while(true){
             try {
                 this.automat.removeKuchen((int) (Math.random() * this.automat.checkKuchen().size()));
-                System.out.println("Simulation hat kuchen entfernt");
+                System.out.println("Simulation removed thread");
             } catch (EmptyListException e) {
                 System.out.println("simulation simulation: list empty");
             } catch (InvalidInputException e) {
@@ -22,7 +20,7 @@ public class DeleteThread extends Thread {
         }
     }
 
-    public void setAutomat(AutomatImpl automat) {
+    public void setAutomat(Automat automat) {
         this.automat = automat;
     }
 }

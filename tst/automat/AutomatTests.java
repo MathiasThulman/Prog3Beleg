@@ -1,6 +1,5 @@
 package automat;
 
-import automat.*;
 import exceptions.AlreadyExistsException;
 import exceptions.EmptyListException;
 import exceptions.FullAutomatException;
@@ -34,12 +33,12 @@ class AutomatTests {
     Duration dur1 = Duration.ofDays(4);
     LinkedList<Allergen> allergList1 = new LinkedList<>(Arrays.asList(Allergen.Erdnuss, Allergen.Haselnuss));
     KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), MASCARPONE);
-    KuchenVerkaufsObjektImpl kuch2 = new ObstkuchenImpl(herst3, allergList1, 400, dur1, new BigDecimal(250), KIRSCHE);
-    KuchenVerkaufsObjektImpl kuch3 = new ObsttorteImpl(herst1, allergList1, 500, dur1, new BigDecimal(300), MASCARPONE, ERDBEERE);
-    KuchenVerkaufsObjektImpl kuch4 = new KremkuchenImpl(herst3, allergList1,250 , dur1, new BigDecimal(400), SENF);
+    ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst3, allergList1, 400, dur1, new BigDecimal(250), KIRSCHE);
+    ObsttorteImpl kuch3 = new ObsttorteImpl(herst1, allergList1, 500, dur1, new BigDecimal(300), MASCARPONE, ERDBEERE);
+    KremkuchenImpl kuch4 = new KremkuchenImpl(herst3, allergList1,250 , dur1, new BigDecimal(400), SENF);
 
     public Automat getAutomat(){
-        return new AutomatImpl(500);
+        return new Automat(500);
     }
 
     //addKuchen tests
@@ -56,7 +55,7 @@ class AutomatTests {
 
     @Test
     public void addKuchenFullAutomat() throws AlreadyExistsException, FullAutomatException, InvalidInputException, EmptyListException {
-        Automat auto = new AutomatImpl(2); //create automate with fewer slots so just 3 have to be added
+        Automat auto = new Automat(2); //create automate with fewer slots so just 3 have to be added
 
         auto.addHersteller(herst3);
         auto.addKuchen(kuch2);
@@ -215,8 +214,8 @@ class AutomatTests {
         auto.addKuchen(kuch4);
 
         //multiple adds and asserts to see if it can extract multiple kuchen objects properly
-        Assertions.assertEquals(KremkuchenImpl.class, auto.checkKuchen(kuch1).get(0).getClass());
-        Assertions.assertEquals(KremkuchenImpl.class, auto.checkKuchen(kuch1).get(1).getClass());
+        Assertions.assertEquals(KremkuchenImpl.class, auto.checkKuchen(KremkuchenImpl.class).get(0).getClass());
+        Assertions.assertEquals(KremkuchenImpl.class, auto.checkKuchen(KremkuchenImpl.class).get(1).getClass());
     }
 
     @Test
@@ -234,7 +233,7 @@ class AutomatTests {
         auto.addKuchen(kuch2);
         auto.addKuchen(kuch4);
 
-        Assertions.assertThrows(NoSuchElementException.class, () -> auto.checkKuchen(kuch3));
+        Assertions.assertThrows(NoSuchElementException.class, () -> auto.checkKuchen(ObsttorteImpl.class));
     }
 
     //addHersteller tests
@@ -371,7 +370,7 @@ class AutomatTests {
     }
 
     @Test
-    public void voidCheckAllergenNoneFound() throws EmptyListException, AlreadyExistsException, FullAutomatException, InvalidInputException {
+    public void checkAllergenNoneFound() throws EmptyListException, AlreadyExistsException, FullAutomatException, InvalidInputException {
         Automat auto = getAutomat();
 
         auto.addHersteller(herst1);
@@ -389,8 +388,18 @@ class AutomatTests {
         auto.addKuchen(kuch6);
         auto.addKuchen(kuch7);
 
-        //list is supposed to be empty when kuchen exist but none of them have allergene
+        //list is supposed to be empty when kuchen exist but none of them have allergens
         Assertions.assertTrue(auto.checkAllergen().isEmpty());
+    }
+
+    @Test
+    public void checkAbsentAllergenValid() throws AlreadyExistsException, FullAutomatException, EmptyListException {
+        Automat auto = getAutomat();
+
+        auto.addHersteller(herst1);
+        auto.addKuchen(kuch1);
+
+        Assertions.assertTrue(auto.checkAbsentAllergen().contains(Allergen.Gluten) && auto.checkAbsentAllergen().contains(Allergen.Sesamsamen));
     }
 
 

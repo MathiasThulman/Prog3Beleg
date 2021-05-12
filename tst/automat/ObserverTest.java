@@ -1,6 +1,5 @@
 package automat;
 
-import automat.*;
 import exceptions.AlreadyExistsException;
 import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
@@ -15,8 +14,6 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import static org.mockito.Mockito.*;
-
 public class ObserverTest {
     Hersteller herst1 = new HerstellerImpl("MOSES");
     Duration dur1 = Duration.ofDays(4);
@@ -25,7 +22,7 @@ public class ObserverTest {
 
     @Test
     public void automatCapacityObserverTestValid() throws AlreadyExistsException, FullAutomatException {
-        AutomatImpl auto = new AutomatImpl(20);
+        Automat auto = new Automat(20);
         AutomatCapacityObserver obs = new AutomatCapacityObserver(auto);
 
         auto.addHersteller(herst1);
@@ -45,7 +42,7 @@ public class ObserverTest {
 
     @Test
     public void AutomatAllergenObserverTestValid() throws AlreadyExistsException, FullAutomatException {
-        AutomatImpl auto = new AutomatImpl(20);
+        Automat auto = new Automat(20);
         AutomatAllergenObserver obs = new AutomatAllergenObserver(auto);
 
         final ByteArrayOutputStream bos1 = new ByteArrayOutputStream();
@@ -61,7 +58,7 @@ public class ObserverTest {
 
     @Test
     public void automatChangeObserverAddKuchenTest() throws AlreadyExistsException, FullAutomatException {
-        AutomatImpl auto = new AutomatImpl(20);
+        Automat auto = new Automat(20);
         AutomatChangeObserver obs = new AutomatChangeObserver(auto);
 
         auto.addHersteller(herst1);
@@ -78,7 +75,7 @@ public class ObserverTest {
 
     @Test
     public void removeKuchenChangeObserverTest() throws AlreadyExistsException, FullAutomatException, InvalidInputException {
-        AutomatImpl auto = new AutomatImpl(20);
+        Automat auto = new Automat(20);
         AutomatChangeObserver obs = new AutomatChangeObserver(auto);
 
         auto.addHersteller(herst1);

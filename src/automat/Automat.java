@@ -6,88 +6,273 @@ import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
 import kuchen.KuchenVerkaufsObjekt;
 import kuchen.KuchenVerkaufsObjektImpl;
+import observer.Observable;
+import observer.Observer;
+
 
 import java.util.*;
 
-public interface Automat {
+public class Automat implements Observable {
+    private final LinkedList<Hersteller> herstellerList = new LinkedList<>();
+    private final KuchenVerkaufsObjektImpl[] kuchenList;
+    private final LinkedList<Observer> observerList = new LinkedList<>();
+    private int kuchenCounter = 0;
 
-    /**
-     * add a new kuchen to the automat
-     * @throws AlreadyExistsException when the fachnummer is already taken
-     */
-    void addKuchen(KuchenVerkaufsObjektImpl kuchen) throws NoSuchElementException, FullAutomatException;
+    public Automat(int fachzahl) {
+        this.kuchenList = new KuchenVerkaufsObjektImpl[fachzahl];
+    }
 
-    /**
-     * @param fachnummer place in the automat
-     * @return the kuchen-object
-     */
-    KuchenVerkaufsObjekt getKuchen(int fachnummer) throws NoSuchElementException, InvalidInputException;
+    public void addHersteller(Hersteller hersteller) throws AlreadyExistsException {
+        //check if manufacturer already exists
+        for (Hersteller herst : this.herstellerList) {
+            if (herst.getName().equals(hersteller.getName())) {
+                throw new AlreadyExistsException();
+            }
+        }
+        this.herstellerList.add(hersteller);
+        notifyObservers();
+    }
 
-    /**
-     * remove cake with the given fachnummer
-     * @param fachnummer
-     * @throws NoSuchElementException when no Cake with the given fachnummer exists
-     */
-    void removeKuchen(int fachnummer) throws NoSuchElementException, InvalidInputException;
+    public void removeHersteller(String hersteller) throws NoSuchElementException {
+        for (Hersteller herst : this.herstellerList) {
+            if (herst.getName().equals(hersteller)) {
+                this.herstellerList.remove(herst);
+                //remove all kuchen of the hersteller from the automat as well
+                for(int i = 0; i < this.kuchenList.length; i++){
+                    if(this.kuchenList[i] != null && this.kuchenList[i].getHersteller().getName().equals(hersteller)){
+                        this.kuchenList[i] = null;
+                    }
+                }
+                notifyObservers();
+                return;
+            }
+        }
+        throw new NoSuchElementException();
+    }
 
-    /**
-     * change/replace the kuchen-object at given fachnummer
-     * @param fachnummer
-     * @param kuchen
-     * @throws NoSuchElementException when the fachnummer does not exist
-     */
-    void changeKuchen(int fachnummer, KuchenVerkaufsObjektImpl kuchen) throws NoSuchElementException, InvalidInputException;
+    public void addKuchen(KuchenVerkaufsObjektImpl kuchen) throws NoSuchElementException, FullAutomatException {
 
-    /**
-     * add a herrsteller
-     * @param hersteller
-     * @throws AlreadyExistsException when a herrsteller with the same name exists
-     */
-    void addHersteller(Hersteller hersteller) throws AlreadyExistsException, FullAutomatException, InvalidInputException, EmptyListException;
+        //check if there is already a hersteller with boolean flag
+        boolean herstFlag = false;
+        for (Hersteller herst : this.herstellerList) {
+            if (kuchen.getHersteller().getName().equals(herst.getName())) {
+                herstFlag = true;
+                break;
+            }
+        }
 
-    /**
-     * remove a hersteller from the automat
-     * @param hersteller name
-     * @throws NoSuchElementException when the name could not be found
-     */
-    void removeHersteller(String hersteller) throws NoSuchElementException;
+        //throw exception if no hersteller has been found
+        if (!herstFlag) {
+            throw new NoSuchElementException();
+        }
 
-    /**
-     * @return the list of all available manufacturers
-     * @throws NullPointerException when no manufacturers are in the list
-     */
-    LinkedList<Hersteller> getHersteller() throws EmptyListException;
+        //insert the kuchen at the first empty place
+        boolean fullFlag = true;
+            for (int i = 0; i < this.kuchenList.length; i++) {
+                if (this.kuchenList[i] == null) {
+                    kuchen.setFachNummer(i);    //put this somewhere else?
+                    kuchen.setInspektionsDatum(Calendar.getInstance().getTime());
+                    this.kuchenList[i] = kuchen;
+                    fullFlag = false;
+                    this.kuchenCounter++;
+                    notifyObservers();
+                    break;
+                }
+            }
+        if(fullFlag){
+            throw new FullAutomatException();
+        }
+    }
 
-    /**
-     * @return a list of all manufacturers with the number of cakes they have
-     * @throws NoSuchElementException when manufacturer doesnt exist
-     */
-    HashMap<String, Integer> checkHersteller() throws EmptyListException;
+    public KuchenVerkaufsObjekt getKuchen(int fachnummer) throws NoSuchElementException, InvalidInputException {
+        checkNumber(fachnummer);
 
-    /**
-     * checks every cake in the automat
-     * @return all available cakes as a list
-     */
-    List<KuchenVerkaufsObjektImpl> checkKuchen() throws EmptyListException;
+        if (kuchenList[fachnummer] == null) {
+            throw new NoSuchElementException();
+        }
+        return this.kuchenList[fachnummer];
+    }
 
-    /**
-     * checks all available cakes
-     * @param kuchen cake by which you want to filter
-     * @return all cakes of chosen type as a list
-     * @throws NoSuchElementException when chosen cake is not in the list
-     */
-    LinkedList<KuchenVerkaufsObjektImpl> checkKuchen(KuchenVerkaufsObjekt kuchen) throws NoSuchElementException, EmptyListException;
+    public void removeKuchen(int fachnummer) throws NoSuchElementException, InvalidInputException {
+        checkNumber(fachnummer);
 
-    /**
-     * checks the whole automat
-     * @return the list if every allergen currently in the automat, returns an emtpylist when no allergen have been found
-     * @throws EmptyListException there are no kuchen in the automate
-     */
-    Set<Allergen> checkAllergen() throws EmptyListException;
+        //check the list if the fachnummer exists, first
+        if (this.kuchenList[fachnummer] == null) {
+            throw new NoSuchElementException();
+        }
 
-    /**
-     * changes the inspection date of all cakes in the automat
-     * @param date
-     */
-    void setInspectionDate(Date date, int fachnummer) throws InvalidInputException;
+        this.kuchenList[fachnummer] = null;
+        this.kuchenCounter--;
+        notifyObservers();
+    }
+
+    public void changeKuchen(int fachnummer, KuchenVerkaufsObjektImpl kuchen) throws NoSuchElementException, InvalidInputException {
+        checkNumber(fachnummer);
+        kuchen.setFachNummer(fachnummer);
+
+        for (int i = 0; i < this.kuchenList.length; i++) {
+            if(this.kuchenList[i] == null){
+                break; //break when no objekt is at the list place to avoid null pointer exception
+            }
+            if (kuchenList[i].getFachnummer() == fachnummer) {
+                kuchenList[i] = kuchen;
+                notifyObservers();
+                return;
+            }
+        }
+        throw new NoSuchElementException();
+    }
+
+    public LinkedList<Hersteller> getHersteller() throws EmptyListException {
+        if (this.herstellerList.isEmpty()) {
+            throw new EmptyListException();
+        }
+        return this.herstellerList;
+    }
+
+    public HashMap<String, Integer> checkHersteller() throws NoSuchElementException, EmptyListException {
+        if (this.herstellerList.isEmpty()) {
+            throw new EmptyListException();
+        }
+        HashMap<String, Integer> manufacturerHashmap = new HashMap<>();
+
+        for (Hersteller manu : this.herstellerList) {
+            if (!manufacturerHashmap.containsKey(manu)) {
+                manufacturerHashmap.put(manu.getName(), 0);
+            }
+        }
+
+        for (KuchenVerkaufsObjekt kuch : this.kuchenList) {
+            if(kuch == null){
+                break; // dont go into objekt if null to avoid NullPointerException
+            }
+            if (manufacturerHashmap.containsKey(kuch.getHersteller().getName())) {
+                manufacturerHashmap.put(kuch.getHersteller().getName(), manufacturerHashmap.get(kuch.getHersteller().getName()) + 1);
+            } else {
+                manufacturerHashmap.put(kuch.getHersteller().getName(), 1);
+            }
+        }
+        return manufacturerHashmap;
+    }
+
+    public List<KuchenVerkaufsObjektImpl> checkKuchen() throws EmptyListException {
+        kuchListEmpty();
+
+        LinkedList<KuchenVerkaufsObjektImpl> res = new LinkedList<>();
+
+        for(int i = 0; i < this.kuchenList.length; i++) {
+            if (this.kuchenList[i] != null) {
+                res.add(this.kuchenList[i]);
+            }
+        }
+
+        return res;
+    }
+
+    public LinkedList<KuchenVerkaufsObjektImpl> checkKuchen(Class kuchen) throws NoSuchElementException, EmptyListException {
+        kuchListEmpty();
+
+        LinkedList<KuchenVerkaufsObjektImpl> res = new LinkedList<>();
+
+        for(int i = 0; i < this.kuchenList.length; i++) {
+            if (this.kuchenList[i] != null && this.kuchenList[i].getClass().equals(kuchen)) {
+                res.add(this.kuchenList[i]);
+            }
+        }
+
+        if (res.isEmpty()) {
+            throw new NoSuchElementException();
+        }
+
+        return res;
+    }
+
+    public Set<Allergen> checkAllergen() throws EmptyListException {
+        kuchListEmpty();
+
+       HashSet<Allergen> res = new HashSet<Allergen>();
+
+        for (KuchenVerkaufsObjekt kuch : kuchenList) {
+            if(kuch != null){
+                res.addAll(kuch.getAllergene());
+            }
+        }
+        return res;
+    }
+
+    public Set<Allergen> checkAbsentAllergen() throws EmptyListException{
+        kuchListEmpty();
+
+        HashSet<Allergen> res = new HashSet<>();
+        res.add(Allergen.Erdnuss);
+        res.add(Allergen.Haselnuss);
+        res.add(Allergen.Gluten);
+        res.add(Allergen.Sesamsamen);
+
+        for (KuchenVerkaufsObjekt kuch : kuchenList) {
+            if(kuch != null){
+                res.removeAll(kuch.getAllergene());
+            }
+        }
+
+        return res;
+    }
+
+    public void setInspectionDate(Date date, int fachnummer) throws InvalidInputException {
+        checkNumber(fachnummer);
+
+        this.kuchenList[fachnummer].setInspektionsDatum(date);
+        notifyObservers();
+    }
+
+    //function to check if the fachnummer is negative
+    private void checkNumber(int num) throws InvalidInputException {
+        if (num < 0 || num > this.kuchenList.length) {
+            throw new InvalidInputException();
+        }
+    }
+
+    private void kuchListEmpty() throws EmptyListException {
+        boolean flag = false;
+        for (int i = 0; i < this.kuchenList.length; i++) {
+            if (this.kuchenList[i] != null) {
+                flag = true;
+                break;
+            }
+        }
+        if (!flag) {
+            throw new EmptyListException();
+        }
+    }
+
+    public int getSize(){
+        return this.kuchenList.length;
+    }
+
+    @Override
+    public void addObserver(Observer observer) {
+        this.observerList.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        this.observerList.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers()  {
+        for(Observer observer : this.observerList){
+            try {
+                observer.update();//why does this throw every exception under the sun ??
+            } catch (EmptyListException e) {
+            } catch (FullAutomatException e) {
+            } catch (InvalidInputException e) {
+            } catch (AlreadyExistsException e) {
+            }
+        }
+    }
+
+    public int getKuchenCounter() {
+        return kuchenCounter;
+    }
 }

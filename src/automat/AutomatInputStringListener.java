@@ -2,14 +2,11 @@ package automat;
 
 import events.*;
 import exceptions.AlreadyExistsException;
-import exceptions.EmptyListException;
-import exceptions.FullAutomatException;
-import exceptions.InvalidInputException;
 
 import java.util.NoSuchElementException;
 
 public class AutomatInputStringListener implements EventListener<InputStringEvent> {
-    private AutomatImpl automat;
+    private Automat automat;
     private ErrorEventHandler<ErrorEvent> errorHandler;
 
 
@@ -32,7 +29,7 @@ public class AutomatInputStringListener implements EventListener<InputStringEven
         }
     }
 
-    public void setAutomat(AutomatImpl automat) {
+    public void setAutomat(Automat automat) {
         this.automat = automat;
     }
 

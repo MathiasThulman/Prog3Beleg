@@ -11,7 +11,7 @@ public class AutomatStringListenerTests {
 
     @Test
     public void addHerstellerListenerTest() throws EmptyListException {
-        AutomatImpl auto = new AutomatImpl(20);
+        Automat auto = new Automat(20);
         AutomatInputStringListener listener = new AutomatInputStringListener();
 
         listener.setAutomat(auto);
@@ -24,7 +24,7 @@ public class AutomatStringListenerTests {
 
     @Test
     public void removeHerstellerListenerTest() throws AlreadyExistsException {
-        AutomatImpl auto = new AutomatImpl(20);
+        Automat auto = new Automat(20);
         AutomatInputStringListener listener = new AutomatInputStringListener();
 
         listener.setAutomat(auto);

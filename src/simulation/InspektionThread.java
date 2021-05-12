@@ -1,16 +1,18 @@
 package simulation;
 
-import automat.AutomatImpl;
+import automat.Automat;
 import exceptions.EmptyListException;
 import exceptions.InvalidInputException;
 
+import java.util.Calendar;
+
 public class InspektionThread extends Thread {
-    private AutomatImpl automat;
+    private Automat automat;
 
     public void run(){
         while(true){
             try {
-                System.out.println(this.automat.getKuchen((int) (Math.random() * this.automat.checkKuchen().size())).toString());
+                this.automat.setInspectionDate(Calendar.getInstance().getTime() ,(int) (Math.random() * this.automat.checkKuchen().size()));
                 System.out.println("Simulation inspektion");
             } catch (EmptyListException e) {
                 System.out.println("simulation simulation: list empty");
@@ -20,7 +22,7 @@ public class InspektionThread extends Thread {
         }
     }
 
-    public void setAutomat(AutomatImpl automat) {
+    public void setAutomat(Automat automat) {
         this.automat = automat;
     }
 }

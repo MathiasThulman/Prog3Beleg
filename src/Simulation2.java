@@ -1,13 +1,14 @@
-package simulation;
-
+import automat.Automat;
 import automat.AutomatChangeObserver;
-import automat.AutomatImpl;
 import automat.Hersteller;
 import automat.HerstellerImpl;
 import exceptions.AlreadyExistsException;
+import simulation.CreateThread;
+import simulation.DeleteRandomThread;
+import simulation.DeleteThread;
+import simulation.InspektionThread;
 
-public class Simulation1 {
-
+public class Simulation2 {
 
     public static void main(String[] args) {
         String BENJAMIN = "benjamin";
@@ -16,13 +17,15 @@ public class Simulation1 {
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         Hersteller herst2 = new HerstellerImpl(BLUEMCHEN);
         Hersteller herst3 = new HerstellerImpl(MOSES);
-        AutomatImpl automat = new AutomatImpl(60000);
+        Automat automat = new Automat(60000);
         AutomatChangeObserver observer = new AutomatChangeObserver(automat);
 
         CreateThread createThread = new CreateThread();
-        DeleteThread deleteThread = new DeleteThread();
+        DeleteRandomThread deleteThread = new DeleteRandomThread();//random delete uses because non random is too slow
+        InspektionThread inspektionThread = new InspektionThread();
         createThread.setAutomat(automat);
         deleteThread.setAutomat(automat);
+        inspektionThread.setAutomat(automat);
 
         try {
             automat.addHersteller(herst1);
@@ -34,6 +37,6 @@ public class Simulation1 {
 
         createThread.start();
         deleteThread.start();
+        inspektionThread.start();
     }
-
 }

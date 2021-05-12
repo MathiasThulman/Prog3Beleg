@@ -27,4 +27,9 @@ public class ObsttorteImpl extends KuchenVerkaufsObjektImpl implements Obsttorte
     public String getObstsorte() {
         return this.obstsorte;
     }
+
+    @Override
+    public String toString(){
+        return this.kremsorte + ", " + this.obstsorte + ", " + super.toString();
+    }
 }

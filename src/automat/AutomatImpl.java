@@ -15,7 +15,7 @@ import java.util.*;
 public class AutomatImpl implements Automat, Observable {
     private final LinkedList<Hersteller> herstellerList = new LinkedList<>();
     private final KuchenVerkaufsObjektImpl[] kuchenList;
-    private final LinkedList<Observer> oberverList = new LinkedList<>();
+    private final LinkedList<Observer> observerList = new LinkedList<>();
     private int kuchenCounter = 0;
 
     public AutomatImpl(int fachzahl) {
@@ -31,6 +31,7 @@ public class AutomatImpl implements Automat, Observable {
             }
         }
         this.herstellerList.add(hersteller);
+        notifyObservers();
     }
 
     @Override
@@ -44,6 +45,7 @@ public class AutomatImpl implements Automat, Observable {
                         this.kuchenList[i] = null;
                     }
                 }
+                notifyObservers();
                 return;
             }
         }
@@ -76,8 +78,8 @@ public class AutomatImpl implements Automat, Observable {
                     this.kuchenList[i] = kuchen;
                     fullFlag = false;
                     this.kuchenCounter++;
+                    notifyObservers();
                     break;
-                    //TODO notify
                 }
             }
         if(fullFlag){
@@ -106,6 +108,7 @@ public class AutomatImpl implements Automat, Observable {
 
         this.kuchenList[fachnummer] = null;
         this.kuchenCounter--;
+        notifyObservers();
     }
 
     @Override
@@ -119,6 +122,7 @@ public class AutomatImpl implements Automat, Observable {
             }
             if (kuchenList[i].getFachnummer() == fachnummer) {
                 kuchenList[i] = kuchen;
+                notifyObservers();
                 return;
             }
         }
@@ -141,8 +145,9 @@ public class AutomatImpl implements Automat, Observable {
         HashMap<String, Integer> manufacturerHashmap = new HashMap<>();
 
         for (Hersteller manu : this.herstellerList) {
-            if (!manufacturerHashmap.containsKey(manu)) ;
-            manufacturerHashmap.put(manu.getName(), 0);
+            if (!manufacturerHashmap.containsKey(manu)) {
+                manufacturerHashmap.put(manu.getName(), 0);
+            }
         }
 
         for (KuchenVerkaufsObjekt kuch : this.kuchenList) {
@@ -155,16 +160,22 @@ public class AutomatImpl implements Automat, Observable {
                 manufacturerHashmap.put(kuch.getHersteller().getName(), 1);
             }
         }
-
-
         return manufacturerHashmap;
     }
 
     @Override
-    public KuchenVerkaufsObjektImpl[] checkKuchen() throws EmptyListException {
+    public List<KuchenVerkaufsObjektImpl> checkKuchen() throws EmptyListException {
         kuchListEmpty();
 
-        return this.kuchenList;
+        LinkedList<KuchenVerkaufsObjektImpl> res = new LinkedList<>();
+
+        for(int i = 0; i < this.kuchenList.length; i++) {
+            if (this.kuchenList[i] != null) {
+                res.add(this.kuchenList[i]);
+            }
+        }
+
+        return res;
     }
 
     @Override
@@ -209,6 +220,7 @@ public class AutomatImpl implements Automat, Observable {
         checkNumber(fachnummer);
 
         this.kuchenList[fachnummer].setInspektionsDatum(date);
+        notifyObservers();
     }
 
     //function to check if the fachnummer is negative
@@ -237,18 +249,24 @@ public class AutomatImpl implements Automat, Observable {
 
     @Override
     public void addObserver(Observer observer) {
-        this.oberverList.add(observer);
+        this.observerList.add(observer);
     }
 
     @Override
     public void removeObserver(Observer observer) {
-        this.oberverList.remove(observer);
+        this.observerList.remove(observer);
     }
 
     @Override
-    public void notifyObservers() throws EmptyListException, FullAutomatException, InvalidInputException, AlreadyExistsException {
-        for(Observer observer : this.oberverList){
-            observer.update();
+    public void notifyObservers()  {
+        for(Observer observer : this.observerList){
+            try {
+                observer.update();//why does this throw every exception under the sun ??
+            } catch (EmptyListException e) {
+            } catch (FullAutomatException e) {
+            } catch (InvalidInputException e) {
+            } catch (AlreadyExistsException e) {
+            }
         }
     }
 

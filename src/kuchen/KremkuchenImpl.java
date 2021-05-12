@@ -24,4 +24,9 @@ public class KremkuchenImpl extends KuchenVerkaufsObjektImpl implements Kremkuch
     public void setKremsorte(String kremsorte) {
         this.kremsorte = kremsorte;
     }
+
+    @Override
+    public String toString(){
+        return this.kremsorte + ", " + super.toString();
+    }
 }

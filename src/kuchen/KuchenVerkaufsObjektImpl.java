@@ -68,4 +68,8 @@ public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt {
     public void setFachNummer(int fachNummer) {
         this.fachNummer = fachNummer;
     }
+
+    public String toString(){
+        return this.hersteller.getName() + ", " + this.allergene.toString()  + ", " + this.haltbarkeit.getSeconds()  + ", "+ this.inspektionsDatum.toString() + ", "+ this.preis.toString() + ", ";
+    }
 }

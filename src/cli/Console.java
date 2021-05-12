@@ -1,16 +1,19 @@
 package cli;
 
 
-import events.InputEventHandler;
+import events.*;
 import exceptions.AlreadyExistsException;
 import exceptions.EmptyListException;
 import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
 
+import java.util.Collection;
 import java.util.LinkedList;
 
 public class Console {
-    private InputEventHandler handler;
+    private GetEventHandler getHandler;
+    private InputIntEventHandler intHandler;
+    private InputStringEventHandler stringHandler;
 
     public Console(){
     }
@@ -38,11 +41,8 @@ public class Console {
         }
         while(true);
     }
-    public void setHandler(InputEventHandler handler){
-        this.handler = handler;
-    }
 
-    public void start() throws FullAutomatException, InvalidInputException, AlreadyExistsException, EmptyListException {
+    public void start()  {
         CommandFactory cf = new CommandFactory(this);
         LinkedList<ICommand> cmds = cf.returnsCommandList();
         do {
@@ -52,7 +52,41 @@ public class Console {
         } while (true);
     }
 
-    public InputEventHandler getHandler() {
-        return handler;
+
+
+    public void printError(ErrorEvent error){
+        System.out.println(error.getError());
+    }
+    public void printCollectionEvent(CollectionOutputEvent event){
+
+        for(Object object : event.getEventColletion()){
+            if(object != null) {
+                System.out.println(object.toString());
+            }
+        }
+    }
+
+    public void setGetHandler(GetEventHandler getHandler) {
+        this.getHandler = getHandler;
+    }
+
+    public GetEventHandler getGetHandler() {
+        return getHandler;
+    }
+
+    public void setIntHandler(InputIntEventHandler intHandler) {
+        this.intHandler = intHandler;
+    }
+
+    public InputIntEventHandler getIntHandler() {
+        return intHandler;
+    }
+
+    public InputStringEventHandler getStringHandler() {
+        return stringHandler;
+    }
+
+    public void setStringHandler(InputStringEventHandler stringHandler) {
+        this.stringHandler = stringHandler;
     }
 }

@@ -13,10 +13,14 @@ public class AutomatAllergenObserver implements Observer {
 
     public AutomatAllergenObserver(AutomatImpl automat) {
         this.automat = automat;
+        this.automat.addObserver(this);
     }
 
     @Override
     public void update() throws EmptyListException {
-       // this.allergenList = this.automat.checkAllergen();
+       if(!this.allergenList.equals(automat.checkAllergen())){
+           this.allergenList = automat.checkAllergen();
+           System.out.println("Die Allergene im Automat haben sich verändert");
+       }
     }
 }

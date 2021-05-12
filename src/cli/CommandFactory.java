@@ -1,11 +1,12 @@
 package cli;
 
-import events.InputEvent;
+import events.*;
 import exceptions.AlreadyExistsException;
 import exceptions.EmptyListException;
 import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
 
+import java.util.Date;
 import java.util.LinkedList;
 
 public class CommandFactory {
@@ -19,34 +20,23 @@ public class CommandFactory {
     private final Console console;
     private final String sExitMessage = "Close Program";
     private final String KUCHENWAHL = "bitte wähle einen Kuchen" + System.lineSeparator()  +
-            "1. Erdbeerkuchen" + System.lineSeparator() + "2. Butterkremkuchen";
-    private final String ADDKUCHEN = "addKuchen";
-    private final String ADDHERSTELLER = "addHersteller";
-    private final String REMOVEHERSTELLER = "removeHersteller";
-    private final String REMOVEKUCHEN = "removeKuchen";
-    private final String GETKUCHEN = "getKuchen";
-    private final String CHECKHERSTELLER = "checkHersteller";
-    private final String CHECKKUCHEN = "checkKuchen";
-    private final String CHECKKUCHESPECIFIC = "checkKuchenSpecific";
-    private final String CHECKALLERGEN = "checkAllergen";
-    private final String SETINSPECTIONDATE = "setInspectionDate";
+            "1. Erdbeerkuchen, hersteller faustulus" + System.lineSeparator() + "2. Butterkremkuchen, hersteller bob";
 
     public CommandFactory(Console console){
         this.console = console;
-
     }
 
     public LinkedList<ICommand> returnsCommandList(){
         LinkedList<ICommand> cmds = new LinkedList<>();
         cmds.add(createExit());
-        cmds.add(addKuchen());
         cmds.add(addHersteller());
+        cmds.add(addKuchen());
         cmds.add(getKuchen());
         cmds.add(removeKuchen());
         cmds.add(removeHersteller());
-        cmds.add(checkHersteller());
+        //cmds.add(checkHersteller()); this does not work yet
         cmds.add(checkKuchen());
-        cmds.add(checkKuchenSpecific());
+        //cmds.add(checkKuchenSpecific()); this does not work yet
         cmds.add(checkAllergen());
         cmds.add(setInspectionDate());
         return cmds;
@@ -70,15 +60,14 @@ public class CommandFactory {
     private ICommand addHersteller() {
         return new ICommand() {
             @Override
-            public void execute() throws FullAutomatException, InvalidInputException, AlreadyExistsException, EmptyListException {
-                String text = ADDHERSTELLER + "#" + InputReader.readStringfromStdIn(sPleaseEnterHersteller);
-                InputEvent e=new InputEvent(this,text);
-                if(null != console.getHandler()) console.getHandler().handle(e);
+            public void execute() {
+                InputStringEvent e = new InputStringEvent(this, EventType.addHersteller, InputReader.readStringfromStdIn(sPleaseEnterHersteller));
+                if(null != console.getStringHandler()) console.getStringHandler().handle(e);
             }
 
             @Override
             public String description() {
-                return "1. Füge deinem Automat einen Hersteller Hinzu";
+                return "Füge deinem Automat einen Hersteller Hinzu";
             }
         };
     }
@@ -87,12 +76,13 @@ public class CommandFactory {
         return new ICommand() {
             @Override
             public void execute() {
-                String text = ADDKUCHEN + "#" + InputReader.readStringfromStdIn(KUCHENWAHL); //TODO kuchen bauen
+                InputIntEvent e = new InputIntEvent(this, EventType.addKuchen, InputReader.readIntFromStdin(KUCHENWAHL));
+                if(null != console.getIntHandler()) console.getIntHandler().handle(e);
             }
 
             @Override
             public String description() {
-                return "2. Füge deinem Automaten einen Kuchen Hinzu";
+                return "Füge deinem Automaten einen Kuchen Hinzu";
             }
         };
     }
@@ -100,15 +90,14 @@ public class CommandFactory {
     private ICommand getKuchen(){
         return new ICommand() {
             @Override
-            public void execute() throws FullAutomatException, InvalidInputException, AlreadyExistsException, EmptyListException {
-                String text = GETKUCHEN + "#" + InputReader.readIntFromStdin(sFachnummer);
-                InputEvent e = new InputEvent(this,text);
-                if(null != console.getHandler()) console.getHandler().handle(e);
+            public void execute() {
+                InputIntEvent e = new InputIntEvent(this, EventType.getOneKuchen, InputReader.readIntFromStdin(sFachnummer));
+                if(null != console.getIntHandler()) console.getIntHandler().handle(e);
             }
 
             @Override
             public String description() {
-                return "3. Zeige einen Kuchen an bestimmer Fachnummer";
+                return "Zeige einen Kuchen an bestimmer Fachnummer";
             }
         };
     }
@@ -116,15 +105,14 @@ public class CommandFactory {
     private ICommand removeKuchen(){
         return new ICommand() {
             @Override
-            public void execute() throws FullAutomatException, InvalidInputException, AlreadyExistsException, EmptyListException {
-                String text = REMOVEKUCHEN + "#" + InputReader.readIntFromStdin(sFachnummer);
-                InputEvent e = new InputEvent(this,text);
-                if(null != console.getHandler()) console.getHandler().handle(e);
+            public void execute()  {
+                InputIntEvent e = new InputIntEvent(this, EventType.removeKuchen, InputReader.readIntFromStdin(sFachnummer));
+                if(null != console.getIntHandler()) console.getIntHandler().handle(e);
             }
 
             @Override
             public String description() {
-                return "4. entferne Kuchen aus Fachnummer";
+                return "entferne Kuchen aus Fachnummer";
             }
         };
     }
@@ -132,15 +120,14 @@ public class CommandFactory {
     private ICommand removeHersteller(){
         return new ICommand() {
             @Override
-            public void execute() throws FullAutomatException, InvalidInputException, AlreadyExistsException, EmptyListException {
-                String text = REMOVEHERSTELLER + "#" + InputReader.readStringfromStdIn(sPleaseEnterHersteller);
-                InputEvent e = new InputEvent(this,text);
-                if(null != console.getHandler()) console.getHandler().handle(e);
+            public void execute()  {
+                InputStringEvent e = new InputStringEvent(this, EventType.remHersteller, InputReader.readStringfromStdIn(sPleaseEnterHersteller));
+                if(null != console.getStringHandler()) console.getStringHandler().handle(e);
             }
 
             @Override
             public String description() {
-                return "5. Entferne einen Hersteller und alle seine Kuchen aus dem Automat";
+                return "Entferne einen Hersteller und alle seine Kuchen aus dem Automat";
             }
         };
     }
@@ -148,15 +135,14 @@ public class CommandFactory {
     private ICommand checkHersteller(){
         return new ICommand() {
             @Override
-            public void execute() throws FullAutomatException, InvalidInputException, AlreadyExistsException, EmptyListException {
-                String text = CHECKHERSTELLER;
-                InputEvent e = new InputEvent(this,text);
-                if(null != console.getHandler()) console.getHandler().handle(e);
+            public void execute()  {
+                GetEvent e = new GetEvent(this, EventType.getHersteller);
+                if(null != console.getGetHandler()) console.getGetHandler().handle(e);
             }
 
             @Override
             public String description() {
-                return "6. Zeige mir die Liste aller Hersteller und wie viele Kuchen sie haben";
+                return "Zeige mir die Liste aller Hersteller und wie viele Kuchen sie haben";
             }
         };
     }
@@ -164,15 +150,14 @@ public class CommandFactory {
     private ICommand checkKuchen(){
         return new ICommand() {
             @Override
-            public void execute() throws FullAutomatException, InvalidInputException, AlreadyExistsException, EmptyListException {
-                String text = CHECKKUCHEN;
-                InputEvent e = new InputEvent(this,text);
-                if(null != console.getHandler()) console.getHandler().handle(e);
+            public void execute() {
+                GetEvent e = new GetEvent(this, EventType.getKuchen);
+                if(null != console.getGetHandler()) console.getGetHandler().handle(e);
             }
 
             @Override
             public String description() {
-                return "7. Zeige mir alle Kuchen Im Automat";
+                return "Zeige mir alle Kuchen Im Automat";
             }
         };
     }
@@ -180,15 +165,13 @@ public class CommandFactory {
     private ICommand checkKuchenSpecific(){
         return  new ICommand() {
             @Override
-            public void execute() throws FullAutomatException, InvalidInputException, AlreadyExistsException, EmptyListException {
-                String text = CHECKKUCHESPECIFIC + "#" + InputReader.readStringfromStdIn(sPleaseEnterKuchen);
-                InputEvent e = new InputEvent(this,text);
-                if(null != console.getHandler()) console.getHandler().handle(e);
+            public void execute() {
+                GetEvent e = new GetEvent(this, EventType.getKuchenSpecific);//TODO nur einen kuchen ausgeben lassen
+                if(null != console.getGetHandler()) console.getGetHandler().handle(e);
             }
-
             @Override
             public String description() {
-                return "8. Zeige mir alle Kuchen eines Bestimmen typ";
+                return "Zeige mir alle Kuchen eines Bestimmen typ";
             }
         };
     }
@@ -196,15 +179,14 @@ public class CommandFactory {
     private ICommand checkAllergen(){
         return new ICommand() {
             @Override
-            public void execute() throws FullAutomatException, InvalidInputException, AlreadyExistsException, EmptyListException {
-                String text = CHECKALLERGEN;
-                InputEvent e = new InputEvent(this,text);
-                if(null != console.getHandler()) console.getHandler().handle(e);
+            public void execute() {
+                GetEvent e = new GetEvent(this, EventType.getAllergene);
+                if(null != console.getGetHandler()) console.getGetHandler().handle(e);
             }
 
             @Override
             public String description() {
-                return "9. Zeige mir alle Allergene die in den Kuchen des Automats auftauchen";
+                return "Zeige mir alle Allergene die in den Kuchen des Automats auftauchen";
             }
         };
     }
@@ -212,15 +194,15 @@ public class CommandFactory {
     private ICommand setInspectionDate(){
         return new ICommand() {
             @Override
-            public void execute() throws FullAutomatException, InvalidInputException, AlreadyExistsException, EmptyListException {
-                String text = SETINSPECTIONDATE + "#" + InputReader.readIntFromStdin(sPleaseEnterDay) + "." + InputReader.readIntFromStdin(sPleaseEntherMonth) + "." + InputReader.readIntFromStdin(sPleaseEnterYear);
-                InputEvent e = new InputEvent(this,text);
-                if(null != console.getHandler()) console.getHandler().handle(e);
+            public void execute() {
+                Date date = new Date(InputReader.readIntFromStdin(sPleaseEnterYear), InputReader.readIntFromStdin(sPleaseEntherMonth), InputReader.readIntFromStdin(sPleaseEnterDay));
+                InputIntEvent e = new InputIntEvent(this, EventType.setDate, InputReader.readIntFromStdin(sFachnummer), date );
+                if(null != console.getIntHandler()) console.getIntHandler().handle(e);
             }
 
             @Override
             public String description() {
-                return "10. Setze ein neues Inspektionsdatum für alle kuchen";
+                return "Setze ein neues Inspektionsdatum für einen kuchen";
             }
         };
     }

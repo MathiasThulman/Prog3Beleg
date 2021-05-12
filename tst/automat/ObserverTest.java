@@ -2,12 +2,14 @@ package automat;
 
 import automat.*;
 import exceptions.AlreadyExistsException;
-import exceptions.EmptyListException;
 import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
 import kuchen.KremkuchenImpl;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Arrays;
@@ -22,7 +24,7 @@ public class ObserverTest {
     KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), "Mascarpone");
 
     @Test
-    public void automatCapacityObserverTestValid() throws AlreadyExistsException, FullAutomatException, InvalidInputException, EmptyListException {
+    public void automatCapacityObserverTestValid() throws AlreadyExistsException, FullAutomatException {
         AutomatImpl auto = new AutomatImpl(20);
         AutomatCapacityObserver obs = new AutomatCapacityObserver(auto);
 
@@ -32,8 +34,13 @@ public class ObserverTest {
         for(int i = 0; i < 18; i++){
             auto.addKuchen(kuch1);
         }
+        final ByteArrayOutputStream bos2 = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bos2));
+        String testString = "Dieser Automat hat die Kapazität von 90% überschritten" + System.lineSeparator();//line seperator necessary to properly compary
+
         auto.addKuchen(kuch1);
-        verify(obs).update(); //geht nur mit mock
+        Assertions.assertEquals(testString, bos2.toString());
+
     }
 
     @Test
@@ -41,8 +48,48 @@ public class ObserverTest {
         AutomatImpl auto = new AutomatImpl(20);
         AutomatAllergenObserver obs = new AutomatAllergenObserver(auto);
 
+        final ByteArrayOutputStream bos1 = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bos1));
+
         auto.addHersteller(herst1);
         auto.addKuchen(kuch1);
-        //TODO was wird von dem Observer erwartet?
+
+        String testString = "Die Allergene im Automat haben sich verändert" + System.lineSeparator();
+
+        Assertions.assertEquals(testString , bos1.toString());
+    }
+
+    @Test
+    public void automatChangeObserverAddKuchenTest() throws AlreadyExistsException, FullAutomatException {
+        AutomatImpl auto = new AutomatImpl(20);
+        AutomatChangeObserver obs = new AutomatChangeObserver(auto);
+
+        auto.addHersteller(herst1);
+
+        final ByteArrayOutputStream bos1 = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bos1));
+
+        auto.addKuchen(kuch1);
+        String testString ="KUCHEN HINZUGEFÜGT" + System.lineSeparator();
+
+        Assertions.assertEquals(testString, bos1.toString());
+
+    }
+
+    @Test
+    public void removeKuchenChangeObserverTest() throws AlreadyExistsException, FullAutomatException, InvalidInputException {
+        AutomatImpl auto = new AutomatImpl(20);
+        AutomatChangeObserver obs = new AutomatChangeObserver(auto);
+
+        auto.addHersteller(herst1);
+        auto.addKuchen(kuch1);
+
+        final ByteArrayOutputStream bos1 = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bos1));
+        auto.removeKuchen(0);
+
+        String testString ="KUCHEN ENTFERNT" + System.lineSeparator();
+        Assertions.assertEquals(testString, bos1.toString());
+
     }
 }

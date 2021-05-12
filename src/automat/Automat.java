@@ -43,7 +43,7 @@ public interface Automat {
      * @param hersteller
      * @throws AlreadyExistsException when a herrsteller with the same name exists
      */
-    void addHersteller(Hersteller hersteller) throws AlreadyExistsException;
+    void addHersteller(Hersteller hersteller) throws AlreadyExistsException, FullAutomatException, InvalidInputException, EmptyListException;
 
     /**
      * remove a hersteller from the automat
@@ -68,7 +68,7 @@ public interface Automat {
      * checks every cake in the automat
      * @return all available cakes as a list
      */
-    KuchenVerkaufsObjektImpl[] checkKuchen() throws EmptyListException;
+    List<KuchenVerkaufsObjektImpl> checkKuchen() throws EmptyListException;
 
     /**
      * checks all available cakes

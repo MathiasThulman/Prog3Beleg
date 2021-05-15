@@ -2,6 +2,7 @@ package kuchen;
 
 import automat.Allergen;
 import automat.Hersteller;
+import automat.KuchenVerkaufsObjektImpl;
 import automat.Obsttorte;
 
 import java.math.BigDecimal;

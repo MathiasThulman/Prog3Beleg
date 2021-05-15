@@ -5,7 +5,6 @@ import exceptions.EmptyListException;
 import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
 import kuchen.KuchenVerkaufsObjekt;
-import kuchen.KuchenVerkaufsObjektImpl;
 import observer.Observable;
 import observer.Observer;
 
@@ -16,13 +15,13 @@ public class Automat implements Observable {
     private final LinkedList<Hersteller> herstellerList = new LinkedList<>();
     private final KuchenVerkaufsObjektImpl[] kuchenList;
     private final LinkedList<Observer> observerList = new LinkedList<>();
-    private int kuchenCounter = 0;
+    private volatile int kuchenCounter = 0;
 
     public Automat(int fachzahl) {
         this.kuchenList = new KuchenVerkaufsObjektImpl[fachzahl];
     }
 
-    public void addHersteller(Hersteller hersteller) throws AlreadyExistsException {
+    synchronized public void addHersteller(Hersteller hersteller) throws AlreadyExistsException {
         //check if manufacturer already exists
         for (Hersteller herst : this.herstellerList) {
             if (herst.getName().equals(hersteller.getName())) {
@@ -33,13 +32,13 @@ public class Automat implements Observable {
         notifyObservers();
     }
 
-    public void removeHersteller(String hersteller) throws NoSuchElementException {
+    synchronized public void removeHersteller(String hersteller) throws NoSuchElementException {
         for (Hersteller herst : this.herstellerList) {
             if (herst.getName().equals(hersteller)) {
                 this.herstellerList.remove(herst);
                 //remove all kuchen of the hersteller from the automat as well
-                for(int i = 0; i < this.kuchenList.length; i++){
-                    if(this.kuchenList[i] != null && this.kuchenList[i].getHersteller().getName().equals(hersteller)){
+                for (int i = 0; i < this.kuchenList.length; i++) {
+                    if (this.kuchenList[i] != null && this.kuchenList[i].getHersteller().getName().equals(hersteller)) {
                         this.kuchenList[i] = null;
                     }
                 }
@@ -50,7 +49,7 @@ public class Automat implements Observable {
         throw new NoSuchElementException();
     }
 
-    public void addKuchen(KuchenVerkaufsObjektImpl kuchen) throws NoSuchElementException, FullAutomatException {
+    synchronized public void addKuchen(KuchenVerkaufsObjektImpl kuchen) throws NoSuchElementException, FullAutomatException {
 
         //check if there is already a hersteller with boolean flag
         boolean herstFlag = false;
@@ -68,23 +67,23 @@ public class Automat implements Observable {
 
         //insert the kuchen at the first empty place
         boolean fullFlag = true;
-            for (int i = 0; i < this.kuchenList.length; i++) {
-                if (this.kuchenList[i] == null) {
-                    kuchen.setFachNummer(i);    //put this somewhere else?
-                    kuchen.setInspektionsDatum(Calendar.getInstance().getTime());
-                    this.kuchenList[i] = kuchen;
-                    fullFlag = false;
-                    this.kuchenCounter++;
-                    notifyObservers();
-                    break;
-                }
+        for (int i = 0; i < this.kuchenList.length; i++) {
+            if (this.kuchenList[i] == null) {
+                kuchen.setFachNummer(i);    //put this somewhere else?
+                kuchen.setInspektionsDatum(Calendar.getInstance().getTime());
+                this.kuchenList[i] = kuchen;
+                fullFlag = false;
+                this.kuchenCounter++;
+                notifyObservers();
+                break;
             }
-        if(fullFlag){
+        }
+        if (fullFlag) {
             throw new FullAutomatException();
         }
     }
 
-    public KuchenVerkaufsObjekt getKuchen(int fachnummer) throws NoSuchElementException, InvalidInputException {
+    synchronized public KuchenVerkaufsObjekt getKuchen(int fachnummer) throws NoSuchElementException, InvalidInputException {
         checkNumber(fachnummer);
 
         if (kuchenList[fachnummer] == null) {
@@ -93,11 +92,12 @@ public class Automat implements Observable {
         return this.kuchenList[fachnummer];
     }
 
-    public void removeKuchen(int fachnummer) throws NoSuchElementException, InvalidInputException {
+    synchronized public void removeKuchen(int fachnummer) throws NoSuchElementException, InvalidInputException {
         checkNumber(fachnummer);
 
         //check the list if the fachnummer exists, first
         if (this.kuchenList[fachnummer] == null) {
+            System.out.println(fachnummer);
             throw new NoSuchElementException();
         }
 
@@ -106,12 +106,12 @@ public class Automat implements Observable {
         notifyObservers();
     }
 
-    public void changeKuchen(int fachnummer, KuchenVerkaufsObjektImpl kuchen) throws NoSuchElementException, InvalidInputException {
+    synchronized public void changeKuchen(int fachnummer, KuchenVerkaufsObjektImpl kuchen) throws NoSuchElementException, InvalidInputException {
         checkNumber(fachnummer);
         kuchen.setFachNummer(fachnummer);
 
         for (int i = 0; i < this.kuchenList.length; i++) {
-            if(this.kuchenList[i] == null){
+            if (this.kuchenList[i] == null) {
                 break; //break when no objekt is at the list place to avoid null pointer exception
             }
             if (kuchenList[i].getFachnummer() == fachnummer) {
@@ -123,14 +123,14 @@ public class Automat implements Observable {
         throw new NoSuchElementException();
     }
 
-    public LinkedList<Hersteller> getHersteller() throws EmptyListException {
+    synchronized public LinkedList<Hersteller> getHersteller() throws EmptyListException {
         if (this.herstellerList.isEmpty()) {
             throw new EmptyListException();
         }
         return this.herstellerList;
     }
 
-    public HashMap<String, Integer> checkHersteller() throws NoSuchElementException, EmptyListException {
+    synchronized public HashMap<String, Integer> checkHersteller() throws NoSuchElementException, EmptyListException {
         if (this.herstellerList.isEmpty()) {
             throw new EmptyListException();
         }
@@ -143,7 +143,7 @@ public class Automat implements Observable {
         }
 
         for (KuchenVerkaufsObjekt kuch : this.kuchenList) {
-            if(kuch == null){
+            if (kuch == null) {
                 break; // dont go into objekt if null to avoid NullPointerException
             }
             if (manufacturerHashmap.containsKey(kuch.getHersteller().getName())) {
@@ -155,8 +155,8 @@ public class Automat implements Observable {
         return manufacturerHashmap;
     }
 
-    public List<KuchenVerkaufsObjektImpl> checkKuchen() throws EmptyListException {
-        kuchListEmpty();
+    synchronized public List<KuchenVerkaufsObjektImpl> checkKuchen() throws EmptyListException {
+        if(kuchListEmpty()) throw new EmptyListException();
 
         LinkedList<KuchenVerkaufsObjektImpl> res = new LinkedList<>();
 
@@ -169,12 +169,12 @@ public class Automat implements Observable {
         return res;
     }
 
-    public LinkedList<KuchenVerkaufsObjektImpl> checkKuchen(Class kuchen) throws NoSuchElementException, EmptyListException {
-        kuchListEmpty();
+    synchronized public LinkedList<KuchenVerkaufsObjektImpl> checkKuchen(Class kuchen) throws NoSuchElementException, EmptyListException {
+        if(kuchListEmpty()) throw new EmptyListException();
 
         LinkedList<KuchenVerkaufsObjektImpl> res = new LinkedList<>();
 
-        for(int i = 0; i < this.kuchenList.length; i++) {
+        for (int i = 0; i < this.kuchenList.length; i++) {
             if (this.kuchenList[i] != null && this.kuchenList[i].getClass().equals(kuchen)) {
                 res.add(this.kuchenList[i]);
             }
@@ -187,21 +187,21 @@ public class Automat implements Observable {
         return res;
     }
 
-    public Set<Allergen> checkAllergen() throws EmptyListException {
-        kuchListEmpty();
+    synchronized public Set<Allergen> checkAllergen() throws EmptyListException {
+        if(kuchListEmpty()) throw new EmptyListException();
 
-       HashSet<Allergen> res = new HashSet<Allergen>();
+        HashSet<Allergen> res = new HashSet<Allergen>();
 
         for (KuchenVerkaufsObjekt kuch : kuchenList) {
-            if(kuch != null){
+            if (kuch != null) {
                 res.addAll(kuch.getAllergene());
             }
         }
         return res;
     }
 
-    public Set<Allergen> checkAbsentAllergen() throws EmptyListException{
-        kuchListEmpty();
+    synchronized public Set<Allergen> checkAbsentAllergen() throws EmptyListException {
+        if(kuchListEmpty()) throw new EmptyListException();
 
         HashSet<Allergen> res = new HashSet<>();
         res.add(Allergen.Erdnuss);
@@ -210,7 +210,7 @@ public class Automat implements Observable {
         res.add(Allergen.Sesamsamen);
 
         for (KuchenVerkaufsObjekt kuch : kuchenList) {
-            if(kuch != null){
+            if (kuch != null) {
                 res.removeAll(kuch.getAllergene());
             }
         }
@@ -218,7 +218,7 @@ public class Automat implements Observable {
         return res;
     }
 
-    public void setInspectionDate(Date date, int fachnummer) throws InvalidInputException {
+    synchronized public void setInspectionDate(Date date, int fachnummer) throws InvalidInputException {
         checkNumber(fachnummer);
 
         this.kuchenList[fachnummer].setInspektionsDatum(date);
@@ -226,26 +226,24 @@ public class Automat implements Observable {
     }
 
     //function to check if the fachnummer is negative
-    private void checkNumber(int num) throws InvalidInputException {
+    synchronized public void checkNumber(int num) throws InvalidInputException {
         if (num < 0 || num > this.kuchenList.length) {
             throw new InvalidInputException();
         }
     }
 
-    private void kuchListEmpty() throws EmptyListException {
+    synchronized public boolean kuchListEmpty() {
         boolean flag = false;
-        for (int i = 0; i < this.kuchenList.length; i++) {
-            if (this.kuchenList[i] != null) {
+        for (KuchenVerkaufsObjektImpl kuchenVerkaufsObjekt : this.kuchenList) {
+            if (kuchenVerkaufsObjekt != null) {
                 flag = true;
                 break;
             }
         }
-        if (!flag) {
-            throw new EmptyListException();
-        }
+        return !flag;
     }
 
-    public int getSize(){
+    public int getSize() {
         return this.kuchenList.length;
     }
 
@@ -260,8 +258,8 @@ public class Automat implements Observable {
     }
 
     @Override
-    public void notifyObservers()  {
-        for(Observer observer : this.observerList){
+    public void notifyObservers() {
+        for (Observer observer : this.observerList) {
             try {
                 observer.update();//why does this throw every exception under the sun ??
             } catch (EmptyListException e) {

@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.*;
 
-class AutomatTests {
+class AutomatTest {
     private final int fn1 = 246;
     private final int negFn = -444;
     private final String MASCARPONE = "Mascarpone";

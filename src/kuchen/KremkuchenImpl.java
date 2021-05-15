@@ -3,6 +3,7 @@ package kuchen;
 import automat.Allergen;
 import automat.Hersteller;
 import automat.Kremkuchen;
+import automat.KuchenVerkaufsObjektImpl;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -29,4 +30,5 @@ public class KremkuchenImpl extends KuchenVerkaufsObjektImpl implements Kremkuch
     public String toString(){
         return this.kremsorte + ", " + super.toString();
     }
+
 }

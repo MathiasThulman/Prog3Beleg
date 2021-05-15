@@ -1,7 +1,9 @@
-package kuchen;
+package automat;
 
 import automat.Allergen;
 import automat.Hersteller;
+import kuchen.KuchenTyp;
+import kuchen.KuchenVerkaufsObjekt;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -16,6 +18,8 @@ public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt {
     private final BigDecimal preis;
     private Date inspektionsDatum;
     private int fachNummer;
+    private KuchenTyp kuchenTyp;
+
 
     public KuchenVerkaufsObjektImpl(Hersteller hersteller, Collection<Allergen> allergene, int naehrwert, Duration haltbarkeit, BigDecimal preis) {
         this.hersteller = hersteller;
@@ -25,6 +29,10 @@ public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt {
         this.preis = preis;
     }
 
+    public KuchenVerkaufsObjektImpl(Hersteller hersteller, Collection<Allergen> allergene, int naehrwert, Duration haltbarkeit, BigDecimal preis, KuchenTyp kuchenTyp, String Sort) {
+        this(hersteller, allergene,  naehrwert, haltbarkeit,  preis);
+        this.kuchenTyp = kuchenTyp;
+    }
 
     @Override
     public Hersteller getHersteller() {
@@ -61,15 +69,16 @@ public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt {
         return this.fachNummer;
     }
 
-    public void setInspektionsDatum(Date inspektionsDatum) {
+    protected void setInspektionsDatum(Date inspektionsDatum) {
         this.inspektionsDatum = inspektionsDatum;
     }
 
-    public void setFachNummer(int fachNummer) {
+    protected void setFachNummer(int fachNummer) {
         this.fachNummer = fachNummer;
     }
 
     public String toString(){
         return this.hersteller.getName() + ", " + this.allergene.toString()  + ", " + this.haltbarkeit.getSeconds()  + ", "+ this.inspektionsDatum.toString() + ", "+ this.preis.toString() + ", ";
     }
+
 }

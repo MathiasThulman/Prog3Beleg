@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
-public class AutomatInputIntListenerTests {
+public class AutomatInputIntListenerTest {
 
     @Test
     public void addKuchenListenerTest() throws InvalidInputException, AlreadyExistsException {

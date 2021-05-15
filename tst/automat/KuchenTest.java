@@ -1,10 +1,6 @@
 package automat;
 
-import automat.Allergen;
-import automat.Hersteller;
-import automat.HerstellerImpl;
 import kuchen.KremkuchenImpl;
-import kuchen.KuchenVerkaufsObjektImpl;
 import kuchen.ObstkuchenImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

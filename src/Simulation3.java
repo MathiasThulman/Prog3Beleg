@@ -3,10 +3,12 @@ import automat.AutomatChangeObserver;
 import automat.Hersteller;
 import automat.HerstellerImpl;
 import exceptions.AlreadyExistsException;
-import simulation.*;
+import simulation.AutomatSimulationWrapper;
+import simulation.CreateThread;
+import simulation.DeleteMultipleThread;
+import simulation.DeleteThread;
 
-public class Simulation2 {
-
+public class Simulation3 {
     public static void main(String[] args) {
         String BENJAMIN = "benjamin";
         String BLUEMCHEN = "blümchen";
@@ -14,17 +16,19 @@ public class Simulation2 {
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         Hersteller herst2 = new HerstellerImpl(BLUEMCHEN);
         Hersteller herst3 = new HerstellerImpl(MOSES);
-        Automat automat = new Automat(10);
+        Automat automat = new Automat(60000);
         AutomatChangeObserver observer = new AutomatChangeObserver(automat);
         AutomatSimulationWrapper wrapper = new AutomatSimulationWrapper();
         wrapper.setAutomat(automat);
 
-        CreateSynchronizedThread createThread = new CreateSynchronizedThread();
-        DeleteSynchronizedThread deleteThread = new DeleteSynchronizedThread();
-        InspektionThread inspektionThread = new InspektionThread();
-        createThread.setWrapper(wrapper);
-        deleteThread.setWrapper(wrapper);
-        inspektionThread.setWrapper(wrapper);
+        CreateThread createThread1 = new CreateThread();
+        CreateThread createThread2 = new CreateThread();
+        DeleteMultipleThread deleteThread1 = new DeleteMultipleThread();
+        DeleteMultipleThread deleteThread2 = new DeleteMultipleThread();
+        createThread1.setSimulationWrapper(wrapper);
+        createThread2.setSimulationWrapper(wrapper);
+        deleteThread1.setSimulationWrapper(wrapper);
+        deleteThread2.setSimulationWrapper(wrapper);
 
         try {
             automat.addHersteller(herst1);
@@ -33,9 +37,9 @@ public class Simulation2 {
         } catch (AlreadyExistsException e) {
             e.printStackTrace();
         }
-
-        createThread.start();
-        deleteThread.start();
-        inspektionThread.start();
+        createThread1.start();
+        deleteThread1.start();
+        createThread2.start();
+        deleteThread2.start();
     }
 }

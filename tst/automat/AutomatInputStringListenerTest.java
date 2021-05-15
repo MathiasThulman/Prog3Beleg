@@ -7,7 +7,7 @@ import exceptions.EmptyListException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class AutomatStringListenerTests {
+public class AutomatInputStringListenerTest {
 
     @Test
     public void addHerstellerListenerTest() throws EmptyListException {

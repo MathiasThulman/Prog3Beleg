@@ -14,7 +14,7 @@ public class Simulation2 {
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         Hersteller herst2 = new HerstellerImpl(BLUEMCHEN);
         Hersteller herst3 = new HerstellerImpl(MOSES);
-        Automat automat = new Automat(10);
+        Automat automat = new Automat(500);
         AutomatChangeObserver observer = new AutomatChangeObserver(automat);
         AutomatSimulationWrapper wrapper = new AutomatSimulationWrapper();
         wrapper.setAutomat(automat);
@@ -22,8 +22,8 @@ public class Simulation2 {
         CreateSynchronizedThread createThread = new CreateSynchronizedThread();
         DeleteSynchronizedThread deleteThread = new DeleteSynchronizedThread();
         InspektionThread inspektionThread = new InspektionThread();
-        createThread.setWrapper(wrapper);
-        deleteThread.setWrapper(wrapper);
+        createThread.setSimulationWrapper(wrapper);
+        deleteThread.setSimulationWrapper(wrapper);
         inspektionThread.setWrapper(wrapper);
 
         try {

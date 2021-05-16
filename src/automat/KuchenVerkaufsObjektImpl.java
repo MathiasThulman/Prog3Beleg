@@ -18,8 +18,6 @@ public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt {
     private final BigDecimal preis;
     private Date inspektionsDatum;
     private int fachNummer;
-    private KuchenTyp kuchenTyp;
-
 
     public KuchenVerkaufsObjektImpl(Hersteller hersteller, Collection<Allergen> allergene, int naehrwert, Duration haltbarkeit, BigDecimal preis) {
         this.hersteller = hersteller;
@@ -29,10 +27,6 @@ public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt {
         this.preis = preis;
     }
 
-    public KuchenVerkaufsObjektImpl(Hersteller hersteller, Collection<Allergen> allergene, int naehrwert, Duration haltbarkeit, BigDecimal preis, KuchenTyp kuchenTyp, String Sort) {
-        this(hersteller, allergene,  naehrwert, haltbarkeit,  preis);
-        this.kuchenTyp = kuchenTyp;
-    }
 
     @Override
     public Hersteller getHersteller() {

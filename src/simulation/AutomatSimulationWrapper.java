@@ -52,7 +52,7 @@ public class AutomatSimulationWrapper {
 
     protected void createRandomCake() {
         try {
-            this.automat.addKuchen(kuchList[(int) (Math.random() * 10)]);
+            this.automat.addKuchen(copyCake(kuchList[(int) (Math.random() * 10)]));//copyCake not pretty but will have to do until kuchen structure is different
         } catch (FullAutomatException e) {
             System.out.println("simulation: automat ist voll");
         }
@@ -76,8 +76,6 @@ public class AutomatSimulationWrapper {
 
         try {
             for (KuchenVerkaufsObjektImpl kuchen : this.automat.checkKuchen()) {
-                System.out.println(kuchen.getFachnummer());
-                System.out.println(kuchen.getNaehrwert());
                 if (kuchen.getInspektionsdatum().before(oldestDate)) {
                     oldestDate = kuchen.getInspektionsdatum();
                     oldestFachnummer = kuchen.getFachnummer();
@@ -132,15 +130,28 @@ public class AutomatSimulationWrapper {
         }
     }
 
-    protected void removeMultipleOldestCake() {
-        int randomInt = (int) (Math.random() * 100);
+    protected void removeMultipleOldestCakeSynchronized() {
+        this.lock.lock();
+        try {
+            while(this.automat.getKuchenCounter() == 0) this.full.await();
+            int randomInt = (int) (Math.random() * this.automat.getKuchenCounter());
 
-        for(int i = 0; i < randomInt; i++){
-            removeOldestCake();
+            for (int i = 0; i < randomInt; i++) {
+                removeOldestCake();
+            }
+            this.full.signal();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            this.lock.unlock();
         }
     }
 
     public void setAutomat(Automat automat) {
         this.automat = automat;
+    }
+
+    private KuchenVerkaufsObjektImpl copyCake(KuchenVerkaufsObjektImpl kuchen){
+        return new KuchenVerkaufsObjektImpl(kuchen.getHersteller(), kuchen.getAllergene(), kuchen.getNaehrwert(), kuchen.getHaltbarkeit(), kuchen.getPreis());
     }
 }

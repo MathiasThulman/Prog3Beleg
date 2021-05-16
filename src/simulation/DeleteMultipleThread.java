@@ -5,7 +5,7 @@ public class DeleteMultipleThread extends Thread{
 
     public void run(){
         while(true){
-            this.wrapper.removeMultipleOldestCake();
+            this.wrapper.removeMultipleOldestCakeSynchronized();
         }
     }
 

@@ -3,10 +3,7 @@ import automat.AutomatChangeObserver;
 import automat.Hersteller;
 import automat.HerstellerImpl;
 import exceptions.AlreadyExistsException;
-import simulation.AutomatSimulationWrapper;
-import simulation.CreateThread;
-import simulation.DeleteMultipleThread;
-import simulation.DeleteThread;
+import simulation.*;
 
 public class Simulation3 {
     public static void main(String[] args) {
@@ -21,8 +18,9 @@ public class Simulation3 {
         AutomatSimulationWrapper wrapper = new AutomatSimulationWrapper();
         wrapper.setAutomat(automat);
 
-        CreateThread createThread1 = new CreateThread();
-        CreateThread createThread2 = new CreateThread();
+        CreateSynchronizedThread createThread1 = new CreateSynchronizedThread();
+        CreateSynchronizedThread createThread2 = new CreateSynchronizedThread();
+        CreateSynchronizedThread createThread3 = new CreateSynchronizedThread();
         DeleteMultipleThread deleteThread1 = new DeleteMultipleThread();
         DeleteMultipleThread deleteThread2 = new DeleteMultipleThread();
         createThread1.setSimulationWrapper(wrapper);
@@ -41,5 +39,6 @@ public class Simulation3 {
         deleteThread1.start();
         createThread2.start();
         deleteThread2.start();
+        createThread3.start();
     }
 }

@@ -14,7 +14,7 @@ public class DeleteSynchronizedThread extends Thread {
         }
     }
 
-    public void setWrapper(AutomatSimulationWrapper wrapper) {
+    public void setSimulationWrapper(AutomatSimulationWrapper wrapper) {
         this.wrapper = wrapper;
     }
 }

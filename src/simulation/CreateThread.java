@@ -8,12 +8,12 @@ public class CreateThread extends Thread {
 
     public void run() {
         while (true) {
-//            try {
+            try {
             this.simulationWrapper.createRandomCake();
-//            sleep(20);
-//            }  catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
+            sleep(0);
+            }  catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

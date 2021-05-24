@@ -1,10 +1,6 @@
 package cli;
 
 import events.*;
-import exceptions.AlreadyExistsException;
-import exceptions.EmptyListException;
-import exceptions.FullAutomatException;
-import exceptions.InvalidInputException;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -136,7 +132,7 @@ public class CommandFactory {
         return new ICommand() {
             @Override
             public void execute()  {
-                GetEvent e = new GetEvent(this, EventType.getHersteller);
+                InputGetEvent e = new InputGetEvent(this, EventType.getHersteller);
                 if(null != console.getGetHandler()) console.getGetHandler().handle(e);
             }
 
@@ -151,7 +147,7 @@ public class CommandFactory {
         return new ICommand() {
             @Override
             public void execute() {
-                GetEvent e = new GetEvent(this, EventType.getKuchen);
+                InputGetEvent e = new InputGetEvent(this, EventType.getKuchen);
                 if(null != console.getGetHandler()) console.getGetHandler().handle(e);
             }
 
@@ -166,7 +162,7 @@ public class CommandFactory {
         return  new ICommand() {
             @Override
             public void execute() {
-                GetEvent e = new GetEvent(this, EventType.getKuchenSpecific);//TODO nur einen kuchen ausgeben lassen
+                InputGetEvent e = new InputGetEvent(this, EventType.getKuchenSpecific);//TODO nur einen kuchen ausgeben lassen
                 if(null != console.getGetHandler()) console.getGetHandler().handle(e);
             }
             @Override
@@ -180,7 +176,7 @@ public class CommandFactory {
         return new ICommand() {
             @Override
             public void execute() {
-                GetEvent e = new GetEvent(this, EventType.getAllergene);
+                InputGetEvent e = new InputGetEvent(this, EventType.getAllergene);
                 if(null != console.getGetHandler()) console.getGetHandler().handle(e);
             }
 

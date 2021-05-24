@@ -14,7 +14,7 @@ public class Simulation2 {
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         Hersteller herst2 = new HerstellerImpl(BLUEMCHEN);
         Hersteller herst3 = new HerstellerImpl(MOSES);
-        Automat automat = new Automat(500);
+        Automat automat = new Automat(6000);
         AutomatChangeObserver observer = new AutomatChangeObserver(automat);
         AutomatSimulationWrapper wrapper = new AutomatSimulationWrapper();
         wrapper.setAutomat(automat);

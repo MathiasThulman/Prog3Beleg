@@ -6,7 +6,7 @@ import events.*;
 import java.util.LinkedList;
 
 public class Console {
-    private GetEventHandler<GetEvent> getHandler;
+    private GetEventHandler<InputGetEvent> getHandler;
     private InputIntEventHandler<InputIntEvent> intHandler;
     private InputStringEventHandler<InputStringEvent> stringHandler;
 
@@ -62,11 +62,11 @@ public class Console {
         }
     }
 
-    public void setGetHandler(GetEventHandler<GetEvent> getHandler) {
+    public void setGetHandler(GetEventHandler<InputGetEvent> getHandler) {
         this.getHandler = getHandler;
     }
 
-    public GetEventHandler<GetEvent> getGetHandler() {
+    public GetEventHandler<InputGetEvent> getGetHandler() {
         return getHandler;
     }
 

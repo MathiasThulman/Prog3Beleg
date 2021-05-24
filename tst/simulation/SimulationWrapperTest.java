@@ -1,9 +1,6 @@
 package simulation;
 
-import automat.Allergen;
-import automat.Automat;
-import automat.Hersteller;
-import automat.HerstellerImpl;
+import automat.*;
 import exceptions.AlreadyExistsException;
 import exceptions.EmptyListException;
 import exceptions.FullAutomatException;
@@ -11,6 +8,8 @@ import exceptions.InvalidInputException;
 import kuchen.KremkuchenImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -19,7 +18,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 
-public class SimulationWrapperTests {
+import static org.mockito.Mockito.*;
+
+public class SimulationWrapperTest {
     private static final String MASCARPONE = "Mascarpone";
     private final String BENJAMIN = "benjamin";
     private final String BLUEMCHEN = "blümchen";
@@ -45,6 +46,22 @@ public class SimulationWrapperTests {
 
         wrapper.createRandomCake();
         Assertions.assertFalse(auto.checkKuchen().isEmpty());
+    }
+
+    @Test
+    public void createRandomCakeSynchronizedValid() throws AlreadyExistsException, EmptyListException {
+        Automat auto = new Automat(20);
+        AutomatSimulationWrapper wrapper = new AutomatSimulationWrapper();
+        wrapper.setAutomat(auto);
+
+        //every possible hersteller needs to be added to randomCreate doesnt not throw exception
+        auto.addHersteller(herst1);
+        auto.addHersteller(herst2);
+        auto.addHersteller(herst3);
+
+        wrapper.createRandomCakeSynchronized();
+        Assertions.assertFalse(auto.checkKuchen().isEmpty());
+
     }
 
     @Test
@@ -80,5 +97,53 @@ public class SimulationWrapperTests {
         wrapper.removeOldestCake();
         //oldest cake should be removed check by Naehrwert if the correct one is still there
         Assertions.assertEquals(500, auto.checkKuchen().get(0).getNaehrwert());
+    }
+
+    @Test
+    public void removeOldestCakeSynchronizedValid() throws AlreadyExistsException, FullAutomatException, InvalidInputException, EmptyListException {
+        Automat auto = new Automat(20);
+        AutomatSimulationWrapper wrapper = new AutomatSimulationWrapper();
+        wrapper.setAutomat(auto);
+
+        auto.addHersteller(herst1);
+        auto.addKuchen(kuch1);
+        auto.addKuchen(kuch2);
+
+        Date date1 = new Date(1980, Calendar.JANUARY, 1);
+        Date date2 = new Date(2000, Calendar.JANUARY, 3);
+
+        auto.setInspectionDate(date1, 0);
+        auto.setInspectionDate(date2, 1);
+
+        wrapper.removeOldestCakeSynchronized();
+        //oldest cake should be removed check by Naehrwert if the correct one is still there
+        Assertions.assertEquals(500, auto.checkKuchen().get(0).getNaehrwert());
+    }
+
+    @Test
+    public void causeInspectionValid() throws InvalidInputException {
+        Automat auto = mock(Automat.class);
+        AutomatSimulationWrapper wrapper = new AutomatSimulationWrapper();
+        wrapper.setAutomat(auto);
+
+        wrapper.causeInspection();
+
+        Date testDate = new Date(2020, 6,9);
+        verify(auto).setInspectionDate(testDate,0);
+    }
+
+    @Test
+    public void removeMultipleOldestCakeSynchronized() throws AlreadyExistsException, FullAutomatException{
+        Automat auto = new Automat(20);
+        AutomatSimulationWrapper wrapper = new AutomatSimulationWrapper();
+        wrapper.setAutomat(auto);
+
+
+        auto.addHersteller(herst1);
+        auto.addKuchen(kuch1);
+        auto.addKuchen(kuch2);
+
+        wrapper.removeMultipleOldestCakeSynchronized();
+        //TODO how to i test/assert in a random method?
     }
 }

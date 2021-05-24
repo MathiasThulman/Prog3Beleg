@@ -7,10 +7,12 @@ import exceptions.EmptyListException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 public class AutomatInputStringListenerTest {
 
     @Test
-    public void addHerstellerListenerTest() throws EmptyListException {
+    public void addHerstellerListenerTest() {
         Automat auto = new Automat(20);
         AutomatInputStringListener listener = new AutomatInputStringListener();
 
@@ -19,18 +21,26 @@ public class AutomatInputStringListenerTest {
         InputStringEvent event = new InputStringEvent(this, EventType.addHersteller,"Guy Fiery");
         listener.addEvent(event);
 
-        Assertions.assertEquals("Guy Fiery" ,auto.getHersteller().get(0).getName());
+        try {
+            Assertions.assertEquals("Guy Fiery" ,auto.getHersteller().get(0).getName());
+        } catch (EmptyListException e) {
+            fail();
+        }
     }
 
     @Test
-    public void removeHerstellerListenerTest() throws AlreadyExistsException {
+    public void removeHerstellerListenerTest() {
         Automat auto = new Automat(20);
         AutomatInputStringListener listener = new AutomatInputStringListener();
 
         listener.setAutomat(auto);
 
         HerstellerImpl gf = new HerstellerImpl("Guy Fiery");
-        auto.addHersteller(gf);
+        try {
+            auto.addHersteller(gf);
+        } catch (AlreadyExistsException e) {
+            fail();
+        }
         InputStringEvent event = new InputStringEvent(this, EventType.remHersteller,"Guy Fiery");
         listener.addEvent(event);
 

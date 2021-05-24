@@ -7,6 +7,7 @@ public enum EventType {
     getKuchen,
     getKuchenSpecific,
     getAllergene,
+    getAbsentAllergene,
     addKuchen,
     removeKuchen,
     setDate,

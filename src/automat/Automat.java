@@ -83,7 +83,7 @@ public class Automat implements Observable {
         }
     }
 
-    synchronized public KuchenVerkaufsObjekt getKuchen(int fachnummer) throws NoSuchElementException, InvalidInputException {
+    synchronized public KuchenVerkaufsObjektImpl getKuchen(int fachnummer) throws NoSuchElementException, InvalidInputException {
         checkNumber(fachnummer);
 
         if (kuchenList[fachnummer] == null) {
@@ -97,7 +97,6 @@ public class Automat implements Observable {
 
         //check the list if the fachnummer exists, first
         if (this.kuchenList[fachnummer] == null) {
-            System.out.println(fachnummer);
             throw new NoSuchElementException();
         }
 
@@ -110,17 +109,22 @@ public class Automat implements Observable {
         checkNumber(fachnummer);
         kuchen.setFachNummer(fachnummer);
 
-        for (int i = 0; i < this.kuchenList.length; i++) {
-            if (this.kuchenList[i] == null) {
-                break; //break when no objekt is at the list place to avoid null pointer exception
-            }
-            if (kuchenList[i].getFachnummer() == fachnummer) {
-                kuchenList[i] = kuchen;
-                notifyObservers();
-                return;
-            }
+        //exception removed for easier swap and the ability to inserti kuchen
+        this.kuchenList[fachnummer] = kuchen;
+    }
+
+    synchronized public void swapKuchen(int fachNummer1, int fachNummer2) throws InvalidInputException {
+        checkNumber(fachNummer1);
+        checkNumber(fachNummer2);
+
+        if (this.kuchenList[fachNummer1] == null || this.kuchenList[fachNummer2] == null) {
+            throw new NoSuchElementException();
         }
-        throw new NoSuchElementException();
+
+        KuchenVerkaufsObjektImpl tempKuchen = getKuchen(fachNummer1);
+
+        changeKuchen(fachNummer1, getKuchen(fachNummer2));
+        changeKuchen(fachNummer2, tempKuchen);
     }
 
     synchronized public LinkedList<Hersteller> getHersteller() throws EmptyListException {
@@ -155,7 +159,7 @@ public class Automat implements Observable {
         return manufacturerHashmap;
     }
 
-    synchronized public List<KuchenVerkaufsObjektImpl> checkKuchen() throws EmptyListException {
+    synchronized public List<KuchenVerkaufsObjektImpl > checkKuchen() throws EmptyListException {
         if(kuchListEmpty()) throw new EmptyListException();
 
         LinkedList<KuchenVerkaufsObjektImpl> res = new LinkedList<>();

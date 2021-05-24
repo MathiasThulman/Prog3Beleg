@@ -18,13 +18,13 @@ public class Simulation1 {
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         Hersteller herst2 = new HerstellerImpl(BLUEMCHEN);
         Hersteller herst3 = new HerstellerImpl(MOSES);
-        Automat automat = new Automat(60000);
+        Automat automat = new Automat(6000);
         AutomatChangeObserver observer = new AutomatChangeObserver(automat);
         AutomatSimulationWrapper wrapper = new AutomatSimulationWrapper();
         wrapper.setAutomat(automat);
 
         CreateThread createThread = new CreateThread();
-        DeleteThread deleteThread = new DeleteThread();//random thread uses because delete thread i too slow
+        DeleteThread deleteThread = new DeleteThread();
         createThread.setSimulationWrapper(wrapper);
         deleteThread.setSimulationWrapper(wrapper);
 

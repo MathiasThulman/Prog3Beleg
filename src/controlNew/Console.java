@@ -5,7 +5,7 @@ import events.*;
 import java.util.Scanner;
 
 public class Console {
-    private GetEventHandler<GetEvent> getHandler;
+    private GetEventHandler<InputGetEvent> getHandler;
     private InputIntEventHandler<InputIntEvent> intHandler;
     private InputStringEventHandler<InputStringEvent> stringHandler;
     private InputMode mode;
@@ -31,7 +31,7 @@ public class Console {
         }
     }
 
-    public void setGetHandler(GetEventHandler<GetEvent> getHandler) {
+    public void setGetHandler(GetEventHandler<InputGetEvent> getHandler) {
         this.getHandler = getHandler;
     }
 

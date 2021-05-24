@@ -13,6 +13,8 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 public class AutomatAllergenObserverTest {
     Hersteller herst1 = new HerstellerImpl("MOSES");
     Duration dur1 = Duration.ofDays(4);
@@ -20,15 +22,20 @@ public class AutomatAllergenObserverTest {
     KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), "Mascarpone");
 
     @Test
-    public void AutomatAllergenObserverTestValid() throws AlreadyExistsException, FullAutomatException {
+    public void AutomatAllergenObserverTestValid()  {
         Automat auto = new Automat(20);
         AutomatAllergenObserver obs = new AutomatAllergenObserver(auto);
 
         final ByteArrayOutputStream bos1 = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bos1));
 
-        auto.addHersteller(herst1);
-        auto.addKuchen(kuch1);
+        try {
+            auto.addHersteller(herst1);
+            auto.addKuchen(kuch1);
+        } catch (AlreadyExistsException | FullAutomatException e) {
+            fail();
+        }
+
 
         String testString = "Die Allergene im Automat haben sich verändert" + System.lineSeparator();
 

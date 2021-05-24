@@ -71,7 +71,7 @@ public class AutomatSimulationWrapper {
     }
 
     protected void removeOldestCake() {
-        int oldestFachnummer = -1;
+        int oldestFachnummer = -1;//so i get an exception if this number is not replaced at least once
         Date oldestDate = new Date(3000, Calendar.FEBRUARY, 6);
 
         try {
@@ -94,14 +94,14 @@ public class AutomatSimulationWrapper {
 
     protected void causeInspection() {
         try {
-            this.automat.setInspectionDate(Calendar.getInstance().getTime(), (int) (Math.random() * this.automat.checkKuchen().size()));
+            Date andyDate = new Date(2020, 6, 9);
+            this.automat.setInspectionDate(andyDate, (int) (Math.random() * this.automat.checkKuchen().size()));
             System.out.println("Simulation inspektion");
         } catch (InvalidInputException e) {
             System.out.println("simulation inspektion: invalid input");
         } catch (EmptyListException e) {
             System.out.println("simulation inspektion: empty list");
         }
-        System.out.println("Simulation inspektion");
     }
 
     protected void createRandomCakeSynchronized() {
@@ -120,12 +120,12 @@ public class AutomatSimulationWrapper {
     protected void removeOldestCakeSynchronized() {
         this.lock.lock();
         try {
-            while(this.automat.getKuchenCounter() == 0) this.full.await();
+            while (this.automat.getKuchenCounter() == 0) this.full.await();
             removeOldestCake();
             this.empty.signal();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }  finally {
+        } finally {
             this.lock.unlock();
         }
     }
@@ -133,7 +133,7 @@ public class AutomatSimulationWrapper {
     protected void removeMultipleOldestCakeSynchronized() {
         this.lock.lock();
         try {
-            while(this.automat.getKuchenCounter() == 0) this.full.await();
+            while (this.automat.getKuchenCounter() == 0) this.full.await();
             int randomInt = (int) (Math.random() * this.automat.getKuchenCounter());
 
             for (int i = 0; i < randomInt; i++) {
@@ -151,7 +151,7 @@ public class AutomatSimulationWrapper {
         this.automat = automat;
     }
 
-    private KuchenVerkaufsObjektImpl copyCake(KuchenVerkaufsObjektImpl kuchen){
+    private KuchenVerkaufsObjektImpl copyCake(KuchenVerkaufsObjektImpl kuchen) {
         return new KuchenVerkaufsObjektImpl(kuchen.getHersteller(), kuchen.getAllergene(), kuchen.getNaehrwert(), kuchen.getHaltbarkeit(), kuchen.getPreis());
     }
 }

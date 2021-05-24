@@ -25,7 +25,7 @@ public class AutomatCapacityObserverTest {
         AutomatCapacityObserver obs = new AutomatCapacityObserver(auto);
 
         auto.addHersteller(herst1);
-
+        //TODO remove exceptions from signature
         //addkuchen until almost at full capacity
         for(int i = 0; i < 18; i++){
             auto.addKuchen(kuch1);

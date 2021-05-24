@@ -1,4 +1,4 @@
-module prog3.beleg {
+module prog3_beleg {
     requires javafx.fxml;
     requires javafx.controls;
 

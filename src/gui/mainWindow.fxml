@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <HBox alignment="CENTER" minWidth="100.0" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <RadioButton fx:id="sortByFachnummer" mnemonicParsing="false" selected="true" text="Nach Fachnumer sortieren">
+               <toggleGroup>
+                  <ToggleGroup fx:id="filter" />
+               </toggleGroup></RadioButton>
+            <RadioButton fx:id="sortByHersteller" mnemonicParsing="false" text="Nach Hersteller sortieren" toggleGroup="$filter" />
+            <RadioButton fx:id="sortByHaltbarkeit" mnemonicParsing="false" text="Nach Haltbarkeit Sortieren" toggleGroup="$filter" />
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <SplitPane dividerPositions="0.5" prefHeight="376.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+         <items>
+            <ListView fx:id="listViewHersteller" prefHeight="200.0" prefWidth="200.0" />
+            <ListView fx:id="listViewKuchen" prefHeight="200.0" prefWidth="200.0" />
+         </items>
+      </SplitPane>
+   </center>
+   <right>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
+   </right>
+   <left>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <Accordion>
+              <panes>
+                <TitledPane animated="false" text="hinzufügen">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="98.0">
+                           <children>
+                              <Button fx:id="buttonAddHersteller" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="98.0" text="Hersteller" />
+                              <Button fx:id="buttonAddkuchen" layoutY="27.0" mnemonicParsing="false" onAction="#showNewItemsDialog" prefHeight="25.0" prefWidth="98.0" text="Kuchen" />
+                           </children></AnchorPane>
+                  </content>
+                </TitledPane>
+                <TitledPane animated="false" text="entfernen">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Button fx:id="buttonRemoveHersteller" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="97.0" text="Hersteller" />
+                              <Button fx:id="buttonRemoveKuchen" layoutY="27.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="97.0" text="Kuchen" />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+                <TitledPane animated="false" text="verändern">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Button fx:id="buttonSetInspection" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="98.0" text="InspektionsDatum" />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+              </panes>
+            </Accordion>
+         </children></VBox>
+   </left>
+   <bottom>
+      <VBox prefHeight="82.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField fx:id="herstellerField" promptText="Hersteller Angeben" />
+            <TextField fx:id="fachnummerField" promptText="Fachnummer angeben" />
+         </children>
+      </VBox>
+   </bottom>
+</BorderPane>

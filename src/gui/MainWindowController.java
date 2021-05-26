@@ -1,20 +1,39 @@
 package gui;
 
+import automat.*;
+import exceptions.AlreadyExistsException;
+import exceptions.EmptyListException;
+import exceptions.FullAutomatException;
+import exceptions.InvalidInputException;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
+import kuchen.KremkuchenImpl;
+import kuchen.KuchenVerkaufsObjekt;
+import kuchen.ObstkuchenImpl;
+import kuchen.ObsttorteImpl;
+import observer.Observer;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.function.Predicate;
 
 public class MainWindowController {
-//    @FXML
-//    BorderPane mainBorderPane;
     @FXML
-    private ToggleGroup filter;
+    BorderPane mainBorderPane;
+    @FXML
+    private ToggleGroup toggleGroupSort;
     @FXML
     private Button buttonAddHersteller;
     @FXML
@@ -28,13 +47,87 @@ public class MainWindowController {
     @FXML
     private TextField herstellerField;
     @FXML
-    private  TextField fachnummerField;
+    private TextField fachnummerField;
+    @FXML
+    private String choiceObstkuchen;
+    @FXML
+    private String choiceKremkuchen;
+    @FXML
+    private String choiceObsttorte;
+    @FXML
+    private ListView<String> listViewHersteller;
+    @FXML
+    private TextField fieldHersteller;
+    @FXML
+    private TextField fieldPreis;
+    @FXML
+    private TextField fieldNaehrwert;
+    @FXML
+    private TextField fieldHaltbarkeit;
+    @FXML
+    private TextArea fieldAllergene;
+    @FXML
+    private TextField fieldObstsorte;
+    @FXML
+    private TextField fieldKremsorte;
+    @FXML
+    private ListView<KuchenVerkaufsObjektImpl> listViewKuchen;
+    @FXML
+    private DatePicker datePicker;
+    @FXML
+    private Label errorText;
+    @FXML
+    private ChoiceBox choiceKuchen;
+    Automat automat;
+    private Comparator<KuchenVerkaufsObjektImpl> fachnummerComp;
+    private Comparator<KuchenVerkaufsObjekt> herstellerComp;
+    private Comparator<KuchenVerkaufsObjektImpl> haltbarKeitComp;
+
+
 
     public void initialize(){
+        this.automat = new Automat(20);
+
+        //just to test initial loading
+        try {
+            this.automat.addHersteller(new HerstellerImpl("Benjamin"));
+            this.automat.addKuchen(new ObstkuchenImpl(new HerstellerImpl("Benjamin"), new HashSet<>(Arrays.asList(Allergen.Gluten)), 500, Duration.ofDays(1), new BigDecimal(500), "mais" ));
+            this.automat.addKuchen(new ObstkuchenImpl(new HerstellerImpl("Benjamin"), new HashSet<>(Arrays.asList(Allergen.Gluten)), 500, Duration.ofDays(2), new BigDecimal(500), "senf" ));
+        } catch (AlreadyExistsException | FullAutomatException e) {
+            e.printStackTrace();
+        }
 
 
+        try {
+            listViewKuchen.setItems(FXCollections.observableList(this.automat.checkKuchen()));
+        } catch (EmptyListException e) {
+            //e.printStackTrace(); this will always happen and means nothing
+        }
 
-        //let this field only accept numbers source: https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
+        this.fachnummerComp = new Comparator<KuchenVerkaufsObjektImpl>() {
+            @Override
+            public int compare(KuchenVerkaufsObjektImpl o1, KuchenVerkaufsObjektImpl o2) {
+                return o1.getFachnummer() - o2.getFachnummer();
+            }
+        };
+
+//        this.herstellerComp = new Comparator<KuchenVerkaufsObjekt>() {
+//            @Override
+//            public int compare(KuchenVerkaufsObjekt o1, KuchenVerkaufsObjekt o2) {
+//                return ;
+//            }
+//        };
+
+        this.haltbarKeitComp = new Comparator<KuchenVerkaufsObjektImpl>() {
+            @Override
+            public int compare(KuchenVerkaufsObjektImpl o1, KuchenVerkaufsObjektImpl o2) {
+                return o1.getHaltbarkeit().compareTo(o2.getHaltbarkeit());
+            }
+        };
+
+        SortedList<KuchenVerkaufsObjektImpl> sortedList = new SortedList<KuchenVerkaufsObjektImpl>(listViewKuchen.getItems(), fachnummerComp);
+
+        //let all numeric fields only accept numbers source: https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
         fachnummerField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -44,26 +137,124 @@ public class MainWindowController {
                 }
             }
         });
+
+        fieldPreis.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    fieldPreis.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+
+        fieldHaltbarkeit.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    fieldHaltbarkeit.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+
+        fieldNaehrwert.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    fieldNaehrwert.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
     }
 
-    @FXML
-    public void showNewItemsDialog(){
-        Dialog<ButtonType> dialog = new Dialog<>();
-        //dialog.initOwner(mainBorderPane.getScene().getWindow());
-        dialog.setTitle("Add new Todo Item");
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("todoItemDialog.fxml"));
-
-        try{
-            dialog.getDialogPane().setContent(fxmlLoader.load());
-        } catch(IOException e){
-            System.out.println("couldnt load the dialog");
-            e.printStackTrace();
-            return;
+    public void onPressAddHersteller(){
+        try {
+            this.automat.addHersteller(new HerstellerImpl(herstellerField.getText()));
+        } catch (AlreadyExistsException e) {
+            errorText.setText("Hersteller existiert bereits");
         }
+        herstellerField.clear();
+    }
 
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+    public void onPressRemoveHersteller(){
+        try {
+            this.automat.removeHersteller(herstellerField.getText());
+        } catch (NoSuchElementException e) {
+            errorText.setText("Hersteller nicht bekannt");
+        }
+        herstellerField.clear();
+    }
 
+    public void onPressSetInspection(){
+        //convert localdate from datepicker to Date  source https://beginnersbook.com/2017/10/java-convert-localdate-to-date/
+        LocalDate localDate = datePicker.getValue();
+        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        try {
+            this.automat.setInspectionDate(date, Integer.parseInt(fachnummerField.getText()));
+        } catch (InvalidInputException e) {
+            errorText.setText("ungültige Eingabe");
+        }
+    }
+
+    public void onPressAddKuchen(){
+        if (choiceKremkuchen.equals(choiceKuchen.getValue())) {
+            KremkuchenImpl kremkuchen = new KremkuchenImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
+                    Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())), new BigDecimal(Integer.parseInt(fieldPreis.getText())), fieldKremsorte.getText());
+            try {
+                this.automat.addKuchen(kremkuchen);
+            } catch (FullAutomatException e) {
+                errorText.setText("Der Automat ist voll");
+            }
+        } else if (choiceObstkuchen.equals(choiceKuchen.getValue())){
+            ObstkuchenImpl obstkuchen = new ObstkuchenImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
+                    Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())), new BigDecimal(Integer.parseInt(fieldPreis.getText())), fieldObstsorte.getText());
+            try {
+                this.automat.addKuchen(obstkuchen);
+            } catch (FullAutomatException e) {
+                errorText.setText("Der Automat ist voll");
+            }
+        } else if (choiceObsttorte.equals(choiceKuchen.getValue())){
+            ObsttorteImpl obsttorte = new ObsttorteImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
+                    Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())), new BigDecimal(Integer.parseInt(fieldPreis.getText())), fieldKremsorte.getText() ,fieldObstsorte.getText());
+            try {
+                this.automat.addKuchen(obsttorte);
+            } catch (FullAutomatException e) {
+                errorText.setText("Der Automat ist voll");
+            }
+        } else {
+            errorText.setText("fehler bei auswahl der Kuchensorte");
+        }
+        //TODO clear all buttons
+    }
+
+    public void onPressRemoveKuchen(){
+        try {
+            this.automat.removeKuchen(Integer.parseInt(fachnummerField.getText()));
+        } catch (InvalidInputException e) {
+            errorText.setText("Ungültige Eingabe");
+        } catch (NoSuchElementException e){
+
+        }
+        fachnummerField.clear();
+    }
+
+    public void setAutomat(Automat automat) {
+        this.automat = automat;
+    }
+
+    private HashSet<Allergen> stringToSet(String in){
+        HashSet<Allergen> set = null;
+        try {
+            set = new HashSet();
+            String[] splitString = in.split(",");
+            for(int i = 0; i < splitString.length;i++){
+                set.add(Allergen.valueOf(splitString[i]));
+            }
+        } catch (IllegalArgumentException e) {
+            errorText.setText("fehler beim Einlesen der Allergene");
+        }
+        return set;
     }
 }

@@ -1,6 +1,7 @@
 package gui;
 
 import automat.*;
+import events.HerstellerNummer;
 import exceptions.AlreadyExistsException;
 import exceptions.EmptyListException;
 import exceptions.FullAutomatException;
@@ -11,27 +12,26 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Text;
 import kuchen.KremkuchenImpl;
 import kuchen.KuchenVerkaufsObjekt;
 import kuchen.ObstkuchenImpl;
 import kuchen.ObsttorteImpl;
 import observer.Observer;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.function.Predicate;
 
-public class MainWindowController {
+public class MainWindowController implements Observer{
     @FXML
-    BorderPane mainBorderPane;
+    private RadioButton sortByHersteller;
+    @FXML
+    private RadioButton sortByFachnummer;
+    @FXML
+    private RadioButton sortByHaltbarkeit;
     @FXML
     private ToggleGroup toggleGroupSort;
     @FXML
@@ -55,7 +55,7 @@ public class MainWindowController {
     @FXML
     private String choiceObsttorte;
     @FXML
-    private ListView<String> listViewHersteller;
+    private ListView<HerstellerNummer> listViewHersteller;
     @FXML
     private TextField fieldHersteller;
     @FXML
@@ -76,32 +76,39 @@ public class MainWindowController {
     private DatePicker datePicker;
     @FXML
     private Label errorText;
+    //public StringProperty errorString = new SimpleStringProperty();
     @FXML
     private ChoiceBox choiceKuchen;
-    Automat automat;
+    private Automat automat;
     private Comparator<KuchenVerkaufsObjektImpl> fachnummerComp;
     private Comparator<KuchenVerkaufsObjekt> herstellerComp;
     private Comparator<KuchenVerkaufsObjektImpl> haltbarKeitComp;
+    private ObservableList<KuchenVerkaufsObjektImpl> observableKuchenList;
+    private SortedList<KuchenVerkaufsObjektImpl> sortedKuchenList;
+    private ObservableList<HerstellerNummer> observableHerstellerList;
 
 
-
-    public void initialize(){
+    public void initialize() {
         this.automat = new Automat(20);
 
         //just to test initial loading
         try {
             this.automat.addHersteller(new HerstellerImpl("Benjamin"));
-            this.automat.addKuchen(new ObstkuchenImpl(new HerstellerImpl("Benjamin"), new HashSet<>(Arrays.asList(Allergen.Gluten)), 500, Duration.ofDays(1), new BigDecimal(500), "mais" ));
-            this.automat.addKuchen(new ObstkuchenImpl(new HerstellerImpl("Benjamin"), new HashSet<>(Arrays.asList(Allergen.Gluten)), 500, Duration.ofDays(2), new BigDecimal(500), "senf" ));
+            this.automat.addKuchen(new ObstkuchenImpl(new HerstellerImpl("Benjamin"), new HashSet<>(Arrays.asList(Allergen.Gluten)), 500, Duration.ofDays(1), new BigDecimal(500), "mais"));
+            this.automat.addKuchen(new ObstkuchenImpl(new HerstellerImpl("Benjamin"), new HashSet<>(Arrays.asList(Allergen.Gluten)), 500, Duration.ofDays(2), new BigDecimal(500), "senf"));
         } catch (AlreadyExistsException | FullAutomatException e) {
             e.printStackTrace();
         }
 
 
+
         try {
-            listViewKuchen.setItems(FXCollections.observableList(this.automat.checkKuchen()));
+            observableKuchenList = FXCollections.observableList(this.automat.checkKuchen());
+            sortedKuchenList = new SortedList<>(this.observableKuchenList, fachnummerComp);
+            listViewKuchen.setItems(sortedKuchenList);
+            listViewHersteller.setItems(FXCollections.observableList(hashmapToList(this.automat.checkHersteller())));
         } catch (EmptyListException e) {
-            //e.printStackTrace(); this will always happen and means nothing
+            //e.printStackTrace(); this will always happen when the automat is empty and means nothing
         }
 
         this.fachnummerComp = new Comparator<KuchenVerkaufsObjektImpl>() {
@@ -110,6 +117,8 @@ public class MainWindowController {
                 return o1.getFachnummer() - o2.getFachnummer();
             }
         };
+
+
 
 //        this.herstellerComp = new Comparator<KuchenVerkaufsObjekt>() {
 //            @Override
@@ -126,6 +135,20 @@ public class MainWindowController {
         };
 
         SortedList<KuchenVerkaufsObjektImpl> sortedList = new SortedList<KuchenVerkaufsObjektImpl>(listViewKuchen.getItems(), fachnummerComp);
+
+//        toggleGroupSort.selectedToggleProperty().addListener(new ChangeListener<RadioButton>() {
+//            @Override
+//            public void changed(ObservableValue<? extends RadioButton> observableValue, RadioButton radioButton, RadioButton t1) {
+////werte der radiobuttons vergleichen
+//                if (sortByFachnummer.equals(t1)) {
+//                    sortedList.setComparator(fachnummerComp);
+//                } else if (sortByHaltbarkeit.equals(t1)) {
+//                    sortedList.setComparator(haltbarKeitComp);
+//                } else if (sortByHersteller.equals(t1)) {
+//                    sortedList.setComparator(herstellerComp);
+//                }
+//            }
+//        });
 
         //let all numeric fields only accept numbers source: https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
         fachnummerField.textProperty().addListener(new ChangeListener<String>() {
@@ -169,16 +192,18 @@ public class MainWindowController {
         });
     }
 
-    public void onPressAddHersteller(){
+    public void onPressAddHersteller() {
         try {
             this.automat.addHersteller(new HerstellerImpl(herstellerField.getText()));
-        } catch (AlreadyExistsException e) {
+            this.observableHerstellerList = FXCollections.observableList(hashmapToList(automat.checkHersteller()));
+
+        } catch (AlreadyExistsException | EmptyListException e) {
             errorText.setText("Hersteller existiert bereits");
         }
         herstellerField.clear();
     }
 
-    public void onPressRemoveHersteller(){
+    public void onPressRemoveHersteller() {
         try {
             this.automat.removeHersteller(herstellerField.getText());
         } catch (NoSuchElementException e) {
@@ -187,7 +212,7 @@ public class MainWindowController {
         herstellerField.clear();
     }
 
-    public void onPressSetInspection(){
+    public void onPressSetInspection() {
         //convert localdate from datepicker to Date  source https://beginnersbook.com/2017/10/java-convert-localdate-to-date/
         LocalDate localDate = datePicker.getValue();
         Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -198,7 +223,7 @@ public class MainWindowController {
         }
     }
 
-    public void onPressAddKuchen(){
+    public void onPressAddKuchen() {
         if (choiceKremkuchen.equals(choiceKuchen.getValue())) {
             KremkuchenImpl kremkuchen = new KremkuchenImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
                     Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())), new BigDecimal(Integer.parseInt(fieldPreis.getText())), fieldKremsorte.getText());
@@ -206,22 +231,28 @@ public class MainWindowController {
                 this.automat.addKuchen(kremkuchen);
             } catch (FullAutomatException e) {
                 errorText.setText("Der Automat ist voll");
+            } catch (NoSuchElementException e){
+                errorText.setText("Hersteller existiert nicht");
             }
-        } else if (choiceObstkuchen.equals(choiceKuchen.getValue())){
+        } else if (choiceObstkuchen.equals(choiceKuchen.getValue())) {
             ObstkuchenImpl obstkuchen = new ObstkuchenImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
                     Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())), new BigDecimal(Integer.parseInt(fieldPreis.getText())), fieldObstsorte.getText());
             try {
                 this.automat.addKuchen(obstkuchen);
             } catch (FullAutomatException e) {
                 errorText.setText("Der Automat ist voll");
+            } catch (NoSuchElementException e){
+                errorText.setText("Hersteller existiert nicht");
             }
-        } else if (choiceObsttorte.equals(choiceKuchen.getValue())){
+        } else if (choiceObsttorte.equals(choiceKuchen.getValue())) {
             ObsttorteImpl obsttorte = new ObsttorteImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
-                    Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())), new BigDecimal(Integer.parseInt(fieldPreis.getText())), fieldKremsorte.getText() ,fieldObstsorte.getText());
+                    Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())), new BigDecimal(Integer.parseInt(fieldPreis.getText())), fieldKremsorte.getText(), fieldObstsorte.getText());
             try {
                 this.automat.addKuchen(obsttorte);
             } catch (FullAutomatException e) {
                 errorText.setText("Der Automat ist voll");
+            } catch (NoSuchElementException e){
+                errorText.setText("Hersteller existiert nicht");
             }
         } else {
             errorText.setText("fehler bei auswahl der Kuchensorte");
@@ -229,13 +260,13 @@ public class MainWindowController {
         //TODO clear all buttons
     }
 
-    public void onPressRemoveKuchen(){
+    public void onPressRemoveKuchen() {
         try {
             this.automat.removeKuchen(Integer.parseInt(fachnummerField.getText()));
         } catch (InvalidInputException e) {
             errorText.setText("Ungültige Eingabe");
-        } catch (NoSuchElementException e){
-
+        } catch (NoSuchElementException e) {
+            errorText.setText("an dieser Fachnummer befindet sich kein Kuchen");
         }
         fachnummerField.clear();
     }
@@ -244,17 +275,31 @@ public class MainWindowController {
         this.automat = automat;
     }
 
-    private HashSet<Allergen> stringToSet(String in){
+    private HashSet<Allergen> stringToSet(String in) {
         HashSet<Allergen> set = null;
         try {
             set = new HashSet();
             String[] splitString = in.split(",");
-            for(int i = 0; i < splitString.length;i++){
+            for (int i = 0; i < splitString.length; i++) {
                 set.add(Allergen.valueOf(splitString[i]));
             }
         } catch (IllegalArgumentException e) {
             errorText.setText("fehler beim Einlesen der Allergene");
         }
         return set;
+    }
+
+    private List<HerstellerNummer> hashmapToList(HashMap<String, Integer> hashMap){
+        LinkedList<HerstellerNummer> hnList = new LinkedList<>();       //source: https://stackoverflow.com/questions/1066589/iterate-through-a-hashmap
+        for(String key : hashMap.keySet()){
+            hnList.add(new HerstellerNummer(key, hashMap.get(key)));
+        }
+
+        return hnList;
+    }
+
+    @Override
+    public void update() throws EmptyListException, FullAutomatException, InvalidInputException, AlreadyExistsException {
+
     }
 }

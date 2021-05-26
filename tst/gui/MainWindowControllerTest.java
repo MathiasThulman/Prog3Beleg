@@ -1,10 +1,19 @@
 package gui;
 
 import automat.Automat;
+import automat.Hersteller;
+import automat.HerstellerImpl;
+import exceptions.AlreadyExistsException;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -16,9 +25,17 @@ class MainWindowControllerTest {
         ActionEvent e=new ActionEvent(null,null);
         MainWindowController controller=new MainWindowController();
 
-        controller.onPressAddHersteller();
+        try {
+            Field automatField;
+            automatField = controller.getClass().getDeclaredField("automat");
+            automatField.setAccessible(true);
+            automatField.set(controller, automat);
+            controller.onPressAddHersteller();
 
-        //verify(automat.addHersteller("");
+            verify(automat).addHersteller(any(HerstellerImpl.class));
+        } catch (NoSuchFieldException | IllegalAccessException | AlreadyExistsException noSuchFieldException) {
+            fail();
+        }
     }
 
     @Test
@@ -34,7 +51,7 @@ class MainWindowControllerTest {
 
     @Test
     void onPressSetInspection() {
-        Automat automat = mock(Automat.class);
+
         ActionEvent e=new ActionEvent(null,null);
         MainWindowController controller=new MainWindowController();
 

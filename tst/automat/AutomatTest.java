@@ -277,22 +277,30 @@ class AutomatTest {
 
     //addHersteller tests
     @Test
-    public void addHerstellerValid() throws AlreadyExistsException, EmptyListException, FullAutomatException, InvalidInputException {
+    public void addHerstellerValid() {
         Automat auto = getAutomat();
 
         Hersteller manu4 = mock(Hersteller.class);
         when(manu4.getName()).thenReturn("Obama");
 
-        auto.addHersteller(manu4);
+        try {
+            auto.addHersteller(manu4);
 
-        Assertions.assertEquals("Obama", auto.getHersteller().get(0).getName());
+            Assertions.assertEquals("Obama", auto.getHersteller().get(0).getName());
+        } catch (AlreadyExistsException | EmptyListException e) {
+            fail();
+        }
     }
 
     @Test
-    public void addHerstellerNameAlreadyExists() throws AlreadyExistsException {
+    public void addHerstellerNameAlreadyExists()  {
         Automat auto = getAutomat();
 
-        auto.addHersteller(herst1);
+        try {
+            auto.addHersteller(herst1);
+        } catch (AlreadyExistsException e) {
+            fail();
+        }
         Hersteller manu11 = new HerstellerImpl("benjamin");
 
         Assertions.assertThrows(AlreadyExistsException.class, () -> auto.addHersteller(manu11));
@@ -300,33 +308,45 @@ class AutomatTest {
 
     //removeHerstellerTest
     @Test
-    public void removeHerstellervalid() throws AlreadyExistsException, EmptyListException, FullAutomatException, InvalidInputException {
+    public void removeHerstellervalid() {
         Automat auto = getAutomat();
 
-        auto.addHersteller(herst1);
-        auto.addHersteller(herst2);
+        try {
+            auto.addHersteller(herst1);
+            auto.addHersteller(herst2);
 
-        auto.removeHersteller(herst1.getName());
+            auto.removeHersteller(herst1.getName());
 
-        Assertions.assertFalse(auto.getHersteller().contains(herst1));
+            Assertions.assertFalse(auto.getHersteller().contains(herst1));
+        } catch (AlreadyExistsException | EmptyListException e) {
+           fail();
+        }
     }
 
     @Test
-    public void removeHerstellerNoSuchElement() throws NoSuchElementException, AlreadyExistsException, FullAutomatException, InvalidInputException, EmptyListException {
+    public void removeHerstellerNoSuchElement() {
         Automat auto = getAutomat();
 
-        auto.addHersteller(herst1);
-        auto.addHersteller(herst2);
+        try {
+            auto.addHersteller(herst1);
+            auto.addHersteller(herst2);
+        } catch (AlreadyExistsException e) {
+            fail();
+        }
 
         Assertions.assertThrows(NoSuchElementException.class, () -> auto.removeHersteller(MOSES));
     }
 
     @Test
-    public void removeHerstellerWithKuchen() throws AlreadyExistsException, FullAutomatException, InvalidInputException, EmptyListException {
+    public void removeHerstellerWithKuchen() {
         Automat auto = getAutomat();
 
-        auto.addHersteller(herst1);
-        auto.addKuchen(kuch1);
+        try {
+            auto.addHersteller(herst1);
+            auto.addKuchen(kuch1);
+        } catch (AlreadyExistsException | FullAutomatException e) {
+           fail();
+        }
 
         auto.removeHersteller(BENJAMIN);
         //cake with hersteller should now have been removed as well
@@ -335,19 +355,23 @@ class AutomatTest {
 
     //getManufacturer tests
     @Test
-    public void getHerstellerValid() throws AlreadyExistsException, NoSuchElementException, EmptyListException, FullAutomatException, InvalidInputException {
+    public void getHerstellerValid() {
         Automat auto = getAutomat();
 
-        auto.addHersteller(herst1);
-        ;
-        auto.addHersteller(herst3);
+        try {
+            auto.addHersteller(herst1);
 
-        Assertions.assertEquals(BENJAMIN, auto.getHersteller().get(0).getName());
-        Assertions.assertEquals(MOSES, auto.getHersteller().get(1).getName());
+            auto.addHersteller(herst3);
+
+            Assertions.assertEquals(BENJAMIN, auto.getHersteller().get(0).getName());
+            Assertions.assertEquals(MOSES, auto.getHersteller().get(1).getName());
+        } catch (AlreadyExistsException | EmptyListException e) {
+            fail();
+        }
     }
 
     @Test
-    public void getHerstellerEmptyList() throws EmptyListException {
+    public void getHerstellerEmptyList(){
         Automat auto = getAutomat();
 
         Assertions.assertThrows(EmptyListException.class, () -> auto.checkHersteller());
@@ -355,18 +379,22 @@ class AutomatTest {
 
     //checkHerrsteller Tests
     @Test
-    void checkHerstellerValid() throws AlreadyExistsException, InvalidInputException, EmptyListException, FullAutomatException {
+    void checkHerstellerValid() {
         Automat auto = getAutomat();
 
-        auto.addHersteller(herst1);
-        auto.addHersteller(herst3);
-        auto.addKuchen(kuch1);
-        auto.addKuchen(kuch2);
-        auto.addKuchen(kuch2);
+        try {
+            auto.addHersteller(herst1);
+            auto.addHersteller(herst3);
+            auto.addKuchen(kuch1);
+            auto.addKuchen(kuch2);
+            auto.addKuchen(kuch2);
 
-        //multiple adds and assert to check if the hashmap adds and increments properly
-        Assertions.assertEquals(1, auto.checkHersteller().get(BENJAMIN));
-        Assertions.assertEquals(2, auto.checkHersteller().get(MOSES));
+            //multiple adds and assert to check if the hashmap adds and increments properly
+            Assertions.assertEquals(1, auto.checkHersteller().get(BENJAMIN));
+            Assertions.assertEquals(2, auto.checkHersteller().get(MOSES));
+        } catch (AlreadyExistsException | FullAutomatException | EmptyListException e) {
+            fail();
+        }
     }
 
     @Test
@@ -379,17 +407,21 @@ class AutomatTest {
 
     //swapKuchen
     @Test
-    void swapKuchenValidTest() throws AlreadyExistsException, FullAutomatException, InvalidInputException {
+    void swapKuchenValidTest() {
         Automat auto = getAutomat();
 
-        auto.addHersteller(herst1);
-        auto.addHersteller(herst3);
-        auto.addKuchen(kuch1);
-        auto.addKuchen(kuch2);
+        try {
+            auto.addHersteller(herst1);
+            auto.addHersteller(herst3);
+            auto.addKuchen(kuch1);
+            auto.addKuchen(kuch2);
 
-        auto.swapKuchen(0, 1);
-        Assertions.assertEquals(300, auto.getKuchen(1).getNaehrwert());
-        Assertions.assertEquals(400, auto.getKuchen(0).getNaehrwert());
+            auto.swapKuchen(0, 1);
+            Assertions.assertEquals(300, auto.getKuchen(1).getNaehrwert());
+            Assertions.assertEquals(400, auto.getKuchen(0).getNaehrwert());
+        } catch (AlreadyExistsException | FullAutomatException | InvalidInputException e) {
+            fail();
+        }
     }
 
     @Test
@@ -400,13 +432,17 @@ class AutomatTest {
     }
 
     @Test
-    void swapKuchenNoSuchElement() throws AlreadyExistsException, FullAutomatException {
+    void swapKuchenNoSuchElement()  {
         Automat automat = getAutomat();
 
         Automat auto = getAutomat();
 
-        auto.addHersteller(herst1);
-        auto.addKuchen(kuch1);
+        try {
+            auto.addHersteller(herst1);
+            auto.addKuchen(kuch1);
+        } catch (AlreadyExistsException | FullAutomatException e) {
+            fail();
+        }
 
         Assertions.assertThrows(NoSuchElementException.class, () -> auto.swapKuchen(0, 3));
     }
@@ -414,7 +450,7 @@ class AutomatTest {
 
     //check Allergen Tests
     @Test
-    public void checkAllergenValid() throws EmptyListException, AlreadyExistsException, FullAutomatException {
+    public void checkAllergenValid() {
         Automat auto = getAutomat();
 
         //create new allergene lists
@@ -429,68 +465,84 @@ class AutomatTest {
         when(kuch6.getHersteller()).thenReturn(herst1);//mock hersteller so we can actually add them to the automat
         when(kuch7.getHersteller()).thenReturn(herst1);
 
-        auto.addHersteller(herst1);
-        auto.addKuchen(kuch6);
-        auto.addKuchen(kuch7);
+        try {
+            auto.addHersteller(herst1);
+            auto.addKuchen(kuch6);
+            auto.addKuchen(kuch7);
 
-        //System.out.println(auto.checkAllergen());//Haselnuss Erdnuss Gluten Expected
-        Assertions.assertTrue(auto.checkAllergen().contains(Allergen.Erdnuss) && auto.checkAllergen().contains(Allergen.Haselnuss) && auto.checkAllergen().contains(Allergen.Gluten));
+            //System.out.println(auto.checkAllergen());//Haselnuss Erdnuss Gluten Expected
+            Assertions.assertTrue(auto.checkAllergen().contains(Allergen.Erdnuss) && auto.checkAllergen().contains(Allergen.Haselnuss) && auto.checkAllergen().contains(Allergen.Gluten));
+        } catch (AlreadyExistsException | FullAutomatException | EmptyListException e) {
+            fail();
+        }
     }
 
     @Test
-    public void checkAllergenEmptyList() throws EmptyListException {
+    public void checkAllergenEmptyList() {
         Automat auto = getAutomat();
 
         Assertions.assertThrows(EmptyListException.class, () -> auto.checkAllergen());
     }
 
     @Test
-    public void checkAllergenNoneFound() throws EmptyListException, AlreadyExistsException, FullAutomatException, InvalidInputException {
+    public void checkAllergenNoneFound() {
         Automat auto = getAutomat();
 
-        auto.addHersteller(herst1);
+        try {
+            auto.addHersteller(herst1);
 
-        LinkedList<Allergen> allerList0 = new LinkedList<>();
+            LinkedList<Allergen> allerList0 = new LinkedList<>();
 
-        KuchenVerkaufsObjektImpl kuch6 = mock(KremkuchenImpl.class);
-        when(kuch6.getAllergene()).thenReturn(allerList0);
-        KuchenVerkaufsObjektImpl kuch7 = mock(KremkuchenImpl.class);
-        when(kuch7.getAllergene()).thenReturn(allerList0);
+            KuchenVerkaufsObjektImpl kuch6 = mock(KremkuchenImpl.class);
+            when(kuch6.getAllergene()).thenReturn(allerList0);
+            KuchenVerkaufsObjektImpl kuch7 = mock(KremkuchenImpl.class);
+            when(kuch7.getAllergene()).thenReturn(allerList0);
 
-        when(kuch6.getHersteller()).thenReturn(herst1);//mock hersteller so we can actually add them to the automat
-        when(kuch7.getHersteller()).thenReturn(herst1);
+            when(kuch6.getHersteller()).thenReturn(herst1);//mock hersteller so we can actually add them to the automat
+            when(kuch7.getHersteller()).thenReturn(herst1);
 
-        auto.addKuchen(kuch6);
-        auto.addKuchen(kuch7);
+            auto.addKuchen(kuch6);
+            auto.addKuchen(kuch7);
 
-        //list is supposed to be empty when kuchen exist but none of them have allergens
-        Assertions.assertTrue(auto.checkAllergen().isEmpty());
+            //list is supposed to be empty when kuchen exist but none of them have allergens
+            Assertions.assertTrue(auto.checkAllergen().isEmpty());
+        } catch (AlreadyExistsException | FullAutomatException | EmptyListException e) {
+            fail();
+        }
     }
 
     @Test
-    public void checkAbsentAllergenValid() throws AlreadyExistsException, FullAutomatException, EmptyListException {
+    public void checkAbsentAllergenValid() {
         Automat auto = getAutomat();
 
-        auto.addHersteller(herst1);
-        auto.addKuchen(kuch1);
+        try {
+            auto.addHersteller(herst1);
+            auto.addKuchen(kuch1);
 
-        Assertions.assertTrue(auto.checkAbsentAllergen().contains(Allergen.Gluten) && auto.checkAbsentAllergen().contains(Allergen.Sesamsamen));
+            Assertions.assertTrue(auto.checkAbsentAllergen().contains(Allergen.Gluten) && auto.checkAbsentAllergen().contains(Allergen.Sesamsamen));
+        } catch (AlreadyExistsException | FullAutomatException | EmptyListException e) {
+            fail();
+        }
     }
 
 
     //setInspectionDate Test
     @Test
-    public void setInspectionDateValid() throws AlreadyExistsException, InvalidInputException, FullAutomatException, EmptyListException {
+    public void setInspectionDateValid(){
         Automat auto = getAutomat();
 
-        auto.addHersteller(herst1);
-        auto.addKuchen(kuch1);
+        try {
+            auto.addHersteller(herst1);
+            auto.addKuchen(kuch1);
 
-        Date date = new Date(2069, 6, 9);
+            Date date = new Date(2069, 6, 9);
 
-        auto.setInspectionDate(date, 0);
+            auto.setInspectionDate(date, 0);
 
-        //check if the date in all the objects has haven changed
-        Assertions.assertEquals(date, auto.getKuchen(0).getInspektionsdatum());
+            //check if the date in all the objects has haven changed
+            Assertions.assertEquals(date, auto.getKuchen(0).getInspektionsdatum());
+        } catch (AlreadyExistsException | InvalidInputException | FullAutomatException e) {
+            fail();
+        }
     }
 }

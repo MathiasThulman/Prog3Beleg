@@ -63,7 +63,7 @@ public class AutomatGetEventListener implements EventListener<InputGetEvent> {
         this.collectionHandler = collectionHandler;
     }
 
-    private List hashmapToList(HashMap<String, Integer> hashMap){
+    private List<HerstellerNummer> hashmapToList(HashMap<String, Integer> hashMap){
         LinkedList<HerstellerNummer> hnList = new LinkedList<>();       //source: https://stackoverflow.com/questions/1066589/iterate-through-a-hashmap
         for(String key : hashMap.keySet()){
             hnList.add(new HerstellerNummer(key, hashMap.get(key)));

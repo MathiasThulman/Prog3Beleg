@@ -1,13 +1,16 @@
-package automat;
-
-import automat.Automat;
 import automat.AutomatChangeObserver;
+import automat.Automat;
 import automat.Hersteller;
 import automat.HerstellerImpl;
 import exceptions.AlreadyExistsException;
-import simulation.*;
+import simulation.AutomatSimulationWrapper;
+import simulation.CreateThread;
+import simulation.DeleteOldestThread;
+import simulation.DeleteThread;
 
-public class Simulation3 {
+public class Simulation1 {
+
+
     public static void main(String[] args) {
         String BENJAMIN = "benjamin";
         String BLUEMCHEN = "blümchen";
@@ -20,15 +23,10 @@ public class Simulation3 {
         AutomatSimulationWrapper wrapper = new AutomatSimulationWrapper();
         wrapper.setAutomat(automat);
 
-        CreateSynchronizedThread createThread1 = new CreateSynchronizedThread();
-        CreateSynchronizedThread createThread2 = new CreateSynchronizedThread();
-        CreateSynchronizedThread createThread3 = new CreateSynchronizedThread();
-        DeleteMultipleThread deleteThread1 = new DeleteMultipleThread();
-        DeleteMultipleThread deleteThread2 = new DeleteMultipleThread();
-        createThread1.setSimulationWrapper(wrapper);
-        createThread2.setSimulationWrapper(wrapper);
-        deleteThread1.setSimulationWrapper(wrapper);
-        deleteThread2.setSimulationWrapper(wrapper);
+        CreateThread createThread = new CreateThread();
+        DeleteThread deleteThread = new DeleteThread();
+        createThread.setSimulationWrapper(wrapper);
+        deleteThread.setSimulationWrapper(wrapper);
 
         try {
             automat.addHersteller(herst1);
@@ -37,10 +35,8 @@ public class Simulation3 {
         } catch (AlreadyExistsException e) {
             e.printStackTrace();
         }
-        createThread1.start();
-        deleteThread1.start();
-        createThread2.start();
-        deleteThread2.start();
-        createThread3.start();
+        createThread.start();
+        deleteThread.start();
     }
+
 }

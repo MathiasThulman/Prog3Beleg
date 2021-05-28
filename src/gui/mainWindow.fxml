@@ -9,12 +9,10 @@
    <top>
       <HBox alignment="CENTER" minWidth="100.0" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <RadioButton fx:id="sortByFachnummer" mnemonicParsing="false" selected="true" text="Nach Fachnumer sortieren">
-               <toggleGroup>
-                  <ToggleGroup fx:id="toggleGroupSort" />
-               </toggleGroup></RadioButton>
-            <RadioButton fx:id="sortByHersteller" mnemonicParsing="false" text="Nach Hersteller sortieren" toggleGroup="$toggleGroupSort" />
-            <RadioButton fx:id="sortByHaltbarkeit" mnemonicParsing="false" text="Nach Haltbarkeit Sortieren" toggleGroup="$toggleGroupSort" />
+            <Label text="Sortieren nach...." />
+            <Button fx:id="sortByFachnummer" mnemonicParsing="false" onAction="#onPressSortByFachnummer" text="Fachnummer" />
+            <Button fx:id="sortByHersteller" mnemonicParsing="false" onAction="#onPressSortByHersteller" text="Hersteller" />
+            <Button fx:id="sortByHaltbarkeit" mnemonicParsing="false" onAction="#onPressSortByHaltbarkeit" text="Haltbarkeit" />
          </children>
       </HBox>
    </top>
@@ -30,7 +28,7 @@
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
             <Label text="Errorfeld" />
-            <Label fx:id="errorText" textFill="#c91010" wrapText="true"/>
+            <Label fx:id="errorText" textFill="#c91010" wrapText="true" />
          </children></VBox>
    </right>
    <left>

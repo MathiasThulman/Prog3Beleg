@@ -1,5 +1,3 @@
-package automat;
-
 import automat.*;
 import cli.*;
 import events.*;

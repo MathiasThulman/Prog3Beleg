@@ -25,15 +25,13 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
-public class MainWindowController implements Observer{
+public class MainWindowController {
     @FXML
-    private RadioButton sortByHersteller;
+    private Button sortByHersteller;
     @FXML
-    private RadioButton sortByFachnummer;
+    private Button sortByFachnummer;
     @FXML
-    private RadioButton sortByHaltbarkeit;
-    @FXML
-    private ToggleGroup toggleGroupSort;
+    private Button sortByHaltbarkeit;
     @FXML
     private Button buttonAddHersteller;
     @FXML
@@ -92,16 +90,16 @@ public class MainWindowController implements Observer{
         this.automat = new Automat(20);
 
         //just to test initial loading
-        try {
-            this.automat.addHersteller(new HerstellerImpl("Benjamin"));
-            this.automat.addKuchen(new ObstkuchenImpl(new HerstellerImpl("Benjamin"), new HashSet<>(Arrays.asList(Allergen.Gluten)), 500, Duration.ofDays(1), new BigDecimal(500), "mais"));
-            this.automat.addKuchen(new ObstkuchenImpl(new HerstellerImpl("Benjamin"), new HashSet<>(Arrays.asList(Allergen.Gluten)), 500, Duration.ofDays(2), new BigDecimal(500), "senf"));
-        } catch (AlreadyExistsException | FullAutomatException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            this.automat.addHersteller(new HerstellerImpl("Benjamin"));
+//            this.automat.addKuchen(new ObstkuchenImpl(new HerstellerImpl("Benjamin"), new HashSet<>(Arrays.asList(Allergen.Gluten)), 500, Duration.ofDays(1), new BigDecimal(500), "mais"));
+//            this.automat.addKuchen(new ObstkuchenImpl(new HerstellerImpl("Benjamin"), new HashSet<>(Arrays.asList(Allergen.Gluten)), 500, Duration.ofDays(2), new BigDecimal(500), "senf"));
+//        } catch (AlreadyExistsException | FullAutomatException e) {
+//            e.printStackTrace();
+//        }
 
 
-
+//probably not necessary if i dont have objekts to begin with
         try {
             observableKuchenList = FXCollections.observableList(this.automat.checkKuchen());
             sortedKuchenList = new SortedList<>(this.observableKuchenList, fachnummerComp);
@@ -118,15 +116,6 @@ public class MainWindowController implements Observer{
             }
         };
 
-
-
-//        this.herstellerComp = new Comparator<KuchenVerkaufsObjekt>() {
-//            @Override
-//            public int compare(KuchenVerkaufsObjekt o1, KuchenVerkaufsObjekt o2) {
-//                return ;
-//            }
-//        };
-
         this.haltbarKeitComp = new Comparator<KuchenVerkaufsObjektImpl>() {
             @Override
             public int compare(KuchenVerkaufsObjektImpl o1, KuchenVerkaufsObjektImpl o2) {
@@ -135,20 +124,6 @@ public class MainWindowController implements Observer{
         };
 
         SortedList<KuchenVerkaufsObjektImpl> sortedList = new SortedList<KuchenVerkaufsObjektImpl>(listViewKuchen.getItems(), fachnummerComp);
-
-//        toggleGroupSort.selectedToggleProperty().addListener(new ChangeListener<RadioButton>() {
-//            @Override
-//            public void changed(ObservableValue<? extends RadioButton> observableValue, RadioButton radioButton, RadioButton t1) {
-////werte der radiobuttons vergleichen
-//                if (sortByFachnummer.equals(t1)) {
-//                    sortedList.setComparator(fachnummerComp);
-//                } else if (sortByHaltbarkeit.equals(t1)) {
-//                    sortedList.setComparator(haltbarKeitComp);
-//                } else if (sortByHersteller.equals(t1)) {
-//                    sortedList.setComparator(herstellerComp);
-//                }
-//            }
-//        });
 
         //let all numeric fields only accept numbers source: https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
         fachnummerField.textProperty().addListener(new ChangeListener<String>() {
@@ -195,9 +170,8 @@ public class MainWindowController implements Observer{
     public void onPressAddHersteller() {
         try {
             this.automat.addHersteller(new HerstellerImpl(herstellerField.getText()));
-            this.observableHerstellerList = FXCollections.observableList(hashmapToList(automat.checkHersteller()));
-
-        } catch (AlreadyExistsException | EmptyListException e) {
+            updateHersteller();
+        } catch (AlreadyExistsException e) {
             errorText.setText("Hersteller existiert bereits");
         }
         herstellerField.clear();
@@ -206,10 +180,12 @@ public class MainWindowController implements Observer{
     public void onPressRemoveHersteller() {
         try {
             this.automat.removeHersteller(herstellerField.getText());
+            updateHersteller();
         } catch (NoSuchElementException e) {
             errorText.setText("Hersteller nicht bekannt");
         }
         herstellerField.clear();
+        updateKuchen();
     }
 
     public void onPressSetInspection() {
@@ -220,6 +196,8 @@ public class MainWindowController implements Observer{
             this.automat.setInspectionDate(date, Integer.parseInt(fachnummerField.getText()));
         } catch (InvalidInputException e) {
             errorText.setText("ungültige Eingabe");
+        } catch (NoSuchElementException e){
+            errorText.setText("an dieser Stelle befindet sich kein Kuchen");
         }
     }
 
@@ -257,6 +235,8 @@ public class MainWindowController implements Observer{
         } else {
             errorText.setText("fehler bei auswahl der Kuchensorte");
         }
+        updateHersteller();
+        updateKuchen();
         //TODO clear all buttons
     }
 
@@ -269,6 +249,50 @@ public class MainWindowController implements Observer{
             errorText.setText("an dieser Fachnummer befindet sich kein Kuchen");
         }
         fachnummerField.clear();
+        updateHersteller();
+        updateKuchen();
+    }
+
+    public void onPressSortByHaltbarkeit(){
+        try {
+            sortedKuchenList = new SortedList<KuchenVerkaufsObjektImpl>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenVerkaufsObjektImpl>() {
+                @Override
+                public int compare(KuchenVerkaufsObjektImpl o1, KuchenVerkaufsObjektImpl o2) {
+                    return o1.getHaltbarkeit().compareTo(o2.getHaltbarkeit());
+                }
+            });
+        } catch (EmptyListException e) {
+            errorText.setText("automat ist leer");
+        }
+        listViewKuchen.setItems(sortedKuchenList);
+    }
+
+    public void onPressSortByFachnummer(){
+        try {
+            sortedKuchenList = new SortedList<KuchenVerkaufsObjektImpl>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenVerkaufsObjektImpl>() {
+                @Override
+                public int compare(KuchenVerkaufsObjektImpl o1, KuchenVerkaufsObjektImpl o2) {
+                    return o2.getFachnummer()-o1.getFachnummer();
+                }
+            });
+        } catch (EmptyListException e) {
+            errorText.setText("automat ist leer");
+        }
+        listViewKuchen.setItems(sortedKuchenList);
+    }
+
+    public void onPressSortByHersteller(){
+        try {
+            sortedKuchenList = new SortedList<KuchenVerkaufsObjektImpl>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenVerkaufsObjektImpl>() {
+                @Override
+                public int compare(KuchenVerkaufsObjektImpl o1, KuchenVerkaufsObjektImpl o2) {
+                    return o1.getHersteller().getName().compareTo(o2.getHersteller().getName());
+                }
+            });
+        } catch (EmptyListException e) {
+            errorText.setText("automat ist leer");
+        }
+        listViewKuchen.setItems(sortedKuchenList);
     }
 
     public void setAutomat(Automat automat) {
@@ -298,8 +322,21 @@ public class MainWindowController implements Observer{
         return hnList;
     }
 
-    @Override
-    public void update() throws EmptyListException, FullAutomatException, InvalidInputException, AlreadyExistsException {
+    private void updateKuchen(){
+        try {
+            observableKuchenList = FXCollections.observableList(this.automat.checkKuchen());
+            this.listViewKuchen.setItems(observableKuchenList);
+        } catch (EmptyListException e) {
+            e.printStackTrace();
+        }
+    }
 
+    private void updateHersteller(){
+        try {
+            this.listViewHersteller.setItems(FXCollections.observableList(this.hashmapToList(this.automat.checkHersteller())));
+            //this.observableHerstellerList = FXCollections.observableList(hashmapToList(automat.checkHersteller()));
+        } catch (EmptyListException e) {
+            errorText.setText("Keine Hersteller");
+        }
     }
 }

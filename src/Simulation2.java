@@ -1,5 +1,3 @@
-package automat;
-
 import automat.Automat;
 import automat.AutomatChangeObserver;
 import automat.Hersteller;

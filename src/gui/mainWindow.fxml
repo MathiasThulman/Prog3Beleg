@@ -17,7 +17,7 @@
       </HBox>
    </top>
    <center>
-      <SplitPane dividerPositions="0.38104089219330856" prefHeight="376.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+      <SplitPane dividerPositions="0.38104089219330856" prefHeight="376.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <items>
             <ListView fx:id="listViewHersteller" prefHeight="200.0" prefWidth="200.0" />
             <ListView fx:id="listViewKuchen" prefHeight="200.0" prefWidth="200.0" />

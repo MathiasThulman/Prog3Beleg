@@ -4,9 +4,9 @@ import events.ErrorEvent;
 import events.EventListener;
 
 public class ConsoleErrorListener implements EventListener<ErrorEvent> {
-    private final Console console;
+    private final ConsoleOld console;
 
-    public ConsoleErrorListener(Console console) {
+    public ConsoleErrorListener(ConsoleOld console) {
         this.console = console;
     }
 

@@ -23,10 +23,12 @@ public class Simulation3 {
         CreateSynchronizedThread createThread3 = new CreateSynchronizedThread();
         DeleteMultipleThread deleteThread1 = new DeleteMultipleThread();
         DeleteMultipleThread deleteThread2 = new DeleteMultipleThread();
+        InspektionThread inspektionThread1 = new InspektionThread();
         createThread1.setSimulationWrapper(wrapper);
         createThread2.setSimulationWrapper(wrapper);
         deleteThread1.setSimulationWrapper(wrapper);
         deleteThread2.setSimulationWrapper(wrapper);
+        inspektionThread1.setWrapper(wrapper);
 
         try {
             automat.addHersteller(herst1);

@@ -13,22 +13,18 @@ public class Console {
 
 
     public void read() {
-        try {
-            Scanner scanner = new Scanner(System.in);
 
-            String input = scanner.nextLine();
-            if (input.length() == 2 && input.charAt(0) == ':') {
-                changeMode(input);
-            } else if(input.length() <= 1){
-                executeCommand(input);
-            } else {
-                throw new IllegalArgumentException();
-            }
-        } catch (IllegalArgumentException ex){
+        Scanner scanner = new Scanner(System.in);
 
-        } catch (IllegalStateException ex){
-
+        String input = scanner.nextLine();
+        if (input.length() == 2 && input.charAt(0) == ':') {
+            changeMode(input);
+        } else if (input.length() >= 1) {
+            executeCommand(input);
+        } else {
+            return;
         }
+
     }
 
     public void setGetHandler(GetEventHandler<InputGetEvent> getHandler) {
@@ -54,18 +50,19 @@ public class Console {
             case ":r":
                 this.mode = InputMode.displayMode;
                 break;
-            case ":u" :
+            case ":u":
                 this.mode = InputMode.changeMode;
                 break;
             case ":p":
                 this.mode = InputMode.persistence;
                 break;
-            default: throw new IllegalArgumentException();
+            default:
+                break;
         }
     }
 
-    public void executeCommand(String input){
-        switch(this.mode){
+    public void executeCommand(String input) {
+        switch (this.mode) {
             case insertMode:
                 this.inputReader.readInsert(input);
                 break;
@@ -81,7 +78,12 @@ public class Console {
             case persistence:
                 this.inputReader.readPersistence(input);
                 break;
-            default: throw new IllegalStateException();
+            default:
+                throw new IllegalStateException();
         }
+    }
+
+    public void setInputReader(InputReader inputReader) {
+        this.inputReader = inputReader;
     }
 }

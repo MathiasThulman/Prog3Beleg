@@ -5,7 +5,6 @@ import automat.HerstellerImpl;
 import exceptions.AlreadyExistsException;
 import simulation.AutomatSimulationWrapper;
 import simulation.CreateThread;
-import simulation.DeleteOldestThread;
 import simulation.DeleteThread;
 
 public class Simulation1 {

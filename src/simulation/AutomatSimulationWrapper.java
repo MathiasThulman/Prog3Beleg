@@ -50,7 +50,7 @@ public class AutomatSimulationWrapper {
     private final KremkuchenImpl kuch10 = new KremkuchenImpl(herst3, allergList1, 250, dur1, new BigDecimal(400), SENF);
     private final KuchenVerkaufsObjektImpl[] kuchList = {kuch1, kuch2, kuch3, kuch4, kuch5, kuch6, kuch7, kuch8, kuch9, kuch10};
 
-    protected void createRandomCake() {
+    protected synchronized void createRandomCake() {
         try {
             this.automat.addKuchen(copyCake(kuchList[(int) (Math.random() * 10)]));//copyCake not pretty but will have to do until kuchen structure is different
         } catch (FullAutomatException e) {
@@ -59,7 +59,7 @@ public class AutomatSimulationWrapper {
         System.out.println("simulation added Cake");
     }
 
-    protected void removeRandomCake() {
+    protected synchronized void removeRandomCake() {
         try {
             this.automat.removeKuchen((int) (Math.random() * this.automat.checkKuchen().size()));
         } catch (InvalidInputException e) {

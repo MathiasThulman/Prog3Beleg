@@ -5,12 +5,12 @@ import events.*;
 
 import java.util.LinkedList;
 
-public class Console {
+public class ConsoleOld {
     private GetEventHandler<InputGetEvent> getHandler;
     private InputIntEventHandler<InputIntEvent> intHandler;
     private InputStringEventHandler<InputStringEvent> stringHandler;
 
-    public Console(){
+    public ConsoleOld(){
     }
 
     private static String buildCLIMenu(LinkedList<ICommand> cmds) {

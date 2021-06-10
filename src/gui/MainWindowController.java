@@ -199,6 +199,7 @@ public class MainWindowController {
         } catch (NoSuchElementException e){
             errorText.setText("an dieser Stelle befindet sich kein Kuchen");
         }
+        updateKuchen();
     }
 
     public void onPressAddKuchen() {

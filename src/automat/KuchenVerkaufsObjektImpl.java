@@ -1,16 +1,14 @@
 package automat;
 
-import automat.Allergen;
-import automat.Hersteller;
-import kuchen.KuchenTyp;
 import kuchen.KuchenVerkaufsObjekt;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Date;
 
-public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt {
+public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt, Serializable {
     private final Hersteller hersteller;
     private final Collection<Allergen> allergene;
     private final int naehrwert;
@@ -72,7 +70,7 @@ public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt {
     }
 
     public String toString(){
-        return this.hersteller.getName() + ", " + this.allergene.toString()  + ", " + this.haltbarkeit.getSeconds()  + ", "+ this.inspektionsDatum.toString() + ", "+ this.preis.toString() + ", ";
+        return this.hersteller.getName() + ", " + this.allergene.toString()  + ", " + this.haltbarkeit.toDays()  + ", "+ this.inspektionsDatum.toString() + ", "+ this.preis.toString();
     }
 
 }

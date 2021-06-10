@@ -1,5 +1,7 @@
 package automat;
 
+import events.CollectionOutputEvent;
+import events.CollectionOutputHandler;
 import events.EventType;
 import events.InputIntEvent;
 import exceptions.AlreadyExistsException;
@@ -17,72 +19,59 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class AutomatInputIntListenerTest {
 
-    @Test
-    public void addKuchenListenerTest()  {
-        Automat auto = new Automat(20);
-        AutomatInputIntListener listener = new AutomatInputIntListener();
-
-        try {
-            listener.setAutomat(auto);
-
-            auto.addHersteller(new HerstellerImpl("faustulus"));
-            InputIntEvent event = new InputIntEvent(this, EventType.addKuchen, 1);
-            listener.addEvent(event);
-
-            Assertions.assertEquals( 500,auto.getKuchen(0).getNaehrwert());
-        } catch (AlreadyExistsException | InvalidInputException e) {
-           fail();
-        }
-    }
 
     @Test
-    public void removeKuchenListenerTest() {
-        Automat auto = new Automat(20);
+    public void addEventRemoveKuchenValid() {
+        Automat auto = mock(Automat.class);
         AutomatInputIntListener listener = new AutomatInputIntListener();
-
         listener.setAutomat(auto);
-        try {
-            auto.addHersteller(new HerstellerImpl("faustulus"));
-            auto.addKuchen(new ObstkuchenImpl(new HerstellerImpl("faustulus"), new LinkedList<>(Arrays.asList(Allergen.Gluten)), 500, Duration.ofDays(7), new BigDecimal(500), "Erdbeere"));
-        } catch (AlreadyExistsException | FullAutomatException e) {
-            fail();
-        }
 
-        InputIntEvent event = new InputIntEvent(this, EventType.removeKuchen, 0);
+        InputIntEvent event = new InputIntEvent(this, EventType.removeKuchen, 1);
+
         listener.addEvent(event);
 
-        //check for exception to see if the cake at fachnummer 0 has been removed
-        Assertions.assertThrows(NoSuchElementException.class, () -> auto.getKuchen(0));
+        try {
+            verify(auto).removeKuchen(1);
+        } catch (InvalidInputException e) {
+            fail();
+        }
     }
 
     @Test
     public void getOneKuchenListenerTest(){
-        Automat auto = new Automat(20);
+        Automat auto = mock(Automat.class);
         AutomatInputIntListener listener = new AutomatInputIntListener();
+        listener.setAutomat(auto);
+        CollectionOutputHandler<CollectionOutputEvent> handler = new CollectionOutputHandler<>();//necessary to avoid nullpointer since its called with automat
+        listener.setCollectionHandler(handler);
 
-        //TODO
+        InputIntEvent event = new InputIntEvent(this, EventType.getOneKuchen, 1);
+        listener.addEvent(event);
+
+        try {
+            verify(auto).getKuchen(1);
+        } catch (InvalidInputException e) {
+            fail();
+        }
     }
 
     @Test
     public void setInspectionDateListenerTest()  {
-        Automat auto = new Automat(20);
+        Automat auto = mock(Automat.class);
+        Date date = mock(Date.class);
         AutomatInputIntListener listener = new AutomatInputIntListener();
-
         listener.setAutomat(auto);
-        try {
-            auto.addHersteller(new HerstellerImpl("faustulus"));
-            auto.addKuchen(new ObstkuchenImpl(new HerstellerImpl("faustulus"), new LinkedList<>(Arrays.asList(Allergen.Gluten)), 500, Duration.ofDays(7), new BigDecimal(500), "Erdbeere"));
-
-
-        Date date = new Date(2020, 6,6);
-        InputIntEvent event = new InputIntEvent(this, EventType.setDate, 0,date);
+        InputIntEvent event = new InputIntEvent(this, EventType.setDate, 1 ,date);
         listener.addEvent(event);
 
-        Assertions.assertEquals(date, auto.getKuchen(0).getInspektionsdatum());
-        } catch (AlreadyExistsException | FullAutomatException | InvalidInputException e) {
+        try {
+            verify(auto).setInspectionDate(date,1);
+        } catch (InvalidInputException e) {
             fail();
         }
     }

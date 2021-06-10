@@ -13,12 +13,12 @@ public class CommandFactory {
     private final String sPleaseEnterDay = "bitte geben sie den tag ein";
     private final String sPleaseEntherMonth = "bitte geben sie den monat ein";
     private final String sPleaseEnterYear = "bitte geben sie ein jahr ein";
-    private final Console console;
+    private final ConsoleOld console;
     private final String sExitMessage = "Close Program";
     private final String KUCHENWAHL = "bitte wähle einen Kuchen" + System.lineSeparator()  +
             "1. Erdbeerkuchen, hersteller faustulus" + System.lineSeparator() + "2. Butterkremkuchen, hersteller bob";
 
-    public CommandFactory(Console console){
+    public CommandFactory(ConsoleOld console){
         this.console = console;
     }
 

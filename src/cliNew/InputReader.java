@@ -28,7 +28,7 @@ public class InputReader {
     public void readInsert(String input) {
         if(input.split(" ").length == 1){
             this.stringHandler.handle(new InputStringEvent(this, EventType.addHersteller, input));
-        } else if (input.split(" ").length == 8 || input.split(" ").length == 9){
+        } else if (input.split(" ").length == 7 || input.split(" ").length == 8){
             String[] ps = input.split(" ");
 
             switch(ps[0]){
@@ -40,7 +40,7 @@ public class InputReader {
                 case KREMKUCHEN:
                     Duration dur2 = Duration.ofDays(Integer.parseInt(ps[4]));
                     KremkuchenImpl kremkuchen = new KremkuchenImpl(new HerstellerImpl(ps[1]), stringToAllergen(ps[2]), Integer.parseInt(ps[3]), dur2, new BigDecimal(Integer.parseInt(ps[5])), ps[6]);
-
+                    this.kuchenHandler.handle(new InputKuchenEvent<KremkuchenImpl>(this, EventType.addKuchen, kremkuchen));
                     break;
                 case OBSTTORTE:
                     Duration dur3 = Duration.ofDays(Integer.parseInt(ps[4]));
@@ -81,7 +81,7 @@ public class InputReader {
                             this.getHandler.handle(new InputGetEvent(this, EventType.getKuchenSpecific, ObsttorteImpl.class));
                             break;
                     }
-                } else if (input.split(" ")[0].equals("Allergene")) {
+                } else if (input.split(" ")[0].equals("allergene")) {
                     if (input.split(" ")[1].equals("i")) {
                         this.getHandler.handle(new InputGetEvent(this, EventType.getAllergene));
                     } else if (input.split(" ")[1].equals("e")) {
@@ -129,9 +129,14 @@ public class InputReader {
         Set<Allergen> set = new HashSet<>();
 
         String[] paraString = s.split(",");
-        for (String value : paraString) {
-            set.add(Allergen.valueOf(value));
+        for (int i = 0; i < paraString.length; i++) {
+            set.add(Allergen.valueOf(paraString[i]));
+            //TODO fix this
         }
         return set;
+    }
+
+    public void setKuchenHandler(InputKuchenEventHandler<InputKuchenEvent> kuchenHandler) {
+        this.kuchenHandler = kuchenHandler;
     }
 }

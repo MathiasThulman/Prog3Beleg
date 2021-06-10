@@ -9,9 +9,10 @@ import observer.Observable;
 import observer.Observer;
 
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Automat implements Observable {
+public class Automat implements Observable, Serializable {
     private final LinkedList<Hersteller> herstellerList = new LinkedList<>();
     private final KuchenVerkaufsObjektImpl[] kuchenList;
     private final LinkedList<Observer> observerList = new LinkedList<>();

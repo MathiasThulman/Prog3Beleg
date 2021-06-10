@@ -1,13 +1,12 @@
 package cli;
 
 import events.CollectionOutputEvent;
-import events.CollectionOutputListener;
 import events.EventListener;
 
 public class ConsoleCollectionOutputListener implements EventListener<CollectionOutputEvent> {
-    Console console;
+    ConsoleOld console;
 
-    public ConsoleCollectionOutputListener(Console console) {
+    public ConsoleCollectionOutputListener(ConsoleOld console) {
         this.console = console;
     }
 

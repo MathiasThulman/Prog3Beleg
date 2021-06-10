@@ -5,7 +5,7 @@ import events.*;
 public class App {
     public static void main(String[] args) {
         Automat automat = new Automat(10);
-        Console console = new Console();
+        ConsoleOld console = new ConsoleOld();
         InputStringEventHandler stringHandler = new InputStringEventHandler();
         InputIntEventHandler intHandler = new InputIntEventHandler();
         GetEventHandler getHandler = new GetEventHandler();

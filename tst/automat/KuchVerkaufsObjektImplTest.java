@@ -75,4 +75,10 @@ class KuchVerkaufsObjektImplTest {
 
         Assertions.assertEquals(fn1, kuch1.getFachnummer());
     }
+
+    @Test
+    public void toStringValid(){
+        kuch1.setInspektionsDatum(date1);//to avoid nullpointer exception
+        Assertions.assertEquals("aioli, Adidas, [Erdnuss, Haselnuss], 5, Sun May 09 00:00:00 CEST 3920, 500", kuch1.toString());
+    }
 }

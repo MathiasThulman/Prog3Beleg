@@ -18,18 +18,26 @@ public class CLInewMain {
         InputKuchenEventHandler<InputKuchenEvent> kuchenHandler = new InputKuchenEventHandler<>();
         ErrorEventHandler<ErrorEvent> errorHandler = new ErrorEventHandler<>();
         CollectionOutputHandler<CollectionOutputEvent> collectionHandler = new CollectionOutputHandler<>();
+        AutomatWrapper automatWrapper = new AutomatWrapper();
+        automatWrapper.setAutomat(automat);
+
 
         AutomatInputStringListener autoStringListener = new AutomatInputStringListener();
-        autoStringListener.setAutomat(automat);
+        AutomatInputKuchenListener kuchenListener = new AutomatInputKuchenListener();
+        kuchenHandler.add(kuchenListener);
+        kuchenListener.setAutomatWrapper(automatWrapper);
+        kuchenListener.setErrorHandler(errorHandler);
+        autoStringListener.setAutomatWrapper(automatWrapper);
         stringHandler.add(autoStringListener);
         reader.setStringHandler(stringHandler);
         AutomatInputIntListener autoIntListener = new AutomatInputIntListener();
-        autoIntListener.setAutomat(automat);
+        autoIntListener.setAutomatWrapper(automatWrapper);
         intHandler.add(autoIntListener);
         reader.setIntHandler(intHandler);
         AutomatGetEventListener autoGetListner = new AutomatGetEventListener();
-        autoGetListner.setAutomat(automat);
+        autoGetListner.setAutomatWrapper(automatWrapper);
         getHandler.add(autoGetListner);
+        autoGetListner.setErrorHandler(errorHandler);
         reader.setGetHandler(getHandler);
         reader.setKuchenHandler(kuchenHandler);
 
@@ -41,6 +49,9 @@ public class CLInewMain {
         collectionOutPutListener.setConsole(view);
         autoGetListner.setCollectionHandler(collectionHandler);
         autoIntListener.setCollectionHandler(collectionHandler);
+        autoStringListener.setErrorHandler(errorHandler);
+        autoGetListner.setErrorHandler(errorHandler);
+        autoIntListener.setErrorhandler(errorHandler);
 
         AutomatCapacityObserver capacityObserver = new AutomatCapacityObserver(automat);
         AutomatAllergenObserver allergenObserver = new AutomatAllergenObserver(automat);

@@ -11,17 +11,19 @@ public class App {
         GetEventHandler getHandler = new GetEventHandler();
         ErrorEventHandler errorHandler = new ErrorEventHandler();
         CollectionOutputHandler collectionHandler = new CollectionOutputHandler();
+        AutomatWrapper wrapper = new AutomatWrapper();
+        wrapper.setAutomat(automat);
 
         AutomatInputStringListener autoStringListener = new AutomatInputStringListener();
-        autoStringListener.setAutomat(automat);
+        autoStringListener.setAutomatWrapper(wrapper);
         stringHandler.add(autoStringListener);
         console.setStringHandler(stringHandler);
         AutomatInputIntListener autoIntListener = new AutomatInputIntListener();
-        autoIntListener.setAutomat(automat);
+        autoIntListener.setAutomatWrapper(wrapper);
         intHandler.add(autoIntListener);
         console.setIntHandler(intHandler);
         AutomatGetEventListener autoGetListner = new AutomatGetEventListener();
-        autoGetListner.setAutomat(automat);
+        autoGetListner.setAutomatWrapper(wrapper);
         getHandler.add(autoGetListner);
         console.setGetHandler(getHandler);
 

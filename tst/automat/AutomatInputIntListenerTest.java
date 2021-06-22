@@ -28,8 +28,10 @@ public class AutomatInputIntListenerTest {
     @Test
     public void addEventRemoveKuchenValid() {
         Automat auto = mock(Automat.class);
+        AutomatWrapper wrapper = new AutomatWrapper();
+        wrapper.setAutomat(auto);
         AutomatInputIntListener listener = new AutomatInputIntListener();
-        listener.setAutomat(auto);
+        listener.setAutomatWrapper(wrapper);
 
         InputIntEvent event = new InputIntEvent(this, EventType.removeKuchen, 1);
 
@@ -45,8 +47,10 @@ public class AutomatInputIntListenerTest {
     @Test
     public void getOneKuchenListenerTest(){
         Automat auto = mock(Automat.class);
+        AutomatWrapper wrapper = new AutomatWrapper();
+        wrapper.setAutomat(auto);
         AutomatInputIntListener listener = new AutomatInputIntListener();
-        listener.setAutomat(auto);
+        listener.setAutomatWrapper(wrapper);
         CollectionOutputHandler<CollectionOutputEvent> handler = new CollectionOutputHandler<>();//necessary to avoid nullpointer since its called with automat
         listener.setCollectionHandler(handler);
 
@@ -64,8 +68,10 @@ public class AutomatInputIntListenerTest {
     public void setInspectionDateListenerTest()  {
         Automat auto = mock(Automat.class);
         Date date = mock(Date.class);
+        AutomatWrapper wrapper = new AutomatWrapper();
+        wrapper.setAutomat(auto);
         AutomatInputIntListener listener = new AutomatInputIntListener();
-        listener.setAutomat(auto);
+        listener.setAutomatWrapper(wrapper);
         InputIntEvent event = new InputIntEvent(this, EventType.setDate, 1 ,date);
         listener.addEvent(event);
 

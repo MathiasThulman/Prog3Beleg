@@ -1,5 +1,6 @@
 package cliNew;
 
+import automat.Kremkuchen;
 import events.*;
 import kuchen.KremkuchenImpl;
 import org.junit.jupiter.api.Assertions;
@@ -31,7 +32,7 @@ public class InputReaderTest {
         InputKuchenEventHandler<InputKuchenEvent> handler = mock(InputKuchenEventHandler.class);
         reader.setKuchenHandler(handler);
 
-        reader.readInsert("Kremkuchen Friedrich Gluten,Erdnuss 400 4 20 Senf");
+        reader.readInsert("Kremkuchen Friedrich 4 400 20 Gluten,Erdnuss Senf");
         ArgumentCaptor<InputKuchenEvent> argument = ArgumentCaptor.forClass(InputKuchenEvent.class);
         verify(handler).handle(argument.capture());
 
@@ -129,9 +130,4 @@ public class InputReaderTest {
         Assertions.assertEquals(EventType.getAbsentAllergene, argument.getValue().getType());
     }
 
-    @Test
-    public void redChangeValid(){
-        fail();
-        //TODO immer aktuelles datum?
-    }
 }

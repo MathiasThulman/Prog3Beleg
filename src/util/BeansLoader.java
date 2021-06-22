@@ -1,28 +1,62 @@
 package util;
 
-import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
+import automat.Automat;
+import automat.HerstellerImpl;
+import automat.KuchenVerkaufsObjektImpl;
+
+import java.beans.*;
 import java.io.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
+import java.util.List;
 
 public class BeansLoader {
 
-    public void encode(Object object, String fileName) {
+    public void encodeHersteller(HerstellerImpl object, String fileName) {
         try (XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(fileName)));) {
+            encoder.setPersistenceDelegate(HerstellerImpl.class,new DefaultPersistenceDelegate(new String[] {"name"}));
             encoder.writeObject(object);
         } catch (Exception e) {
-
         }
     }
 
-    public LinkedList decode(String fileName) {
+    public HerstellerImpl decodeHersteller(String fileName) {
         try (XMLDecoder decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(fileName)));) {
-            return new LinkedList (Collections.singletonList(decoder.readObject()));
+            return (HerstellerImpl) decoder.readObject();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         return null;
     }
+
+    public void encodeKuchen(KuchenVerkaufsObjektImpl object, String fileName){
+        try (XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(fileName)));) {
+            encoder.setPersistenceDelegate(KuchenVerkaufsObjektImpl.class,new DefaultPersistenceDelegate(new String[] {"hersteller", "allergene", "naehrwert", "durationInMS", "stringBigDecimal"}));
+            encoder.setPersistenceDelegate(HerstellerImpl.class,new DefaultPersistenceDelegate(new String[] {"name"}));
+            encoder.writeObject(object);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public KuchenVerkaufsObjektImpl decodeKuchen(String fileName){
+        try (XMLDecoder decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(fileName)));) {
+            return (KuchenVerkaufsObjektImpl) decoder.readObject();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void encodeAutomat(Automat automat, String fileName){
+        try (XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(fileName)));) {
+            encoder.setPersistenceDelegate(Automat.class,new DefaultPersistenceDelegate(new String[]{"fachzahl"}));
+            encoder.setPersistenceDelegate(KuchenVerkaufsObjektImpl.class,new DefaultPersistenceDelegate(new String[] {"hersteller", "allergene", "naehrwert", "durationInMS", "stringBigDecimal"}));
+            encoder.setPersistenceDelegate(HerstellerImpl.class,new DefaultPersistenceDelegate(new String[] {"name"}));
+            encoder.writeObject(automat);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

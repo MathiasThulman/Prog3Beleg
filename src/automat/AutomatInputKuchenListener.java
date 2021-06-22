@@ -7,20 +7,20 @@ import events.InputKuchenEvent;
 import exceptions.FullAutomatException;
 
 public class AutomatInputKuchenListener implements EventListener<InputKuchenEvent> {
-    Automat automat;
-    ErrorEventHandler<ErrorEvent> errorHandler;
+    private AutomatWrapper automatWrapper;
+    private ErrorEventHandler<ErrorEvent> errorHandler;
 
     @Override
     public void addEvent(InputKuchenEvent event) {
         try {
-            this.automat.addKuchen(event.getKuchenObjekt());
+            this.automatWrapper.getAutomat().addKuchen(event.getKuchenObjekt());
         } catch (FullAutomatException e) {
             this.errorHandler.handle(new ErrorEvent(this, "der Automat ist voll"));
         }
     }
 
-    public void setAutomat(Automat automat) {
-        this.automat = automat;
+    public void setAutomatWrapper(AutomatWrapper wrapper) {
+        this.automatWrapper = wrapper;
     }
 
     public void setErrorHandler(ErrorEventHandler<ErrorEvent> errorHandler) {

@@ -13,5 +13,7 @@ public enum EventType {
     setDate,
     getOneKuchen,
     collectionOutput,
-    error
+    error,
+    saveAutomat,
+    loadAutomat
 }

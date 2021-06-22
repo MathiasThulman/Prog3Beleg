@@ -25,6 +25,14 @@ public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt, Serializa
         this.preis = preis;
     }
 
+    //for beans persistence
+    public KuchenVerkaufsObjektImpl(Hersteller hersteller, Collection<Allergen> allergene, int naehrwert, long haltbarkeit, String preis) {
+        this.hersteller = hersteller;
+        this.allergene = allergene;
+        this.naehrwert = naehrwert;
+        this.haltbarkeit = Duration.ofMillis(haltbarkeit);
+        this.preis = new BigDecimal(preis);
+    }
 
     @Override
     public Hersteller getHersteller() {
@@ -71,6 +79,14 @@ public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt, Serializa
 
     public String toString(){
         return this.hersteller.getName() + ", " + this.allergene.toString()  + ", " + this.haltbarkeit.toDays()  + ", "+ this.inspektionsDatum.toString() + ", "+ this.preis.toString();
+    }
+
+    public long getDurationInMS(){
+        return this.haltbarkeit.toMillis();
+    }
+
+    public String getStringBigDecimal(){
+        return this.preis.toString();
     }
 
 }

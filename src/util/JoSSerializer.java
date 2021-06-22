@@ -5,7 +5,7 @@ import automat.Automat;
 import java.io.*;
 import java.util.Collection;
 
-public class AutomatSerializer {
+public class JoSSerializer {
 
     public void serialize(String filename, Automat item){
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {

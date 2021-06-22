@@ -15,8 +15,10 @@ public class AutomatInputStringListenerTest {
     public void addHerstellerListenerTest() {
         Automat auto = new Automat(20);
         AutomatInputStringListener listener = new AutomatInputStringListener();
+        AutomatWrapper wrapper = new AutomatWrapper();
+        wrapper.setAutomat(auto);
 
-        listener.setAutomat(auto);
+        listener.setAutomatWrapper(wrapper);
 
         InputStringEvent event = new InputStringEvent(this, EventType.addHersteller,"Guy Fiery");
         listener.addEvent(event);
@@ -32,8 +34,10 @@ public class AutomatInputStringListenerTest {
     public void removeHerstellerListenerTest() {
         Automat auto = new Automat(20);
         AutomatInputStringListener listener = new AutomatInputStringListener();
+        AutomatWrapper wrapper = new AutomatWrapper();
+        wrapper.setAutomat(auto);
 
-        listener.setAutomat(auto);
+        listener.setAutomatWrapper(wrapper);
 
         HerstellerImpl gf = new HerstellerImpl("Guy Fiery");
         try {

@@ -30,21 +30,22 @@ public class InputReader {
             this.stringHandler.handle(new InputStringEvent(this, EventType.addHersteller, input));
         } else if (input.split(" ").length == 7 || input.split(" ").length == 8){
             String[] ps = input.split(" ");
+            //TODO change price string to you can write bigdecimal with ,
 
             switch(ps[0]){
                 case OBSTKUCHEN:
                     Duration dur1 = Duration.ofDays(Integer.parseInt(ps[4]));
-                    ObstkuchenImpl obstkuchen = new ObstkuchenImpl(new HerstellerImpl(ps[1]), stringToAllergen(ps[2]), Integer.parseInt(ps[3]), dur1, new BigDecimal(Integer.parseInt(ps[5])), ps[6]);
+                    ObstkuchenImpl obstkuchen = new ObstkuchenImpl(new HerstellerImpl(ps[1]), stringToAllergen(ps[5]), Integer.parseInt(ps[3]), dur1, new BigDecimal((ps[2])), ps[6]);
                     this.kuchenHandler.handle(new InputKuchenEvent<ObstkuchenImpl>(this, EventType.addKuchen, obstkuchen));
                     break;
                 case KREMKUCHEN:
                     Duration dur2 = Duration.ofDays(Integer.parseInt(ps[4]));
-                    KremkuchenImpl kremkuchen = new KremkuchenImpl(new HerstellerImpl(ps[1]), stringToAllergen(ps[2]), Integer.parseInt(ps[3]), dur2, new BigDecimal(Integer.parseInt(ps[5])), ps[6]);
+                    KremkuchenImpl kremkuchen = new KremkuchenImpl(new HerstellerImpl(ps[1]), stringToAllergen(ps[5]), Integer.parseInt(ps[3]), dur2, new BigDecimal((ps[2])), ps[6]);
                     this.kuchenHandler.handle(new InputKuchenEvent<KremkuchenImpl>(this, EventType.addKuchen, kremkuchen));
                     break;
                 case OBSTTORTE:
                     Duration dur3 = Duration.ofDays(Integer.parseInt(ps[4]));
-                    ObsttorteImpl obsttorte = new ObsttorteImpl(new HerstellerImpl(ps[1]), stringToAllergen(ps[2]), Integer.parseInt(ps[3]), dur3, new BigDecimal(Integer.parseInt(ps[5])), ps[6], ps[7]);
+                    ObsttorteImpl obsttorte = new ObsttorteImpl(new HerstellerImpl(ps[1]), stringToAllergen(ps[5]), Integer.parseInt(ps[3]), dur3, new BigDecimal((ps[2])), ps[6], ps[7]);
                     this.kuchenHandler.handle(new InputKuchenEvent<ObsttorteImpl>(this, EventType.addKuchen, obsttorte));
                     break;
             }
@@ -94,14 +95,20 @@ public class InputReader {
 
     public void readChange(String input) {
         if(isNumeric(input)){
-            this.intHandler.handle(new InputIntEvent(this, EventType.removeKuchen,Integer.parseInt(input)));
-        } else {
-            this.stringHandler.handle(new InputStringEvent(this, EventType.remHersteller, input));
+            try {
+                this.intHandler.handle(new InputIntEvent(this, EventType.setDate, Integer.parseInt(input)));
+            } catch (NumberFormatException e) {
+                System.out.println("Falsches nummernformat");;
+            }
         }
     }
 
     public void readPersistence(String input) {
-
+        if(input.equals("saveJOS") ){
+            getHandler.handle(new InputGetEvent(this, EventType.saveAutomat));
+        } else if (input.equals("loadJOS")){
+            getHandler.handle(new InputGetEvent(this, EventType.loadAutomat));
+        }
     }
 
     private boolean isNumeric(String str) {         //source: https://stackoverflow.com/questions/1102891/how-to-check-if-a-string-is-numeric-in-java
@@ -127,11 +134,17 @@ public class InputReader {
 
     private Set<Allergen> stringToAllergen(String s) {
         Set<Allergen> set = new HashSet<>();
+        if(s.equals(",")){
+            return set;
+        }
 
-        String[] paraString = s.split(",");
-        for (int i = 0; i < paraString.length; i++) {
-            set.add(Allergen.valueOf(paraString[i]));
-            //TODO fix this
+        try {
+            String[] paraString = s.split(",");
+            for (int i = 0; i < paraString.length; i++) {
+                set.add(Allergen.valueOf(paraString[i]));
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Illegales Argument, Allergene falsch Eingegeben");;
         }
         return set;
     }

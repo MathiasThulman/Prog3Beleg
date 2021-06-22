@@ -15,9 +15,11 @@ public class AutomatGetEvenListenerTest {
     @Test
     public void addEventgetHerstellerValid(){
         Automat auto = mock(Automat.class);
+        AutomatWrapper wrapper = new AutomatWrapper();
+        wrapper.setAutomat(auto);
 
         AutomatGetEventListener listener = new AutomatGetEventListener();
-        listener.setAutomat(auto);
+        listener.setAutomatWrapper(wrapper);
         CollectionOutputHandler<CollectionOutputEvent> handler = new CollectionOutputHandler<>(); //needed to avoid nullpointer since it gets called with automat
         listener.setCollectionHandler(handler);
         InputGetEvent event = new InputGetEvent(this, EventType.getHersteller);
@@ -33,9 +35,11 @@ public class AutomatGetEvenListenerTest {
     @Test
     public void addEventGetKuchenValid(){
         Automat auto = mock(Automat.class);
+        AutomatWrapper wrapper = new AutomatWrapper();
+        wrapper.setAutomat(auto);
 
         AutomatGetEventListener listener = new AutomatGetEventListener();
-        listener.setAutomat(auto);
+        listener.setAutomatWrapper(wrapper);
         CollectionOutputHandler<CollectionOutputEvent> handler = new CollectionOutputHandler<>(); //needed to avoid nullpointer since it gets called with automat
         listener.setCollectionHandler(handler);
         InputGetEvent event = new InputGetEvent(this, EventType.getKuchen);
@@ -51,9 +55,11 @@ public class AutomatGetEvenListenerTest {
     @Test
     public void addEventGetKuchenSpecificValid(){
         Automat auto = mock(Automat.class);
+        AutomatWrapper wrapper = new AutomatWrapper();
+        wrapper.setAutomat(auto);
 
         AutomatGetEventListener listener = new AutomatGetEventListener();
-        listener.setAutomat(auto);
+        listener.setAutomatWrapper(wrapper);
         CollectionOutputHandler<CollectionOutputEvent> handler = new CollectionOutputHandler<>(); //needed to avoid nullpointer since it gets called with automat
         listener.setCollectionHandler(handler);
         InputGetEvent event = new InputGetEvent(this, EventType.getKuchenSpecific, KremkuchenImpl.class);
@@ -69,9 +75,11 @@ public class AutomatGetEvenListenerTest {
     @Test
     public void addEventGetAllergeneValid(){
         Automat auto = mock(Automat.class);
+        AutomatWrapper wrapper = new AutomatWrapper();
+        wrapper.setAutomat(auto);
 
         AutomatGetEventListener listener = new AutomatGetEventListener();
-        listener.setAutomat(auto);
+        listener.setAutomatWrapper(wrapper);
         CollectionOutputHandler<CollectionOutputEvent> handler = new CollectionOutputHandler<>(); //needed to avoid nullpointer since it gets called with automat
         listener.setCollectionHandler(handler);
         InputGetEvent event = new InputGetEvent(this, EventType.getAllergene);
@@ -87,9 +95,11 @@ public class AutomatGetEvenListenerTest {
     @Test
     public void addEventGetAbsentAllergeneValid(){
         Automat auto = mock(Automat.class);
+        AutomatWrapper wrapper = new AutomatWrapper();
+        wrapper.setAutomat(auto);
 
         AutomatGetEventListener listener = new AutomatGetEventListener();
-        listener.setAutomat(auto);
+        listener.setAutomatWrapper(wrapper);
         CollectionOutputHandler<CollectionOutputEvent> handler = new CollectionOutputHandler<>(); //needed to avoid nullpointer since it gets called with automat
         listener.setCollectionHandler(handler);
         InputGetEvent event = new InputGetEvent(this, EventType.getAbsentAllergene);

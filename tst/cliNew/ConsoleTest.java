@@ -7,8 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 
 public class ConsoleTest {
@@ -18,85 +17,87 @@ public class ConsoleTest {
     @Test
     public void executeCommandInsertValid(){
         try {
-            final String Gunther = "Gunther";
-            System.setIn( new ByteArrayInputStream(Gunther.getBytes()));
-
             Console console = new Console();
             InputReader reader = mock(InputReader.class);
             console.setInputReader(reader);
-            //create field to put cli into proper mode
-            final Field field = console.getClass().getDeclaredField(MODE);
-            field.setAccessible(true);
-            field.set(console, InputMode.insertMode);
+
+            final String c = ":c";
+            System.setIn(new ByteArrayInputStream(c.getBytes()));
+            console.read();
+
+            final String Gunther = "Gunther";
+            System.setIn( new ByteArrayInputStream(Gunther.getBytes()));
+
             console.read();
 
             verify(reader).readInsert(Gunther);
+
+        } finally {
             System.setIn(System.in);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-           fail();
         }
     }
 
     @Test
     public void executeCommandDeleteValid(){
         try {
-            System.setIn( new ByteArrayInputStream("2".getBytes()));
-
             Console console = new Console();
             InputReader reader = mock(InputReader.class);
             console.setInputReader(reader);
-            //create field to put cli into proper mode
-            final Field field = console.getClass().getDeclaredField(MODE);
-            field.setAccessible(true);
-            field.set(console, InputMode.deleteMode);
+
+            final String d = ":d";
+            System.setIn(new ByteArrayInputStream(d.getBytes()));
+            console.read();
+
+            System.setIn( new ByteArrayInputStream("2".getBytes()));
+
             console.read();
 
             verify(reader).readDelete("2");
+
+        }  finally {
             System.setIn(System.in);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            fail();
         }
     }
 
     @Test
     public void executeCommandDisplayValid(){
         try {
-            System.setIn( new ByteArrayInputStream("hersteller".getBytes()));
-
             Console console = new Console();
             InputReader reader = mock(InputReader.class);
             console.setInputReader(reader);
-            //create field to put cli into proper mode
-            final Field field = console.getClass().getDeclaredField(MODE);
-            field.setAccessible(true);
-            field.set(console, InputMode.displayMode);
+
+            final String r = ":r";
+            System.setIn(new ByteArrayInputStream(r.getBytes()));
+            console.read();
+
+            System.setIn( new ByteArrayInputStream("hersteller".getBytes()));
             console.read();
 
             verify(reader).readDisplay("hersteller");
             System.setIn(System.in);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            fail();
+        }  finally {
+            System.setIn(System.in);
         }
     }
 
     @Test
     public void executeCommandChangeValid(){
         try {
-            System.setIn( new ByteArrayInputStream("5".getBytes()));
-
             Console console = new Console();
             InputReader reader = mock(InputReader.class);
             console.setInputReader(reader);
-            //create field to put cli into proper mode
-            final Field field = console.getClass().getDeclaredField(MODE);
-            field.setAccessible(true);
-            field.set(console, InputMode.changeMode);
+
+            final String r = ":r";
+            System.setIn(new ByteArrayInputStream(r.getBytes()));
+            console.read();
+
+            System.setIn( new ByteArrayInputStream("5".getBytes()));
             console.read();
 
             verify(reader).readChange("5");
             System.setIn(System.in);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            fail();
+        }  finally {
+            System.setIn(System.in);
         }
     }
 }

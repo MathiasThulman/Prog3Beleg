@@ -1,22 +1,34 @@
-import automat.HerstellerImpl;
+import automat.*;
+import exceptions.AlreadyExistsException;
+import exceptions.FullAutomatException;
 import util.BeansLoader;
 
+import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
 
 public class BeansMain {
+
     public static void main(String[] args) {
+
+//        saving/loading hersteller
         HerstellerImpl Frank = new HerstellerImpl("Frank");
-        HerstellerImpl Guide = new HerstellerImpl("Guide");
-        HerstellerImpl Faustulus = new HerstellerImpl("Faustulus");
-        LinkedList<HerstellerImpl> list = new LinkedList<>(Arrays.asList(Frank, Guide, Faustulus));
-        System.out.println(list + list.toString());
+        System.out.println(Frank + Frank.getName());
 
         BeansLoader loader = new BeansLoader();
+        loader.encodeHersteller(Frank, "beansFile1");
+        HerstellerImpl loadedHerst = loader.decodeHersteller("beansFile1");
 
-        loader.encode(list, "que");
-        LinkedList<HerstellerImpl> loadedList= loader.decode("que");
-        System.out.println(loadedList + loadedList.toString());
+        System.out.println(loadedHerst + loadedHerst.getName());
+
+        KuchenVerkaufsObjektImpl kuchen = new KuchenVerkaufsObjektImpl(new HerstellerImpl("Frank"), new HashSet<>(Collections.singletonList(Allergen.Gluten)), 1000, Duration.ofDays(3), new BigDecimal(200));
+//        System.out.println(kuchen + kuchen.getHersteller().getName()); this does not work  because beans is very reasonable
+        loader.encodeKuchen(kuchen, "beansFile2");
+
+        KuchenVerkaufsObjektImpl loadedKuchen = loader.decodeKuchen("beansFile2");
+//        System.out.println(loadedKuchen + loadedKuchen.getHersteller().getName());
     }
 }

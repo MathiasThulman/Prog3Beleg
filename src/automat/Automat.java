@@ -278,4 +278,8 @@ public class Automat implements Observable, Serializable {
     public int getKuchenCounter() {
         return kuchenCounter;
     }
+
+    public int getFachzahl(){
+        return this.kuchenList.length;
+    }
 }

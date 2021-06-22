@@ -16,9 +16,11 @@ public class AutomaKuchenInputListenerTest {
     public void addEventValid(){
         KremkuchenImpl kuch = mock(KremkuchenImpl.class);
         Automat auto = mock(Automat.class);
+        AutomatWrapper wrapper = new AutomatWrapper();
+        wrapper.setAutomat(auto);
 
         AutomatInputKuchenListener listener = new AutomatInputKuchenListener();
-        listener.setAutomat(auto);
+        listener.setAutomatWrapper(wrapper);
         InputKuchenEvent<KremkuchenImpl> event = new InputKuchenEvent(this, EventType.addKuchen, kuch);
 
         listener.addEvent(event);

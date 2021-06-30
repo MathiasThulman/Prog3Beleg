@@ -92,10 +92,9 @@ public class AutomatSimulationWrapper {
         }
     }
 
-    protected void causeInspection() {
+    protected synchronized void causeInspection() {
         try {
-            Date andyDate = new Date(2020, 6, 9);
-            this.automat.setInspectionDate(andyDate, (int) (Math.random() * this.automat.checkKuchen().size()));
+            this.automat.setInspectionDate((int) (Math.random() * this.automat.checkKuchen().size()));
             System.out.println("Simulation inspektion");
         } catch (InvalidInputException e) {
             System.out.println("simulation inspektion: invalid input");

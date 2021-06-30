@@ -193,7 +193,7 @@ public class MainWindowController {
         LocalDate localDate = datePicker.getValue();
         Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
         try {
-            this.automat.setInspectionDate(date, Integer.parseInt(fachnummerField.getText()));
+            this.automat.setInspectionDate(Integer.parseInt(fachnummerField.getText()));
         } catch (InvalidInputException e) {
             errorText.setText("ungültige Eingabe");
         } catch (NoSuchElementException e){

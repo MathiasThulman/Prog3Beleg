@@ -88,12 +88,6 @@ public class SimulationWrapperTest {
         auto.addKuchen(kuch1);
         auto.addKuchen(kuch2);
 
-        Date date1 = new Date(1980, Calendar.JANUARY, 1);
-        Date date2 = new Date(2000, Calendar.JANUARY, 3);
-
-        auto.setInspectionDate(date1, 0);
-        auto.setInspectionDate(date2, 1);
-
         wrapper.removeOldestCake();
         //oldest cake should be removed check by Naehrwert if the correct one is still there
         Assertions.assertEquals(500, auto.checkKuchen().get(0).getNaehrwert());
@@ -109,11 +103,8 @@ public class SimulationWrapperTest {
         auto.addKuchen(kuch1);
         auto.addKuchen(kuch2);
 
-        Date date1 = new Date(1980, Calendar.JANUARY, 1);
-        Date date2 = new Date(2000, Calendar.JANUARY, 3);
-
-        auto.setInspectionDate(date1, 0);
-        auto.setInspectionDate(date2, 1);
+        auto.setInspectionDate(0);
+        auto.setInspectionDate(1);
 
         wrapper.removeOldestCakeSynchronized();
         //oldest cake should be removed check by Naehrwert if the correct one is still there
@@ -128,8 +119,7 @@ public class SimulationWrapperTest {
 
         wrapper.causeInspection();
 
-        Date testDate = new Date(2020, 6,9);
-        verify(auto).setInspectionDate(testDate,0);
+        verify(auto).setInspectionDate(0);
     }
 
     @Test

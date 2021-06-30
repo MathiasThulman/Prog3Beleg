@@ -12,13 +12,6 @@ public class InputIntEvent extends Event {
         this.inputInt = inputInt;
     }
 
-    //not very pretty?
-    public InputIntEvent(Object source,EventType type, int inputInt, Date date) {
-        super(source, type);
-        this.inputInt = inputInt;
-        this.inputDate = date;
-    }
-
     public int getInputInt() {
         return inputInt;
     }

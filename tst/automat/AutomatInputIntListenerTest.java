@@ -76,7 +76,7 @@ public class AutomatInputIntListenerTest {
         listener.addEvent(event);
 
         try {
-            verify(auto).setInspectionDate(date,1);
+            verify(auto).setInspectionDate(1);
         } catch (InvalidInputException e) {
             fail();
         }

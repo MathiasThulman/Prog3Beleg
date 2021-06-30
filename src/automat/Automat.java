@@ -223,10 +223,10 @@ public class Automat implements Observable, Serializable {
         return res;
     }
 
-    synchronized public void setInspectionDate(Date date, int fachnummer) throws InvalidInputException {
+    synchronized public void setInspectionDate(int fachnummer) throws InvalidInputException {
         checkNumber(fachnummer);
 
-        this.kuchenList[fachnummer].setInspektionsDatum(date);
+        this.kuchenList[fachnummer].setInspektionsDatum(Calendar.getInstance().getTime());
         notifyObservers();
     }
 

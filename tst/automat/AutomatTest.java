@@ -10,8 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 import java.math.BigDecimal;
@@ -533,14 +532,14 @@ class AutomatTest {
 
         try {
             auto.addHersteller(herst1);
-            auto.addKuchen(kuch1);
+            KremkuchenImpl kuchenMock = mock(KremkuchenImpl.class);
+            when(kuchenMock.getHersteller()).thenReturn(herst1);
 
-            Date date = new Date(2069, 6, 9);
+            auto.addKuchen(kuchenMock);
+            auto.setInspectionDate(0);
 
-            auto.setInspectionDate(date, 0);
-
-            //check if the date in all the objects has haven changed
-            Assertions.assertEquals(date, auto.getKuchen(0).getInspektionsdatum());
+            //called 2 times since it is also called on adding the cake
+           verify(kuchenMock, times(2)).setInspektionsDatum(any());
         } catch (AlreadyExistsException | InvalidInputException | FullAutomatException e) {
             fail();
         }

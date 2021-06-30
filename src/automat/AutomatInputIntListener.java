@@ -64,7 +64,7 @@ public class AutomatInputIntListener implements EventListener<InputIntEvent> {
                 break;
             case setDate:
                 try {
-                    this.automatWrapper.getAutomat().setInspectionDate(event.getInputDate(), event.getInputInt());
+                    this.automatWrapper.getAutomat().setInspectionDate(event.getInputInt());
                 } catch (InvalidInputException e) {
                     this.errorhandler.handle(new ErrorEvent(this, "Ungültige Eingabe"));;
                 }catch (NoSuchElementException e){

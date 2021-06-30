@@ -15,7 +15,7 @@ import java.util.*;
 public class Automat implements Observable, Serializable {
     private final LinkedList<Hersteller> herstellerList = new LinkedList<>();
     private final KuchenVerkaufsObjektImpl[] kuchenList;
-    private final LinkedList<Observer> observerList = new LinkedList<>();
+    private final transient LinkedList<Observer> observerList = new LinkedList<>();
     private volatile int kuchenCounter = 0;
 
     public Automat(int fachzahl) {
@@ -264,13 +264,11 @@ public class Automat implements Observable, Serializable {
 
     @Override
     public void notifyObservers() {
+        if(observerList!=null)
         for (Observer observer : this.observerList) {
             try {
                 observer.update();//why does this throw every exception under the sun ??
-            } catch (EmptyListException e) {
-            } catch (FullAutomatException e) {
-            } catch (InvalidInputException e) {
-            } catch (AlreadyExistsException e) {
+            } catch (EmptyListException | NullPointerException | AlreadyExistsException | InvalidInputException | FullAutomatException e) {
             }
         }
     }

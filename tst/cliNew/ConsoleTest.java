@@ -87,7 +87,7 @@ public class ConsoleTest {
             InputReader reader = mock(InputReader.class);
             console.setInputReader(reader);
 
-            final String r = ":r";
+            final String r = ":u";
             System.setIn(new ByteArrayInputStream(r.getBytes()));
             console.read();
 

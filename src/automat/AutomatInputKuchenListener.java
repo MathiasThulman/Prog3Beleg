@@ -6,6 +6,8 @@ import events.EventListener;
 import events.InputKuchenEvent;
 import exceptions.FullAutomatException;
 
+import java.util.NoSuchElementException;
+
 public class AutomatInputKuchenListener implements EventListener<InputKuchenEvent> {
     private AutomatWrapper automatWrapper;
     private ErrorEventHandler<ErrorEvent> errorHandler;
@@ -16,6 +18,8 @@ public class AutomatInputKuchenListener implements EventListener<InputKuchenEven
             this.automatWrapper.getAutomat().addKuchen(event.getKuchenObjekt());
         } catch (FullAutomatException e) {
             this.errorHandler.handle(new ErrorEvent(this, "der Automat ist voll"));
+        } catch (NoSuchElementException e){
+            this.errorHandler.handle(new ErrorEvent(this, "Es wurde kein Hersteller zu diesem Kuchen gefuden"));
         }
     }
 

@@ -3,10 +3,15 @@ import cli.ConsoleCollectionOutputListener;
 import cli.ConsoleOld;
 import cliNew.*;
 import events.*;
+import util.JoSSerializer;
 
 public class CLInewMain {
     public static void main(String[] args) {
-        Automat automat = new Automat(10);
+        int automatCap = 50;
+        if(args.length == 1){
+             automatCap =Integer.parseInt(args[1]);
+        }
+        Automat automat = new Automat(automatCap);
         Console console = new Console();
         InputReader reader = new InputReader();
         console.setInputReader(reader);
@@ -52,6 +57,9 @@ public class CLInewMain {
         autoStringListener.setErrorHandler(errorHandler);
         autoGetListner.setErrorHandler(errorHandler);
         autoIntListener.setErrorhandler(errorHandler);
+        autoGetListner.setAutomatWrapper(automatWrapper);
+        JoSSerializer serializer = new JoSSerializer();
+        automatWrapper.setSerializer(serializer);
 
         AutomatCapacityObserver capacityObserver = new AutomatCapacityObserver(automat);
         AutomatAllergenObserver allergenObserver = new AutomatAllergenObserver(automat);

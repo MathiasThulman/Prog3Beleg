@@ -13,16 +13,9 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import kuchen.KremkuchenImpl;
-import kuchen.KuchenVerkaufsObjekt;
-import kuchen.ObstkuchenImpl;
-import kuchen.ObsttorteImpl;
-import observer.Observer;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
 
 public class MainWindowController {
@@ -71,9 +64,7 @@ public class MainWindowController {
     @FXML
     private ListView<KuchenVerkaufsObjektImpl> listViewKuchen;
     @FXML
-    private DatePicker datePicker;
-    @FXML
-    private Label errorText;
+    private Label errorText; //TODO databinding maybe
     //public StringProperty errorString = new SimpleStringProperty();
     @FXML
     private ChoiceBox choiceKuchen;
@@ -189,9 +180,6 @@ public class MainWindowController {
     }
 
     public void onPressSetInspection() {
-        //convert localdate from datepicker to Date  source https://beginnersbook.com/2017/10/java-convert-localdate-to-date/
-        LocalDate localDate = datePicker.getValue();
-        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
         try {
             this.automat.setInspectionDate(Integer.parseInt(fachnummerField.getText()));
         } catch (InvalidInputException e) {
@@ -205,9 +193,11 @@ public class MainWindowController {
     public void onPressAddKuchen() {
         if (choiceKremkuchen.equals(choiceKuchen.getValue())) {
             KremkuchenImpl kremkuchen = new KremkuchenImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
-                    Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())), new BigDecimal(Integer.parseInt(fieldPreis.getText())), fieldKremsorte.getText());
+                    Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())),
+                    new BigDecimal(Integer.parseInt(fieldPreis.getText())), new Kremsorte(fieldKremsorte.getText()));
             try {
                 this.automat.addKuchen(kremkuchen);
+                clearKuchenFields(); //clear only if the kuchen as been added succesfully
             } catch (FullAutomatException e) {
                 errorText.setText("Der Automat ist voll");
             } catch (NoSuchElementException e){
@@ -215,9 +205,11 @@ public class MainWindowController {
             }
         } else if (choiceObstkuchen.equals(choiceKuchen.getValue())) {
             ObstkuchenImpl obstkuchen = new ObstkuchenImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
-                    Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())), new BigDecimal(Integer.parseInt(fieldPreis.getText())), fieldObstsorte.getText());
+                    Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())),
+                    new BigDecimal(Integer.parseInt(fieldPreis.getText())), new Obstsorte(fieldObstsorte.getText()));
             try {
                 this.automat.addKuchen(obstkuchen);
+                clearKuchenFields(); //clear only if the kuchen as been added succesfully
             } catch (FullAutomatException e) {
                 errorText.setText("Der Automat ist voll");
             } catch (NoSuchElementException e){
@@ -225,9 +217,11 @@ public class MainWindowController {
             }
         } else if (choiceObsttorte.equals(choiceKuchen.getValue())) {
             ObsttorteImpl obsttorte = new ObsttorteImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
-                    Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())), new BigDecimal(Integer.parseInt(fieldPreis.getText())), fieldKremsorte.getText(), fieldObstsorte.getText());
+                    Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())),
+                    new BigDecimal(Integer.parseInt(fieldPreis.getText())), new Kremsorte(fieldKremsorte.getText()) , new Obstsorte(fieldObstsorte.getText()));
             try {
                 this.automat.addKuchen(obsttorte);
+                clearKuchenFields(); //clear only if the kuchen as been added succesfully
             } catch (FullAutomatException e) {
                 errorText.setText("Der Automat ist voll");
             } catch (NoSuchElementException e){
@@ -238,7 +232,6 @@ public class MainWindowController {
         }
         updateHersteller();
         updateKuchen();
-        //TODO clear all buttons
     }
 
     public void onPressRemoveKuchen() {
@@ -339,5 +332,15 @@ public class MainWindowController {
         } catch (EmptyListException e) {
             errorText.setText("Keine Hersteller");
         }
+    }
+
+    private void clearKuchenFields(){
+        this.fieldHersteller.clear();
+        this.fieldAllergene.clear();
+        this.fieldHaltbarkeit.clear();
+        this.fieldNaehrwert.clear();
+        this.fieldPreis.clear();
+        this.fieldKremsorte.clear();
+        this.fieldObstsorte.clear();
     }
 }

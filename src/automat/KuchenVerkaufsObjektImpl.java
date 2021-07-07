@@ -1,7 +1,5 @@
 package automat;
 
-import kuchen.KuchenVerkaufsObjekt;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -16,6 +14,7 @@ public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt, Serializa
     private final BigDecimal preis;
     private Date inspektionsDatum;
     private int fachNummer;
+    private Date einfuegeDatum;
 
     public KuchenVerkaufsObjektImpl(Hersteller hersteller, Collection<Allergen> allergene, int naehrwert, Duration haltbarkeit, BigDecimal preis) {
         this.hersteller = hersteller;
@@ -26,13 +25,13 @@ public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt, Serializa
     }
 
     //for beans persistence
-    public KuchenVerkaufsObjektImpl(Hersteller hersteller, Collection<Allergen> allergene, int naehrwert, long haltbarkeit, String preis) {
-        this.hersteller = hersteller;
-        this.allergene = allergene;
-        this.naehrwert = naehrwert;
-        this.haltbarkeit = Duration.ofMillis(haltbarkeit);
-        this.preis = new BigDecimal(preis);
-    }
+//    public KuchenVerkaufsObjektImpl(Hersteller hersteller, Collection<Allergen> allergene, int naehrwert, long haltbarkeit, String preis) {
+//        this.hersteller = hersteller;
+//        this.allergene = allergene;
+//        this.naehrwert = naehrwert;
+//        this.haltbarkeit = Duration.ofMillis(haltbarkeit);
+//        this.preis = new BigDecimal(preis);
+//    }
 
     @Override
     public Hersteller getHersteller() {
@@ -69,11 +68,11 @@ public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt, Serializa
         return this.fachNummer;
     }
 
-    protected void setInspektionsDatum(Date inspektionsDatum) {
+    void setInspektionsDatum(Date inspektionsDatum) {
         this.inspektionsDatum = inspektionsDatum;
     }
 
-    protected void setFachNummer(int fachNummer) {
+    void setFachNummer(int fachNummer) {
         this.fachNummer = fachNummer;
     }
 
@@ -81,12 +80,21 @@ public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt, Serializa
         return this.hersteller.getName() + ", " + this.allergene.toString()  + ", " + this.haltbarkeit.toDays()  + ", "+ this.inspektionsDatum.toString() + ", "+ this.preis.toString();
     }
 
-    public long getDurationInMS(){
-        return this.haltbarkeit.toMillis();
+    void setEinfuegeDatum(Date einfuegeDatum) {
+        this.einfuegeDatum = einfuegeDatum;
     }
 
-    public String getStringBigDecimal(){
-        return this.preis.toString();
+    public Date getEinfuegeDatum() {
+        return einfuegeDatum;
     }
+
+
+//    public long getDurationInMS(){
+//        return this.haltbarkeit.toMillis();
+//    }
+//
+//    public String getStringBigDecimal(){
+//        return this.preis.toString();
+//    }
 
 }

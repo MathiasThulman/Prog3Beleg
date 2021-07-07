@@ -4,8 +4,10 @@ import automat.HerstellerImpl;
 import exceptions.AlreadyExistsException;
 import exceptions.EmptyListException;
 import exceptions.FullAutomatException;
-import kuchen.ObstkuchenImpl;
-import kuchen.ObsttorteImpl;
+import automat.Kremsorte;
+import automat.ObstkuchenImpl;
+import automat.Obstsorte;
+import automat.ObsttorteImpl;
 import util.JoSSerializer;
 
 import java.math.BigDecimal;
@@ -24,8 +26,8 @@ public class JoSMain {
         try {
             auto.addHersteller(Frank);
             auto.addHersteller(Faustulus);
-            auto.addKuchen(new ObstkuchenImpl(Frank, new HashSet<>(Arrays.asList(Allergen.Gluten, Allergen.Sesamsamen)), 600, Duration.ofDays(5), new BigDecimal(200), "Tomate"));
-            auto.addKuchen(new ObsttorteImpl(Faustulus, new HashSet<>(Arrays.asList(Allergen.Gluten, Allergen.Erdnuss)), 900, Duration.ofDays(2), new BigDecimal(500), "Tomate", "Mayo"));
+            auto.addKuchen(new ObstkuchenImpl(Frank, new HashSet<>(Arrays.asList(Allergen.Gluten, Allergen.Sesamsamen)), 600, Duration.ofDays(5), new BigDecimal(200), new Obstsorte("Tomate")));
+            auto.addKuchen(new ObsttorteImpl(Faustulus, new HashSet<>(Arrays.asList(Allergen.Gluten, Allergen.Erdnuss)), 900, Duration.ofDays(2), new BigDecimal(500), new Kremsorte("Mayo"), new Obstsorte("Mayo")));
             System.out.println(auto + auto.checkKuchen().toString() + auto.checkHersteller().toString());
 
             serializer.serialize("JoSFile", auto);

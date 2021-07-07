@@ -1,4 +1,4 @@
-package cliNew;
+package cli;
 
 import events.CollectionOutputEvent;
 import events.ErrorEvent;

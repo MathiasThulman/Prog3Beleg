@@ -3,7 +3,6 @@ package automat;
 import exceptions.AlreadyExistsException;
 import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
-import kuchen.KremkuchenImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -17,13 +16,14 @@ import java.util.LinkedList;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class AutomatChangeObserverTest {
-    Hersteller herst1 = new HerstellerImpl("MOSES");
-    Duration dur1 = Duration.ofDays(4);
-    LinkedList<Allergen> allergList1 = new LinkedList<>(Arrays.asList(Allergen.Erdnuss, Allergen.Haselnuss));
-    KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), "Mascarpone");
 
     @Test
     public void removeKuchenChangeObserverTest() {
+        Hersteller herst1 = new HerstellerImpl("MOSES");
+        Duration dur1 = Duration.ofDays(4);
+        LinkedList<Allergen> allergList1 = new LinkedList<>(Arrays.asList(Allergen.Erdnuss, Allergen.Haselnuss));
+        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500),  new Kremsorte("Mascarpone"));
+
         Automat auto = new Automat(20);
         AutomatChangeObserver obs = new AutomatChangeObserver(auto);
 

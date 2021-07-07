@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="503.0" prefWidth="740.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainWindowController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="503.0" prefWidth="740.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainWindowController">
    <top>
       <HBox alignment="CENTER" minWidth="100.0" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
@@ -64,7 +64,6 @@
                   <Button fx:id="buttonAddHersteller" mnemonicParsing="false" onAction="#onPressAddHersteller" text="Hersteller hinzufügen" />
                   <Button fx:id="buttonRemoveHersteller" mnemonicParsing="false" onAction="#onPressRemoveHersteller" text="Hersteller entfernen" />
                   <Button fx:id="buttonRemoveKuchen" mnemonicParsing="false" onAction="#onPressRemoveKuchen" text="Kuchen entfernen" />
-                  <DatePicker fx:id="datePicker" promptText="Inspektionsdatum wählen" />
                   <Button mnemonicParsing="false" onAction="#onPressSetInspection" text="Inspektion" />
                </children>
             </HBox>

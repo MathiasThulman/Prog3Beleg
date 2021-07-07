@@ -5,17 +5,14 @@ import exceptions.AlreadyExistsException;
 import exceptions.EmptyListException;
 import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
-import kuchen.KremkuchenImpl;
+import automat.KremkuchenImpl;
+import automat.Kremsorte;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.InOrder;
-import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedList;
 
 import static org.mockito.Mockito.*;
@@ -30,8 +27,8 @@ public class SimulationWrapperTest {
     private final Hersteller herst3 = new HerstellerImpl(MOSES);
     Duration dur1 = Duration.ofDays(4);
     LinkedList<Allergen> allergList1 = new LinkedList<>(Arrays.asList(Allergen.Erdnuss, Allergen.Haselnuss));
-    KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), MASCARPONE);
-    KremkuchenImpl kuch2 = new KremkuchenImpl(herst1, allergList1, 500, dur1, new BigDecimal(600), MASCARPONE);
+    KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE) );
+    KremkuchenImpl kuch2 = new KremkuchenImpl(herst1, allergList1, 500, dur1, new BigDecimal(600), new Kremsorte(MASCARPONE));
 
     @Test
     public void createRandomCakeValid() throws AlreadyExistsException, EmptyListException {

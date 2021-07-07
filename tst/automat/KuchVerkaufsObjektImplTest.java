@@ -1,9 +1,6 @@
 package automat;
 
-import kuchen.KremkuchenImpl;
-import kuchen.ObstkuchenImpl;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -16,54 +13,50 @@ class KuchVerkaufsObjektImplTest {
 
     private final Date date1 = new Date(2020, 4, 9);
     private final int fn1 = 4;
-    private static final String AIOLI = "aioli";
-    private final String MARACUJA = "Maracuja";
-    private final Hersteller herst1 = new HerstellerImpl("Adidas");
-    private final int naehr1 = 300;
-    private final BigDecimal preis1 = new BigDecimal(500);
     LinkedList<Allergen> allergList1 = new LinkedList<>(Arrays.asList(Allergen.Erdnuss, Allergen.Haselnuss));
-    private final Duration dur1 = Duration.ofDays(5);
-    KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, naehr1, dur1, preis1, AIOLI);
-    ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst1, allergList1, naehr1, dur1, preis1, MARACUJA);
+
+
 
     @Test
     void getHerstellerValid() {
-        Assertions.assertEquals(herst1, kuch1.getHersteller());
+        KuchenVerkaufsObjektImpl kuch1 = new KuchenVerkaufsObjektImpl(new HerstellerImpl("Adidas"), allergList1, 300, Duration.ofDays(3), new BigDecimal(20));
+
+        Assertions.assertEquals("Adidas", kuch1.getHersteller().getName());
     }
 
     @Test
     void getAllergeneValid() {
+        KuchenVerkaufsObjektImpl kuch1 = new KuchenVerkaufsObjektImpl(new HerstellerImpl("Adidas"), allergList1, 300, Duration.ofDays(3), new BigDecimal(20));
         //expected to contain erdnuss and haselnuss
         Assertions.assertTrue(kuch1.getAllergene().contains(Allergen.Erdnuss) && kuch1.getAllergene().contains(Allergen.Haselnuss));
     }
 
     @Test
     void getNaehrwertValid() {
-        Assertions.assertEquals(naehr1, kuch1.getNaehrwert());
+        KuchenVerkaufsObjektImpl kuch1 = new KuchenVerkaufsObjektImpl(new HerstellerImpl("Adidas"), allergList1, 300, Duration.ofDays(3), new BigDecimal(20));
+
+        Assertions.assertEquals(300, kuch1.getNaehrwert());
     }
 
     @Test
     void getHaltbarkeitValid() {
-        Assertions.assertEquals(dur1, kuch1.getHaltbarkeit());
+        KuchenVerkaufsObjektImpl kuch1 = new KuchenVerkaufsObjektImpl(new HerstellerImpl("Adidas"), allergList1, 300, Duration.ofDays(3), new BigDecimal(20));
+
+        Assertions.assertEquals(Duration.ofDays(3), kuch1.getHaltbarkeit());
     }
 
-    @Test
-    void getObstsorteValid(){
-        Assertions.assertEquals(MARACUJA, kuch2.getObstsorte());
-    }
-
-    @Test
-    void getKremsortValid(){
-        Assertions.assertEquals(AIOLI, kuch1.getKremsorte());
-    }
 
     @Test
     public void getPreisTestValid(){
-        Assertions.assertEquals(preis1, kuch1.getPreis());
+        KuchenVerkaufsObjektImpl kuch1 = new KuchenVerkaufsObjektImpl(new HerstellerImpl("Adidas"), allergList1, 300, Duration.ofDays(3), new BigDecimal(20));
+
+        Assertions.assertEquals("20", kuch1.getPreis().toString());
     }
 
     @Test
     public void getInspectionsDatumValid(){
+        KuchenVerkaufsObjektImpl kuch1 = new KuchenVerkaufsObjektImpl(new HerstellerImpl("Adidas"), allergList1, 300, Duration.ofDays(3), new BigDecimal(20));
+
         kuch1.setInspektionsDatum(date1);
 
         Assertions.assertEquals(date1, kuch1.getInspektionsdatum());
@@ -71,6 +64,8 @@ class KuchVerkaufsObjektImplTest {
 
     @Test
     public void getFachnummerValid(){
+        KuchenVerkaufsObjektImpl kuch1 = new KuchenVerkaufsObjektImpl(new HerstellerImpl("Adidas"), allergList1, 300, Duration.ofDays(3), new BigDecimal(20));
+
         kuch1.setFachNummer(fn1);
 
         Assertions.assertEquals(fn1, kuch1.getFachnummer());
@@ -78,7 +73,9 @@ class KuchVerkaufsObjektImplTest {
 
     @Test
     public void toStringValid(){
+        KuchenVerkaufsObjektImpl kuch1 = new KuchenVerkaufsObjektImpl(new HerstellerImpl("Adidas"), allergList1, 300, Duration.ofDays(3), new BigDecimal(20));
+
         kuch1.setInspektionsDatum(date1);//to avoid nullpointer exception
-        Assertions.assertEquals("aioli, Adidas, [Erdnuss, Haselnuss], 5, Sun May 09 00:00:00 CEST 3920, 500", kuch1.toString());
+        Assertions.assertEquals("Adidas, [Erdnuss, Haselnuss], 3, Sun May 09 00:00:00 CEST 3920, 20", kuch1.toString());
     }
 }

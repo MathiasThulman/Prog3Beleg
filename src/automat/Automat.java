@@ -4,7 +4,6 @@ import exceptions.AlreadyExistsException;
 import exceptions.EmptyListException;
 import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
-import kuchen.KuchenVerkaufsObjekt;
 import observer.Observable;
 import observer.Observer;
 
@@ -72,6 +71,7 @@ public class Automat implements Observable, Serializable {
             if (this.kuchenList[i] == null) {
                 kuchen.setFachNummer(i);    //put this somewhere else?
                 kuchen.setInspektionsDatum(Calendar.getInstance().getTime());
+                kuchen.setEinfuegeDatum(Calendar.getInstance().getTime());
                 this.kuchenList[i] = kuchen;
                 fullFlag = false;
                 this.kuchenCounter++;
@@ -275,9 +275,5 @@ public class Automat implements Observable, Serializable {
 
     public int getKuchenCounter() {
         return kuchenCounter;
-    }
-
-    public int getFachzahl(){
-        return this.kuchenList.length;
     }
 }

@@ -1,8 +1,7 @@
-package cliNew;
+package cli;
 
-import automat.Kremkuchen;
 import events.*;
-import kuchen.KremkuchenImpl;
+import automat.KremkuchenImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -14,7 +13,7 @@ import static org.mockito.Mockito.verify;
 public class InputReaderTest {
 
     @Test
-    public void readInsertAddHersellerValid(){
+    public void readInsertAddHerstellerValid(){
         InputReader reader = new InputReader();
         InputStringEventHandler<InputStringEvent> handler = mock(InputStringEventHandler.class);
         reader.setStringHandler(handler);

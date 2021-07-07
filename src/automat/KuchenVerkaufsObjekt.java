@@ -1,4 +1,4 @@
-package kuchen;
+package automat;
 
 import automat.Kuchen;
 import automat.Verkaufsobjekt;

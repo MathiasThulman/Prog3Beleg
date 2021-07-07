@@ -2,7 +2,6 @@ package automat;
 
 import events.*;
 import exceptions.EmptyListException;
-import kuchen.KremkuchenImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.fail;
@@ -57,6 +56,7 @@ public class AutomatGetEvenListenerTest {
         Automat auto = mock(Automat.class);
         AutomatWrapper wrapper = new AutomatWrapper();
         wrapper.setAutomat(auto);
+
 
         AutomatGetEventListener listener = new AutomatGetEventListener();
         listener.setAutomatWrapper(wrapper);

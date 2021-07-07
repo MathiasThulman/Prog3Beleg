@@ -1,16 +1,9 @@
 package simulation;
 
-import automat.Allergen;
-import automat.Automat;
-import automat.Hersteller;
-import automat.HerstellerImpl;
+import automat.*;
 import exceptions.EmptyListException;
 import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
-import kuchen.KremkuchenImpl;
-import automat.KuchenVerkaufsObjektImpl;
-import kuchen.ObstkuchenImpl;
-import kuchen.ObsttorteImpl;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -38,16 +31,16 @@ public class AutomatSimulationWrapper {
     private final Duration dur1 = Duration.ofDays(4);
     private final LinkedList<Allergen> allergList1 = new LinkedList<>(Arrays.asList(Allergen.Erdnuss, Allergen.Haselnuss));
     private final LinkedList<Allergen> allergList2 = new LinkedList<>(Arrays.asList(Allergen.Gluten, Allergen.Sesamsamen));
-    private final KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 350, dur1, new BigDecimal(500), MASCARPONE);
-    private final ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst1, allergList2, 400, dur1, new BigDecimal(250), KIRSCHE);
-    private final ObsttorteImpl kuch3 = new ObsttorteImpl(herst1, allergList2, 700, dur1, new BigDecimal(300), MASCARPONE, ERDBEERE);
-    private final KremkuchenImpl kuch4 = new KremkuchenImpl(herst1, allergList1, 250, dur1, new BigDecimal(400), SENF);
-    private final KremkuchenImpl kuch5 = new KremkuchenImpl(herst2, allergList2, 300, dur1, new BigDecimal(500), MASCARPONE);
-    private final ObstkuchenImpl kuch6 = new ObstkuchenImpl(herst2, allergList1, 400, dur1, new BigDecimal(250), KIRSCHE);
-    private final ObsttorteImpl kuch7 = new ObsttorteImpl(herst2, allergList2, 500, dur1, new BigDecimal(300), MASCARPONE, ERDBEERE);
-    private final KremkuchenImpl kuch8 = new KremkuchenImpl(herst3, allergList1, 250, dur1, new BigDecimal(400), SENF);
-    private final ObsttorteImpl kuch9 = new ObsttorteImpl(herst3, allergList2, 600, dur1, new BigDecimal(300), MASCARPONE, ERDBEERE);
-    private final KremkuchenImpl kuch10 = new KremkuchenImpl(herst3, allergList1, 250, dur1, new BigDecimal(400), SENF);
+    private final KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 350, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
+    private final ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst1, allergList2, 400, dur1, new BigDecimal(250), new Obstsorte(KIRSCHE));
+    private final ObsttorteImpl kuch3 = new ObsttorteImpl(herst1, allergList2, 700, dur1, new BigDecimal(300), new Kremsorte(MASCARPONE), new Obstsorte(ERDBEERE));
+    private final KremkuchenImpl kuch4 = new KremkuchenImpl(herst1, allergList1, 250, dur1, new BigDecimal(400), new Kremsorte(SENF));
+    private final KremkuchenImpl kuch5 = new KremkuchenImpl(herst2, allergList2, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
+    private final ObstkuchenImpl kuch6 = new ObstkuchenImpl(herst2, allergList1, 400, dur1, new BigDecimal(250), new Obstsorte(KIRSCHE));
+    private final ObsttorteImpl kuch7 = new ObsttorteImpl(herst2, allergList2, 500, dur1, new BigDecimal(300), new Kremsorte(MASCARPONE), new Obstsorte(ERDBEERE));
+    private final KremkuchenImpl kuch8 = new KremkuchenImpl(herst3, allergList1, 250, dur1, new BigDecimal(400), new Kremsorte(SENF));
+    private final ObsttorteImpl kuch9 = new ObsttorteImpl(herst3, allergList2, 600, dur1, new BigDecimal(300), new Kremsorte(MASCARPONE), new Obstsorte(ERDBEERE));
+    private final KremkuchenImpl kuch10 = new KremkuchenImpl(herst3, allergList1, 250, dur1, new BigDecimal(400), new Kremsorte(SENF));
     private final KuchenVerkaufsObjektImpl[] kuchList = {kuch1, kuch2, kuch3, kuch4, kuch5, kuch6, kuch7, kuch8, kuch9, kuch10};
 
     protected synchronized void createRandomCake() {
@@ -76,7 +69,7 @@ public class AutomatSimulationWrapper {
 
         try {
             for (KuchenVerkaufsObjektImpl kuchen : this.automat.checkKuchen()) {
-                if (kuchen.getInspektionsdatum().before(oldestDate)) {
+                if (kuchen.getEinfuegeDatum().before(oldestDate)) {
                     oldestDate = kuchen.getInspektionsdatum();
                     oldestFachnummer = kuchen.getFachnummer();
                 }

@@ -3,7 +3,6 @@ package automat;
 import events.EventType;
 import events.InputKuchenEvent;
 import exceptions.FullAutomatException;
-import kuchen.KremkuchenImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.fail;

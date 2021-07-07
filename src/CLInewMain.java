@@ -1,7 +1,5 @@
 import automat.*;
-import cli.ConsoleCollectionOutputListener;
-import cli.ConsoleOld;
-import cliNew.*;
+import cli.*;
 import events.*;
 import util.JoSSerializer;
 

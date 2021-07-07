@@ -1,13 +1,8 @@
-package cliNew;
-
-import events.*;
+package cli;
 
 import java.util.Scanner;
 
 public class Console {
-    private GetEventHandler<InputGetEvent> getHandler;
-    private InputIntEventHandler<InputIntEvent> intHandler;
-    private InputStringEventHandler<InputStringEvent> stringHandler;
     private InputMode mode;
     private InputReader inputReader;
 
@@ -25,18 +20,6 @@ public class Console {
             return;
         }
 
-    }
-
-    public void setGetHandler(GetEventHandler<InputGetEvent> getHandler) {
-        this.getHandler = getHandler;
-    }
-
-    public void setIntHandler(InputIntEventHandler<InputIntEvent> intHandler) {
-        this.intHandler = intHandler;
-    }
-
-    public void setStringHandler(InputStringEventHandler<InputStringEvent> stringHandler) {
-        this.stringHandler = stringHandler;
     }
 
     private void changeMode(String input) {

@@ -48,6 +48,7 @@ public class AutomatGetEventListener implements EventListener<InputGetEvent> {
                 } catch (EmptyListException e) {
                     this.errorHandler.handle(new ErrorEvent(this, "Es gibt keine Kuchen dieses Typen"));
                 }
+                break;
             case saveAutomat:
                 try {
                     this.automatWrapper.getSerializer().serialize("AutomatSaveFile", this.automatWrapper.getAutomat());

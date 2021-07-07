@@ -1,16 +1,9 @@
 package automat;
 
 import events.*;
-import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
-import kuchen.KremkuchenImpl;
-import kuchen.ObstkuchenImpl;
 
-import java.math.BigDecimal;
-import java.time.Duration;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 public class AutomatInputIntListener implements EventListener<InputIntEvent> {
@@ -22,28 +15,6 @@ public class AutomatInputIntListener implements EventListener<InputIntEvent> {
     @Override
     public void addEvent(InputIntEvent event) {
         switch (event.getType()) {
-            case addKuchen:
-                switch (event.getInputInt()) {
-                    case 1:
-                        try {
-                            this.automatWrapper.getAutomat().addKuchen(new ObstkuchenImpl(new HerstellerImpl("faustulus"), new LinkedList<>(Collections.singletonList(Allergen.Gluten)), 500, Duration.ofDays(7), new BigDecimal(500), "Erdbeere"));
-                        } catch (FullAutomatException e) {
-                            this.errorhandler.handle(new ErrorEvent(this, "Dieser Automat ist voll"));
-                        } catch (NoSuchElementException e){
-                            this.errorhandler.handle(new ErrorEvent(this, "Hersteller dieses Kuchens konnte nicht gefunden Werden, bitte Hersteller hinzufügen"));
-                        }
-                        break;
-                    case 2:
-                        try {
-                            this.automatWrapper.getAutomat().addKuchen(new KremkuchenImpl(new HerstellerImpl("bob"), new LinkedList<>(Arrays.asList(Allergen.Erdnuss, Allergen.Haselnuss)), 2000, Duration.ofDays(5), new BigDecimal(400), "Butter"));
-                        } catch (FullAutomatException e) {
-                            this.errorhandler.handle(new ErrorEvent(this, "Dieser Automat ist voll"));
-                        } catch (NoSuchElementException e){
-                            this.errorhandler.handle(new ErrorEvent(this, "Hersteller dieses Kuchens konnte nicht gefunden Werden, bitte Hersteller hinzufügen"));
-                        }
-                        break;
-                }
-                break;
             case removeKuchen:
                 try {
                     this.automatWrapper.getAutomat().removeKuchen(event.getInputInt());

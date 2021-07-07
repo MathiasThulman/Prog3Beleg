@@ -4,19 +4,8 @@ import events.CollectionOutputEvent;
 import events.CollectionOutputHandler;
 import events.EventType;
 import events.InputIntEvent;
-import exceptions.AlreadyExistsException;
-import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
-import kuchen.ObstkuchenImpl;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
@@ -67,12 +56,11 @@ public class AutomatInputIntListenerTest {
     @Test
     public void setInspectionDateListenerTest()  {
         Automat auto = mock(Automat.class);
-        Date date = mock(Date.class);
         AutomatWrapper wrapper = new AutomatWrapper();
         wrapper.setAutomat(auto);
         AutomatInputIntListener listener = new AutomatInputIntListener();
         listener.setAutomatWrapper(wrapper);
-        InputIntEvent event = new InputIntEvent(this, EventType.setDate, 1 ,date);
+        InputIntEvent event = new InputIntEvent(this, EventType.setDate, 1);
         listener.addEvent(event);
 
         try {

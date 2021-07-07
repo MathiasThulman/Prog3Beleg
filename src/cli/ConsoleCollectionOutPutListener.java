@@ -1,9 +1,7 @@
-package cliNew;
+package cli;
 
-import cli.ConsoleOld;
 import events.CollectionOutputEvent;
 import events.EventListener;
-import org.w3c.dom.events.Event;
 
 public class ConsoleCollectionOutPutListener implements EventListener<CollectionOutputEvent> {
     private ConsoleView console;

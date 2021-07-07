@@ -1,4 +1,4 @@
-package cliNew;
+package cli;
 
 public enum InputMode {
     insertMode,

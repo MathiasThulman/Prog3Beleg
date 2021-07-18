@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class AutomatChangeObserverTest {
 
     @Test
-    public void removeKuchenChangeObserverTest() {
+    public void removeKuchenChangeObserverValid() {
         Hersteller herst1 = new HerstellerImpl("MOSES");
         Duration dur1 = Duration.ofDays(4);
         LinkedList<Allergen> allergList1 = new LinkedList<>(Arrays.asList(Allergen.Erdnuss, Allergen.Haselnuss));
@@ -40,6 +40,8 @@ public class AutomatChangeObserverTest {
 
         } catch (AlreadyExistsException | FullAutomatException | InvalidInputException e) {
             fail();
+        } finally {
+            System.setOut(System.out);
         }
     }
 }

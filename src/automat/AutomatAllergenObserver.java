@@ -16,10 +16,14 @@ public class AutomatAllergenObserver implements Observer {
     }
 
     @Override
-    public void update() throws EmptyListException {
-       if(!this.allergenList.equals(automat.checkAllergen())){
-           this.allergenList = automat.checkAllergen();
-           System.out.println("Die Allergene im Automat haben sich verändert");
-       }
+    public void update() {
+        try {
+            if(!this.allergenList.equals(automat.checkAllergen())){
+                this.allergenList = automat.checkAllergen();
+                System.out.println("Die Allergene im Automat haben sich verändert");
+            }
+        } catch (EmptyListException e) {
+            //ignore this as it will always be thrown on the first thing added
+        }
     }
 }

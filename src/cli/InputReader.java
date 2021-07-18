@@ -27,7 +27,7 @@ public class InputReader {
         } else if (this.kuchenHandler != null) {
             if (input.split(" ").length == 7 || input.split(" ").length == 8) {
                 String[] ps = input.split(" ");
-                //TODO change price string to you can write bigdecimal with ,
+                //TODO change price string to you can write bigdecimal with , and make it safer to put in nonsense
 
                 switch (ps[0]) {
                     case OBSTKUCHEN:
@@ -54,7 +54,7 @@ public class InputReader {
     public void readDelete(String input) {
         if (isNumeric(input) && this.intHandler != null) {
             this.intHandler.handle(new InputIntEvent(this, EventType.removeKuchen, Integer.parseInt(input)));
-        } else if (this.stringHandler != null){
+        } else if (this.stringHandler != null && !isNumeric(input)){
             this.stringHandler.handle(new InputStringEvent(this, EventType.remHersteller, input));
         }
     }

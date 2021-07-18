@@ -2,7 +2,6 @@ package automat;
 import observer.Observer;
 
 public class AutomatChangeObserver implements Observer {
-    private final String evenString = "Automat is over 90% capacity";
     private final Automat automat;
     int capacity;
     int obsCounter;

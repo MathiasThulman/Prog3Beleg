@@ -1,11 +1,13 @@
 package simulation;
 
+import java.util.Random;
+
 public class DeleteMultipleThread extends Thread{
     private AutomatSimulationWrapper wrapper;
 
     public void run(){
         while(true){
-            this.wrapper.removeMultipleOldestCakeSynchronized();
+            this.wrapper.removeMultipleOldestCakeSynchronized(new Random(System.currentTimeMillis()));
         }
     }
 

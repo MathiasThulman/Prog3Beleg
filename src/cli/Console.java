@@ -8,6 +8,7 @@ public class Console {
 
 
     public void read() {
+        this.mode = InputMode.insertMode;
 
         Scanner scanner = new Scanner(System.in);
 

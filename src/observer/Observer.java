@@ -6,5 +6,5 @@ import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
 
 public interface Observer {
-    void update() throws EmptyListException, FullAutomatException, InvalidInputException, AlreadyExistsException;
+    void update() ;
 }

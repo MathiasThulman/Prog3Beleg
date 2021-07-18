@@ -6,6 +6,8 @@ import exceptions.AlreadyExistsException;
 import exceptions.EmptyListException;
 import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -19,22 +21,7 @@ import java.time.Duration;
 import java.util.*;
 
 public class MainWindowController {
-    @FXML
-    private Button sortByHersteller;
-    @FXML
-    private Button sortByFachnummer;
-    @FXML
-    private Button sortByHaltbarkeit;
-    @FXML
-    private Button buttonAddHersteller;
-    @FXML
-    private Button buttonAddKuchen;
-    @FXML
-    private Button buttonRemoveKuchen;
-    @FXML
-    private Button buttonRemoveHersteller;
-    @FXML
-    private Button buttonSetInspectionDate;
+
     @FXML
     private TextField herstellerField;
     @FXML
@@ -64,8 +51,8 @@ public class MainWindowController {
     @FXML
     private ListView<KuchenVerkaufsObjektImpl> listViewKuchen;
     @FXML
-    private Label errorText; //TODO databinding maybe
-    //public StringProperty errorString = new SimpleStringProperty();
+    private Label errorText;
+    public StringProperty errorTextString = new SimpleStringProperty();
     @FXML
     private ChoiceBox choiceKuchen;
     private Automat automat;
@@ -75,9 +62,25 @@ public class MainWindowController {
     private ObservableList<KuchenVerkaufsObjektImpl> observableKuchenList;
     private SortedList<KuchenVerkaufsObjektImpl> sortedKuchenList;
     private ObservableList<HerstellerNummer> observableHerstellerList;
+    @FXML
+    private Label allergenLabel;
+
+    public StringProperty textProperty() {
+        return this.errorTextString;
+    }
+
+    public String getText() {
+        return this.errorTextString.get();
+    }
+
+    public void setErrorText(String value) {
+        this.errorTextString.setValue(value);
+    }
 
 
     public void initialize() {
+        this.errorText.textProperty().bindBidirectional(errorTextString);
+
         this.automat = new Automat(20);
 
         //just to test initial loading
@@ -159,39 +162,56 @@ public class MainWindowController {
     }
 
     public void onPressAddHersteller() {
+        if(this.herstellerField.getText().isEmpty()){
+            return;
+        }
         try {
             this.automat.addHersteller(new HerstellerImpl(herstellerField.getText()));
             updateHersteller();
         } catch (AlreadyExistsException e) {
-            errorText.setText("Hersteller existiert bereits");
+            errorTextString.setValue("Hersteller existiert bereits");
         }
         herstellerField.clear();
     }
 
     public void onPressRemoveHersteller() {
+        if(this.herstellerField.getText().isEmpty()){
+            return;
+        }
         try {
             this.automat.removeHersteller(herstellerField.getText());
             updateHersteller();
         } catch (NoSuchElementException e) {
-            errorText.setText("Hersteller nicht bekannt");
+            errorTextString.setValue("Hersteller nicht bekannt");
         }
         herstellerField.clear();
         updateKuchen();
     }
 
+    //TODO this causes an Error
     public void onPressSetInspection() {
+        if(fachnummerField.getText().isEmpty()){
+            return;
+        }
         try {
             this.automat.setInspectionDate(Integer.parseInt(fachnummerField.getText()));
+
         } catch (InvalidInputException e) {
-            errorText.setText("ungültige Eingabe");
-        } catch (NoSuchElementException e){
-            errorText.setText("an dieser Stelle befindet sich kein Kuchen");
+            errorTextString.setValue("ungültige Eingabe");
+        } catch (NoSuchElementException e) {
+            errorTextString.setValue("an dieser Stelle befindet sich kein Kuchen");
         }
         updateKuchen();
     }
 
     public void onPressAddKuchen() {
+        if(fieldHersteller.getText().isEmpty() || fieldPreis.getText().isEmpty() || fieldNaehrwert.getText().isEmpty() || fieldHaltbarkeit.getText().isEmpty()){
+            return; //dont allow processing of empty input
+        }
         if (choiceKremkuchen.equals(choiceKuchen.getValue())) {
+            if(fieldKremsorte.getText().isEmpty()){
+                return;
+            }
             KremkuchenImpl kremkuchen = new KremkuchenImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
                     Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())),
                     new BigDecimal(Integer.parseInt(fieldPreis.getText())), new Kremsorte(fieldKremsorte.getText()));
@@ -199,11 +219,14 @@ public class MainWindowController {
                 this.automat.addKuchen(kremkuchen);
                 clearKuchenFields(); //clear only if the kuchen as been added succesfully
             } catch (FullAutomatException e) {
-                errorText.setText("Der Automat ist voll");
-            } catch (NoSuchElementException e){
-                errorText.setText("Hersteller existiert nicht");
+                errorTextString.setValue("Der Automat ist voll");
+            } catch (NoSuchElementException e) {
+                errorTextString.setValue("Hersteller existiert nicht");
             }
         } else if (choiceObstkuchen.equals(choiceKuchen.getValue())) {
+            if(fieldObstsorte.getText().isEmpty()){
+                return;
+            }
             ObstkuchenImpl obstkuchen = new ObstkuchenImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
                     Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())),
                     new BigDecimal(Integer.parseInt(fieldPreis.getText())), new Obstsorte(fieldObstsorte.getText()));
@@ -211,43 +234,50 @@ public class MainWindowController {
                 this.automat.addKuchen(obstkuchen);
                 clearKuchenFields(); //clear only if the kuchen as been added succesfully
             } catch (FullAutomatException e) {
-                errorText.setText("Der Automat ist voll");
-            } catch (NoSuchElementException e){
-                errorText.setText("Hersteller existiert nicht");
+                errorTextString.setValue("Der Automat ist voll");
+            } catch (NoSuchElementException e) {
+                errorTextString.setValue("Hersteller existiert nicht");
             }
         } else if (choiceObsttorte.equals(choiceKuchen.getValue())) {
+            if(fieldObstsorte.getText().isEmpty() || fieldKremsorte.getText().isEmpty()){
+                return;
+            }
             ObsttorteImpl obsttorte = new ObsttorteImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
                     Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())),
-                    new BigDecimal(Integer.parseInt(fieldPreis.getText())), new Kremsorte(fieldKremsorte.getText()) , new Obstsorte(fieldObstsorte.getText()));
+                    new BigDecimal(Integer.parseInt(fieldPreis.getText())), new Kremsorte(fieldKremsorte.getText()), new Obstsorte(fieldObstsorte.getText()));
             try {
                 this.automat.addKuchen(obsttorte);
                 clearKuchenFields(); //clear only if the kuchen as been added succesfully
             } catch (FullAutomatException e) {
-                errorText.setText("Der Automat ist voll");
-            } catch (NoSuchElementException e){
-                errorText.setText("Hersteller existiert nicht");
+                errorTextString.setValue("Der Automat ist voll");
+            } catch (NoSuchElementException e) {
+                errorTextString.setValue("Hersteller existiert nicht");
             }
         } else {
-            errorText.setText("fehler bei auswahl der Kuchensorte");
+            errorTextString.setValue("fehler bei auswahl der Kuchensorte");
         }
         updateHersteller();
         updateKuchen();
     }
 
+
     public void onPressRemoveKuchen() {
+        if(this.fachnummerField.getText().isEmpty()){
+            return;
+        }
         try {
             this.automat.removeKuchen(Integer.parseInt(fachnummerField.getText()));
         } catch (InvalidInputException e) {
-            errorText.setText("Ungültige Eingabe");
+            errorTextString.setValue("Ungültige Eingabe");
         } catch (NoSuchElementException e) {
-            errorText.setText("an dieser Fachnummer befindet sich kein Kuchen");
+            errorTextString.setValue("an dieser Fachnummer befindet sich kein Kuchen");
         }
         fachnummerField.clear();
         updateHersteller();
         updateKuchen();
     }
 
-    public void onPressSortByHaltbarkeit(){
+    public void onPressSortByHaltbarkeit() {
         try {
             sortedKuchenList = new SortedList<KuchenVerkaufsObjektImpl>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenVerkaufsObjektImpl>() {
                 @Override
@@ -256,26 +286,28 @@ public class MainWindowController {
                 }
             });
         } catch (EmptyListException e) {
-            errorText.setText("automat ist leer");
+            errorTextString.setValue("automat ist leer");
         }
         listViewKuchen.setItems(sortedKuchenList);
     }
 
-    public void onPressSortByFachnummer(){
+    public void onPressSortByFachnummer() {
         try {
             sortedKuchenList = new SortedList<KuchenVerkaufsObjektImpl>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenVerkaufsObjektImpl>() {
                 @Override
                 public int compare(KuchenVerkaufsObjektImpl o1, KuchenVerkaufsObjektImpl o2) {
-                    return o2.getFachnummer()-o1.getFachnummer();
+                    return o2.getFachnummer() - o1.getFachnummer();
                 }
             });
         } catch (EmptyListException e) {
-            errorText.setText("automat ist leer");
+            errorTextString.setValue("automat ist leer");
         }
         listViewKuchen.setItems(sortedKuchenList);
     }
 
-    public void onPressSortByHersteller(){
+
+
+    public void onPressSortByHersteller() {
         try {
             sortedKuchenList = new SortedList<KuchenVerkaufsObjektImpl>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenVerkaufsObjektImpl>() {
                 @Override
@@ -284,39 +316,46 @@ public class MainWindowController {
                 }
             });
         } catch (EmptyListException e) {
-            errorText.setText("automat ist leer");
+            errorTextString.setValue("automat ist leer");
         }
         listViewKuchen.setItems(sortedKuchenList);
     }
 
-    public void setAutomat(Automat automat) {
-        this.automat = automat;
+    public void onPressShowExistingAllergen(){
+        try {
+            this.allergenLabel.setText(this.automat.checkAllergen().toString());
+        } catch (EmptyListException e) {
+            this.errorTextString.setValue("keine Kuchen im Automaten enhalten");
+        }
     }
 
     private HashSet<Allergen> stringToSet(String in) {
-        HashSet<Allergen> set = null;
+        HashSet<Allergen> set = new HashSet<>();
+        if(in.length() == 0){
+            return set;
+        }
         try {
-            set = new HashSet();
+            in = in.trim();//TODO trim properly
             String[] splitString = in.split(",");
             for (int i = 0; i < splitString.length; i++) {
                 set.add(Allergen.valueOf(splitString[i]));
             }
         } catch (IllegalArgumentException e) {
-            errorText.setText("fehler beim Einlesen der Allergene");
+            errorTextString.setValue("fehler beim Einlesen der Allergene");
         }
         return set;
     }
 
-    private List<HerstellerNummer> hashmapToList(HashMap<String, Integer> hashMap){
+    private List<HerstellerNummer> hashmapToList(HashMap<String, Integer> hashMap) {
         LinkedList<HerstellerNummer> hnList = new LinkedList<>();       //source: https://stackoverflow.com/questions/1066589/iterate-through-a-hashmap
-        for(String key : hashMap.keySet()){
+        for (String key : hashMap.keySet()) {
             hnList.add(new HerstellerNummer(key, hashMap.get(key)));
         }
 
         return hnList;
     }
 
-    private void updateKuchen(){
+    private void updateKuchen() {
         try {
             observableKuchenList = FXCollections.observableList(this.automat.checkKuchen());
             this.listViewKuchen.setItems(observableKuchenList);
@@ -325,16 +364,16 @@ public class MainWindowController {
         }
     }
 
-    private void updateHersteller(){
+    private void updateHersteller() {
         try {
             this.listViewHersteller.setItems(FXCollections.observableList(this.hashmapToList(this.automat.checkHersteller())));
             //this.observableHerstellerList = FXCollections.observableList(hashmapToList(automat.checkHersteller()));
         } catch (EmptyListException e) {
-            errorText.setText("Keine Hersteller");
+            errorTextString.setValue("Keine Hersteller");
         }
     }
 
-    private void clearKuchenFields(){
+    private void clearKuchenFields() {
         this.fieldHersteller.clear();
         this.fieldAllergene.clear();
         this.fieldHaltbarkeit.clear();

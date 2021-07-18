@@ -43,27 +43,25 @@ public class AutomatSimulationWrapper {
     private final KremkuchenImpl kuch10 = new KremkuchenImpl(herst3, allergList1, 250, dur1, new BigDecimal(400), new Kremsorte(SENF));
     private final KuchenVerkaufsObjektImpl[] kuchList = {kuch1, kuch2, kuch3, kuch4, kuch5, kuch6, kuch7, kuch8, kuch9, kuch10};
 
-    protected synchronized void createRandomCake() {
+    synchronized void createRandomCake() {
         try {
-            this.automat.addKuchen(copyCake(kuchList[(int) (Math.random() * 10)]));//copyCake not pretty but will have to do until kuchen structure is different
+            this.automat.addKuchen(copyCake(kuchList[(int) (Math.random() * 10)]));
         } catch (FullAutomatException e) {
             System.out.println("simulation: automat ist voll");
         }
         System.out.println("simulation added Cake");
     }
 
-    protected synchronized void removeRandomCake() {
+    synchronized void removeRandomCake(Random random) {
         try {
-            this.automat.removeKuchen((int) (Math.random() * this.automat.checkKuchen().size()));
+            this.automat.removeKuchen(random.nextInt(this.automat.getKuchenCounter()));
         } catch (InvalidInputException e) {
             System.out.println("simulation invalid input");
-        } catch (EmptyListException e) {
-            System.out.println("simulation: emptylist");
         }
         System.out.println("Simulation removed cake");
     }
 
-    protected void removeOldestCake() {
+    synchronized void removeOldestCake() {
         int oldestFachnummer = -1;//so i get an exception if this number is not replaced at least once
         Date oldestDate = new Date(3000, Calendar.FEBRUARY, 6);
 
@@ -85,18 +83,16 @@ public class AutomatSimulationWrapper {
         }
     }
 
-    protected synchronized void causeInspection() {
+    synchronized void causeInspection(Random random) {
         try {
-            this.automat.setInspectionDate((int) (Math.random() * this.automat.checkKuchen().size()));
+            this.automat.setInspectionDate(random.nextInt(this.automat.getKuchenCounter()));
             System.out.println("Simulation inspektion");
         } catch (InvalidInputException e) {
             System.out.println("simulation inspektion: invalid input");
-        } catch (EmptyListException e) {
-            System.out.println("simulation inspektion: empty list");
         }
     }
 
-    protected void createRandomCakeSynchronized() {
+    void createRandomCakeSynchronized() {
         this.lock.lock();
         try {
             while (this.automat.getKuchenCounter() == this.automat.getSize()) this.empty.await();
@@ -109,7 +105,7 @@ public class AutomatSimulationWrapper {
         }
     }
 
-    protected void removeOldestCakeSynchronized() {
+    void removeOldestCakeSynchronized() {
         this.lock.lock();
         try {
             while (this.automat.getKuchenCounter() == 0) this.full.await();
@@ -122,11 +118,11 @@ public class AutomatSimulationWrapper {
         }
     }
 
-    protected void removeMultipleOldestCakeSynchronized() {
+    void removeMultipleOldestCakeSynchronized(Random random) {
         this.lock.lock();
         try {
             while (this.automat.getKuchenCounter() == 0) this.full.await();
-            int randomInt = (int) (Math.random() * this.automat.getKuchenCounter());
+            int randomInt = (random.nextInt(this.automat.getKuchenCounter()));
 
             for (int i = 0; i < randomInt; i++) {
                 removeOldestCake();

@@ -106,14 +106,6 @@ public class Automat implements Observable, Serializable {
         notifyObservers();
     }
 
-    synchronized public void changeKuchen(int fachnummer, KuchenVerkaufsObjektImpl kuchen) throws NoSuchElementException, InvalidInputException {
-        checkNumber(fachnummer);
-        kuchen.setFachNummer(fachnummer);
-
-        //exception removed for easier swap and the ability to inserti kuchen
-        this.kuchenList[fachnummer] = kuchen;
-    }
-
     synchronized public void swapKuchen(int fachNummer1, int fachNummer2) throws InvalidInputException {
         checkNumber(fachNummer1);
         checkNumber(fachNummer2);
@@ -126,6 +118,15 @@ public class Automat implements Observable, Serializable {
 
         changeKuchen(fachNummer1, getKuchen(fachNummer2));
         changeKuchen(fachNummer2, tempKuchen);
+    }
+
+    //only needed for swapping not modifying the automat
+    synchronized private void changeKuchen(int fachnummer, KuchenVerkaufsObjektImpl kuchen) throws InvalidInputException {
+        checkNumber(fachnummer);
+        kuchen.setFachNummer(fachnummer);
+
+        //exception removed for easier swap and the ability to inserti kuchen
+        this.kuchenList[fachnummer] = kuchen;
     }
 
     synchronized public LinkedList<Hersteller> getHersteller() throws EmptyListException {
@@ -226,8 +227,12 @@ public class Automat implements Observable, Serializable {
     synchronized public void setInspectionDate(int fachnummer) throws InvalidInputException {
         checkNumber(fachnummer);
 
-        this.kuchenList[fachnummer].setInspektionsDatum(Calendar.getInstance().getTime());
-        notifyObservers();
+        if(this.kuchenList[fachnummer] == null){
+            throw new NoSuchElementException();
+        } else {
+            this.kuchenList[fachnummer].setInspektionsDatum(Calendar.getInstance().getTime());
+            notifyObservers();
+        }
     }
 
     //function to check if the fachnummer is negative
@@ -266,10 +271,7 @@ public class Automat implements Observable, Serializable {
     public void notifyObservers() {
         if(observerList!=null)
         for (Observer observer : this.observerList) {
-            try {
-                observer.update();//why does this throw every exception under the sun ??
-            } catch (EmptyListException | NullPointerException | AlreadyExistsException | InvalidInputException | FullAutomatException e) {
-            }
+                observer.update();
         }
     }
 

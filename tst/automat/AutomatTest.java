@@ -8,25 +8,40 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.*;
 
 class AutomatTest {
-    private final int negFn = -444;
-    private final String MASCARPONE = "Mascarpone";
-    private final String SENF = "Senf";
-    private final String KIRSCHE = "Kirsche";
-    private final String BENJAMIN = "benjamin";
-    private final String BLÜMCHEN = "blümchen";
-    private final String MOSES = "moses";
-    Duration dur1 = Duration.ofDays(4);
-    LinkedList<Allergen> allergList1 = new LinkedList<>(Arrays.asList(Allergen.Erdnuss, Allergen.Haselnuss));
+
+    private int negFn = -444;
+    private String MASCARPONE;
+    private String SENF;
+    private String KIRSCHE;
+    private String BENJAMIN;
+    private String BLÜMCHEN;
+    private String MOSES;
+    Duration dur1;
+    private HashSet<Allergen> allergList1;
+
+    @BeforeEach
+    public void setUp(){
+        negFn = -444;
+        MASCARPONE = "Mascarpone";
+        SENF = "Senf";
+        KIRSCHE = "Kirsche";
+        BENJAMIN = "benjamin";
+        BLÜMCHEN = "blümchen";
+        MOSES = "moses";
+        dur1 = Duration.ofDays(4);
+        allergList1 = new HashSet<>(Arrays.asList(Allergen.Erdnuss, Allergen.Haselnuss));
+    }
 
 
     //addKuchen tests
@@ -176,43 +191,43 @@ class AutomatTest {
         Assertions.assertThrows(InvalidInputException.class, () -> auto.removeKuchen(700));
     }
 
-    //changeKuchen tests do i need this?
-    @Test
-    public void changeKuchenValid() {
-        Automat auto = new Automat(10);
-        Hersteller herst1 = new HerstellerImpl(BENJAMIN);
-        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
-        ObsttorteImpl kuch3 = new ObsttorteImpl(herst1, allergList1, 500, dur1, new BigDecimal(300), new Kremsorte(MASCARPONE), new Obstsorte(KIRSCHE));
+    //not necessary if change Kuchen is on private
+//    @Test
+//    public void changeKuchenValid() {
+//        Automat auto = new Automat(10);
+//        Hersteller herst1 = new HerstellerImpl(BENJAMIN);
+//        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
+//        ObsttorteImpl kuch3 = new ObsttorteImpl(herst1, allergList1, 500, dur1, new BigDecimal(300), new Kremsorte(MASCARPONE), new Obstsorte(KIRSCHE));
+//
+//
+//        try {
+//            auto.addHersteller(herst1);
+//            auto.addKuchen(kuch1);
+//
+//            auto.changeKuchen(0, kuch3);
+//            Assertions.assertEquals(ObsttorteImpl.class, auto.getKuchen(0).getClass());
+//        } catch (AlreadyExistsException | FullAutomatException | InvalidInputException e) {
+//            fail();
+//        }
+//    }
 
-
-        try {
-            auto.addHersteller(herst1);
-            auto.addKuchen(kuch1);
-
-            auto.changeKuchen(0, kuch3);
-            Assertions.assertEquals(ObsttorteImpl.class, auto.getKuchen(0).getClass());
-        } catch (AlreadyExistsException | FullAutomatException | InvalidInputException e) {
-            fail();
-        }
-    }
-
-    @Test
-    public void changeKuchenInvalidInput(){
-        Automat auto = new Automat(10);
-        Hersteller herst1 = new HerstellerImpl(BENJAMIN);
-        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
-        Hersteller herst3 = new HerstellerImpl(MOSES);;
-        ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst3, allergList1, 400, dur1, new BigDecimal(250), new Obstsorte(KIRSCHE));
-
-        try {
-            auto.addHersteller(herst1);
-            auto.addKuchen(kuch1);
-        } catch (AlreadyExistsException | FullAutomatException e) {
-            fail();
-        }
-
-        Assertions.assertThrows(InvalidInputException.class, () -> auto.changeKuchen(-1, kuch2));
-    }
+//    @Test
+//    public void changeKuchenInvalidInput(){
+//        Automat auto = new Automat(10);
+//        Hersteller herst1 = new HerstellerImpl(BENJAMIN);
+//        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
+//        Hersteller herst3 = new HerstellerImpl(MOSES);;
+//        ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst3, allergList1, 400, dur1, new BigDecimal(250), new Obstsorte(KIRSCHE));
+//
+//        try {
+//            auto.addHersteller(herst1);
+//            auto.addKuchen(kuch1);
+//        } catch (AlreadyExistsException | FullAutomatException e) {
+//            fail();
+//        }
+//
+//        Assertions.assertThrows(InvalidInputException.class, () -> auto.changeKuchen(-1, kuch2));
+//    }
 
     //checkKuchen tests
     @Test
@@ -231,7 +246,7 @@ class AutomatTest {
             auto.addKuchen(kuch1);
             auto.addKuchen(kuch2);
 
-            //check if all kuchen are returned in in the list
+            //multiple asserts to check if all kuchen are properly returned in in the list
             Assertions.assertEquals(500, auto.checkKuchen().get(0).getNaehrwert());
             Assertions.assertEquals(300, auto.checkKuchen().get(1).getNaehrwert());
             Assertions.assertEquals(400, auto.checkKuchen().get(2).getNaehrwert());
@@ -441,6 +456,7 @@ class AutomatTest {
             auto.addKuchen(kuch2);
 
             auto.swapKuchen(0, 1);
+            //2 Asserts to check if both kuchen have been swapped properly
             Assertions.assertEquals(300, auto.getKuchen(1).getNaehrwert());
             Assertions.assertEquals(400, auto.getKuchen(0).getNaehrwert());
         } catch (AlreadyExistsException | FullAutomatException | InvalidInputException e) {
@@ -576,6 +592,13 @@ class AutomatTest {
     }
 
     @Test
+    public void setInspectionDateNosuchElement(){
+        Automat auto = new Automat(10);
+
+        assertThrows(NoSuchElementException.class, () -> auto.setInspectionDate(2));
+    }
+
+    @Test
     public void getSizeValid(){
         Automat auto = new Automat(10);
 
@@ -596,5 +619,53 @@ class AutomatTest {
             fail();
         }
         assertEquals(1, auto.getKuchenCounter());
+    }
+
+    @Test
+    public void addObserverValid(){
+        Automat auto = new Automat(10);
+        Hersteller herst1 = new HerstellerImpl(BENJAMIN);
+
+        AutomatChangeObserver obs = mock(AutomatChangeObserver.class);
+        auto.addObserver(obs);
+
+        try {
+            auto.addHersteller(herst1);
+        } catch (AlreadyExistsException e) {
+            fail();
+        }
+        //check if observer calls update on adding a hersteller to see if it has been succesfully added
+        verify(obs).update();
+    }
+
+    @Test
+    public void removeObserverValid(){
+        Automat auto = new Automat(10);
+        Hersteller herst1 = new HerstellerImpl(BENJAMIN);
+        AutomatChangeObserver obs = new AutomatChangeObserver(auto); //observer automatically adds itself to automat when called in constructor
+
+        auto.removeObserver(obs);
+        try {
+            final ByteArrayOutputStream bos1 = new ByteArrayOutputStream();
+            System.setOut(new PrintStream(bos1));
+            auto.addHersteller(herst1);
+            //String is expected to be empty as observer should print into System.out after being removed
+            Assertions.assertTrue(bos1.toString().isEmpty());
+        } catch (AlreadyExistsException e) {
+            fail();
+        } finally {
+            System.setOut(System.out);
+        }
+    }
+
+    @Test
+    public void notifyObserversValid(){
+        Automat auto = new Automat(10);
+        AutomatChangeObserver obs = mock(AutomatChangeObserver.class);
+        auto.addObserver(obs);
+
+        auto.notifyObservers();
+
+        verify(obs).update();
     }
 }

@@ -14,7 +14,10 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Random;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 public class SimulationWrapperTest {
@@ -22,115 +25,170 @@ public class SimulationWrapperTest {
     private final String BENJAMIN = "benjamin";
     private final String BLUEMCHEN = "blümchen";
     private final String MOSES = "moses";
-    private final Hersteller herst1 = new HerstellerImpl(BENJAMIN);
-    private final Hersteller herst2 = new HerstellerImpl(BLUEMCHEN);
-    private final Hersteller herst3 = new HerstellerImpl(MOSES);
     Duration dur1 = Duration.ofDays(4);
     LinkedList<Allergen> allergList1 = new LinkedList<>(Arrays.asList(Allergen.Erdnuss, Allergen.Haselnuss));
-    KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE) );
-    KremkuchenImpl kuch2 = new KremkuchenImpl(herst1, allergList1, 500, dur1, new BigDecimal(600), new Kremsorte(MASCARPONE));
 
     @Test
-    public void createRandomCakeValid() throws AlreadyExistsException, EmptyListException {
+    public void createRandomCakeValid() {
         Automat auto = new Automat(20);
         AutomatSimulationWrapper wrapper = new AutomatSimulationWrapper();
         wrapper.setAutomat(auto);
 
-        //every possible hersteller needs to be added to randomCreate doesnt not throw exception
-        auto.addHersteller(herst1);
-        auto.addHersteller(herst2);
-        auto.addHersteller(herst3);
+        Hersteller herst1 = new HerstellerImpl(BENJAMIN);
+        Hersteller herst2 = new HerstellerImpl(BLUEMCHEN);
+        Hersteller herst3 = new HerstellerImpl(MOSES);
 
-        wrapper.createRandomCake();
-        Assertions.assertFalse(auto.checkKuchen().isEmpty());
+        //every possible hersteller needs to be added to randomCreate doesnt not throw exception
+        try {
+            auto.addHersteller(herst1);
+            auto.addHersteller(herst2);
+            auto.addHersteller(herst3);
+
+            wrapper.createRandomCake();
+            Assertions.assertEquals(1, auto.getKuchenCounter());
+        } catch (AlreadyExistsException e) {
+           fail();
+        }
     }
 
     @Test
-    public void createRandomCakeSynchronizedValid() throws AlreadyExistsException, EmptyListException {
+    public void createRandomCakeSynchronizedValid() {
         Automat auto = new Automat(20);
         AutomatSimulationWrapper wrapper = new AutomatSimulationWrapper();
         wrapper.setAutomat(auto);
 
+        Hersteller herst1 = new HerstellerImpl(BENJAMIN);
+        Hersteller herst2 = new HerstellerImpl(BLUEMCHEN);
+        Hersteller herst3 = new HerstellerImpl(MOSES);
         //every possible hersteller needs to be added to randomCreate doesnt not throw exception
-        auto.addHersteller(herst1);
-        auto.addHersteller(herst2);
-        auto.addHersteller(herst3);
+        try {
+            auto.addHersteller(herst1);
+            auto.addHersteller(herst2);
+            auto.addHersteller(herst3);
 
-        wrapper.createRandomCakeSynchronized();
-        Assertions.assertFalse(auto.checkKuchen().isEmpty());
+            wrapper.createRandomCakeSynchronized();
+            Assertions.assertFalse(auto.checkKuchen().isEmpty());
+        } catch (AlreadyExistsException | EmptyListException e) {
+            fail();
+        }
 
     }
 
     @Test
-    public void removeRandomCakeValid() throws AlreadyExistsException, FullAutomatException, EmptyListException {
+    public void removeRandomCakeValid() {
         Automat auto = new Automat(10);
         AutomatSimulationWrapper wrapper = new AutomatSimulationWrapper();
         wrapper.setAutomat(auto);
 
-        auto.addHersteller(herst1);
-        auto.addKuchen(kuch1);
+        Hersteller herst1 = new HerstellerImpl(BENJAMIN);
+        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE) );
 
-        wrapper.removeRandomCake();
+        try {
+            auto.addHersteller(herst1);
+            auto.addKuchen(kuch1);
+        } catch (AlreadyExistsException | FullAutomatException e) {
+            fail();
+        }
+
+        wrapper.removeRandomCake(new Random(System.currentTimeMillis()));
         //list should be empty since only one cake can be remove, exceptions should not occur
         Assertions.assertTrue(auto.kuchListEmpty());
     }
 
     @Test
-    public void removeOldestCakeValid() throws AlreadyExistsException, FullAutomatException, InvalidInputException, EmptyListException {
+    public void removeOldestCakeValid() {
         Automat auto = new Automat(20);
         AutomatSimulationWrapper wrapper = new AutomatSimulationWrapper();
         wrapper.setAutomat(auto);
 
-        auto.addHersteller(herst1);
-        auto.addKuchen(kuch1);
-        auto.addKuchen(kuch2);
+        Hersteller herst1 = new HerstellerImpl(BENJAMIN);
+        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE) );
+        KremkuchenImpl kuch2 = new KremkuchenImpl(herst1, allergList1, 500, dur1, new BigDecimal(600), new Kremsorte(MASCARPONE));
 
-        wrapper.removeOldestCake();
-        //oldest cake should be removed check by Naehrwert if the correct one is still there
-        Assertions.assertEquals(500, auto.checkKuchen().get(0).getNaehrwert());
+        try {
+            auto.addHersteller(herst1);
+            auto.addKuchen(kuch1);
+            auto.addKuchen(kuch2);
+
+            wrapper.removeOldestCake();
+            //oldest cake should be removed check by Naehrwert if the correct one is still there
+            Assertions.assertEquals(500, auto.checkKuchen().get(0).getNaehrwert());
+        } catch (AlreadyExistsException | FullAutomatException | EmptyListException e) {
+            fail();
+        }
     }
 
     @Test
-    public void removeOldestCakeSynchronizedValid() throws AlreadyExistsException, FullAutomatException, InvalidInputException, EmptyListException {
+    public void removeOldestCakeSynchronizedValid() {
         Automat auto = new Automat(20);
         AutomatSimulationWrapper wrapper = new AutomatSimulationWrapper();
         wrapper.setAutomat(auto);
 
-        auto.addHersteller(herst1);
-        auto.addKuchen(kuch1);
-        auto.addKuchen(kuch2);
+        Hersteller herst1 = new HerstellerImpl(BENJAMIN);
+        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE) );
+        KremkuchenImpl kuch2 = new KremkuchenImpl(herst1, allergList1, 500, dur1, new BigDecimal(600), new Kremsorte(MASCARPONE));
 
-        auto.setInspectionDate(0);
-        auto.setInspectionDate(1);
+        try {
+            auto.addHersteller(herst1);
+            auto.addKuchen(kuch1);
+            auto.addKuchen(kuch2);
 
-        wrapper.removeOldestCakeSynchronized();
-        //oldest cake should be removed check by Naehrwert if the correct one is still there
-        Assertions.assertEquals(500, auto.checkKuchen().get(0).getNaehrwert());
+            auto.setInspectionDate(0);
+            auto.setInspectionDate(1);
+
+            wrapper.removeOldestCakeSynchronized();
+            //oldest cake should be removed check by Naehrwert if the correct one is still there
+            Assertions.assertEquals(500, auto.checkKuchen().get(0).getNaehrwert());
+        } catch (AlreadyExistsException | FullAutomatException | InvalidInputException | EmptyListException e) {
+            fail();
+        }
     }
 
     @Test
     public void causeInspectionValid() throws InvalidInputException {
+        //TODO why does this cause nullpointer
         Automat auto = mock(Automat.class);
         AutomatSimulationWrapper wrapper = new AutomatSimulationWrapper();
         wrapper.setAutomat(auto);
 
-        wrapper.causeInspection();
 
-        verify(auto).setInspectionDate(0);
+        when(auto.getKuchenCounter()).thenReturn(10);
+//        Hersteller herst1 = new HerstellerImpl(BENJAMIN);
+//        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE) );
+//        Automat auto = new Automat(10);
+
+
+
+//            auto.addHersteller(herst1);
+//            auto.addKuchen(kuch1);
+
+            wrapper.causeInspection(new Random(System.currentTimeMillis()));
+
+            verify(auto).setInspectionDate(any());
+
     }
 
     @Test
-    public void removeMultipleOldestCakeSynchronized() throws AlreadyExistsException, FullAutomatException{
+    public void removeMultipleOldestCakeSynchronized() {
         Automat auto = new Automat(20);
         AutomatSimulationWrapper wrapper = new AutomatSimulationWrapper();
         wrapper.setAutomat(auto);
 
+        Hersteller herst1 = new HerstellerImpl(BENJAMIN);
+        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE) );
+        KremkuchenImpl kuch2 = new KremkuchenImpl(herst1, allergList1, 500, dur1, new BigDecimal(600), new Kremsorte(MASCARPONE));
+        KremkuchenImpl kuch3 = new KremkuchenImpl(herst1, allergList1, 400, dur1, new BigDecimal(859), new Kremsorte(MASCARPONE));
 
-        auto.addHersteller(herst1);
-        auto.addKuchen(kuch1);
-        auto.addKuchen(kuch2);
+        try {
+            auto.addHersteller(herst1);
+            auto.addKuchen(kuch1);
+            auto.addKuchen(kuch2);
+        } catch (AlreadyExistsException | FullAutomatException e) {
+            fail();
+        }
 
-        wrapper.removeMultipleOldestCakeSynchronized();
+        wrapper.removeMultipleOldestCakeSynchronized(new Random(2));
+        assertEquals(1, auto.getKuchenCounter());
         //TODO how to i test/assert in a random method?
     }
 }

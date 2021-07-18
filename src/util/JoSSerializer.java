@@ -10,8 +10,6 @@ public class JoSSerializer {
     public void serialize(String filename, Automat item){
         try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
             serialize(oos, item);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -24,11 +22,7 @@ public class JoSSerializer {
     public Automat deserialize(String filename){
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
             return deserialize(ois);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return null;

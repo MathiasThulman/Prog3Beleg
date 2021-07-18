@@ -3,11 +3,12 @@ import cli.*;
 import events.*;
 import util.JoSSerializer;
 
-public class CLInewMain {
+public class alternativeCLI {
+
     public static void main(String[] args) {
         int automatCap = 50;
         if(args.length == 1){
-             automatCap =Integer.parseInt(args[1]);
+            automatCap =Integer.parseInt(args[1]);
         }
         Automat automat = new Automat(automatCap);
         Console console = new Console();
@@ -16,7 +17,6 @@ public class CLInewMain {
         ConsoleView view = new ConsoleView();
 
         InputStringEventHandler<InputStringEvent> stringHandler = new InputStringEventHandler<>();
-        InputIntEventHandler<InputIntEvent> intHandler = new InputIntEventHandler<>();
         GetEventHandler<InputGetEvent> getHandler = new GetEventHandler<>();
         InputKuchenEventHandler<InputKuchenEvent> kuchenHandler = new InputKuchenEventHandler<>();
         ErrorEventHandler<ErrorEvent> errorHandler = new ErrorEventHandler<>();
@@ -35,8 +35,6 @@ public class CLInewMain {
         reader.setStringHandler(stringHandler);
         AutomatInputIntListener autoIntListener = new AutomatInputIntListener();
         autoIntListener.setAutomatWrapper(automatWrapper);
-        intHandler.add(autoIntListener);
-        reader.setIntHandler(intHandler);
         AutomatGetEventListener autoGetListner = new AutomatGetEventListener();
         autoGetListner.setAutomatWrapper(automatWrapper);
         getHandler.add(autoGetListner);

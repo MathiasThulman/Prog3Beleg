@@ -1,6 +1,7 @@
 package automat;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -11,9 +12,16 @@ import java.util.LinkedList;
 
 class KuchVerkaufsObjektImplTest {
 
-    private final Date date1 = new Date(2020, 4, 9);
-    private final int fn1 = 4;
+
+    private Date date1;
+    private int fn1;
     LinkedList<Allergen> allergList1 = new LinkedList<>(Arrays.asList(Allergen.Erdnuss, Allergen.Haselnuss));
+    @BeforeEach
+    public void setUp(){
+        date1 = new Date(2020, 4, 9);
+        fn1 = 4;
+        allergList1 = new LinkedList<>(Arrays.asList(Allergen.Erdnuss, Allergen.Haselnuss));
+    }
 
 
 

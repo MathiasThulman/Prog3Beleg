@@ -5,18 +5,19 @@ import exceptions.EmptyListException;
 import exceptions.InvalidInputException;
 
 import java.util.Calendar;
+import java.util.Random;
 
 public class InspektionThread extends Thread {
     private AutomatSimulationWrapper wrapper;
 
     public void run() {
         while (true) {
-            this.wrapper.causeInspection();
-            try {
-                sleep(0);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            this.wrapper.causeInspection(new Random(System.currentTimeMillis()));
+//            try {
+//                sleep(0);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
     }
 

@@ -3,12 +3,11 @@ package cli;
 import java.util.Scanner;
 
 public class Console {
-    private InputMode mode;
+    private InputMode mode  = InputMode.insertMode;
     private InputReader inputReader;
 
 
     public void read() {
-        this.mode = InputMode.insertMode;
 
         Scanner scanner = new Scanner(System.in);
 

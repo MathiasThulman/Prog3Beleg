@@ -66,7 +66,7 @@ public class AutomatSimulationWrapper {
         Date oldestDate = new Date(3000, Calendar.FEBRUARY, 6);
 
         try {
-            for (KuchenVerkaufsObjektImpl kuchen : this.automat.checkKuchen()) {
+            for (KuchenDekorator kuchen : this.automat.checkKuchen()) {
                 if (kuchen.getEinfuegeDatum().before(oldestDate)) {
                     oldestDate = kuchen.getInspektionsdatum();
                     oldestFachnummer = kuchen.getFachnummer();

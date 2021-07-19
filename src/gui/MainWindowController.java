@@ -49,18 +49,18 @@ public class MainWindowController {
     @FXML
     private TextField fieldKremsorte;
     @FXML
-    private ListView<KuchenVerkaufsObjektImpl> listViewKuchen;
+    private ListView<KuchenDekorator> listViewKuchen;
     @FXML
     private Label errorText;
     public StringProperty errorTextString = new SimpleStringProperty();
     @FXML
     private ChoiceBox choiceKuchen;
     private Automat automat;
-    private Comparator<KuchenVerkaufsObjektImpl> fachnummerComp;
-    private Comparator<KuchenVerkaufsObjekt> herstellerComp;
-    private Comparator<KuchenVerkaufsObjektImpl> haltbarKeitComp;
-    private ObservableList<KuchenVerkaufsObjektImpl> observableKuchenList;
-    private SortedList<KuchenVerkaufsObjektImpl> sortedKuchenList;
+    private Comparator<KuchenDekorator> fachnummerComp;
+    private Comparator<KuchenDekorator> herstellerComp;
+    private Comparator<KuchenDekorator> haltbarKeitComp;
+    private ObservableList<KuchenDekorator> observableKuchenList;
+    private SortedList<KuchenDekorator> sortedKuchenList;
     private ObservableList<HerstellerNummer> observableHerstellerList;
     @FXML
     private Label allergenLabel;
@@ -103,21 +103,21 @@ public class MainWindowController {
             //e.printStackTrace(); this will always happen when the automat is empty and means nothing
         }
 
-        this.fachnummerComp = new Comparator<KuchenVerkaufsObjektImpl>() {
+        this.fachnummerComp = new Comparator<KuchenDekorator>() {
             @Override
-            public int compare(KuchenVerkaufsObjektImpl o1, KuchenVerkaufsObjektImpl o2) {
+            public int compare(KuchenDekorator o1, KuchenDekorator o2) {
                 return o1.getFachnummer() - o2.getFachnummer();
             }
         };
 
-        this.haltbarKeitComp = new Comparator<KuchenVerkaufsObjektImpl>() {
+        this.haltbarKeitComp = new Comparator<KuchenDekorator>() {
             @Override
-            public int compare(KuchenVerkaufsObjektImpl o1, KuchenVerkaufsObjektImpl o2) {
+            public int compare(KuchenDekorator o1, KuchenDekorator o2) {
                 return o1.getHaltbarkeit().compareTo(o2.getHaltbarkeit());
             }
         };
 
-        SortedList<KuchenVerkaufsObjektImpl> sortedList = new SortedList<KuchenVerkaufsObjektImpl>(listViewKuchen.getItems(), fachnummerComp);
+        SortedList<KuchenDekorator> sortedList = new SortedList<KuchenDekorator>(listViewKuchen.getItems(), fachnummerComp);
 
         //let all numeric fields only accept numbers source: https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
         fachnummerField.textProperty().addListener(new ChangeListener<String>() {
@@ -279,9 +279,9 @@ public class MainWindowController {
 
     public void onPressSortByHaltbarkeit() {
         try {
-            sortedKuchenList = new SortedList<KuchenVerkaufsObjektImpl>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenVerkaufsObjektImpl>() {
+            sortedKuchenList = new SortedList<KuchenDekorator>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenDekorator>() {
                 @Override
-                public int compare(KuchenVerkaufsObjektImpl o1, KuchenVerkaufsObjektImpl o2) {
+                public int compare(KuchenDekorator o1, KuchenDekorator o2) {
                     return o1.getHaltbarkeit().compareTo(o2.getHaltbarkeit());
                 }
             });
@@ -293,9 +293,9 @@ public class MainWindowController {
 
     public void onPressSortByFachnummer() {
         try {
-            sortedKuchenList = new SortedList<KuchenVerkaufsObjektImpl>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenVerkaufsObjektImpl>() {
+            sortedKuchenList = new SortedList<KuchenDekorator>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenDekorator>() {
                 @Override
-                public int compare(KuchenVerkaufsObjektImpl o1, KuchenVerkaufsObjektImpl o2) {
+                public int compare(KuchenDekorator o1, KuchenDekorator o2) {
                     return o2.getFachnummer() - o1.getFachnummer();
                 }
             });
@@ -309,9 +309,9 @@ public class MainWindowController {
 
     public void onPressSortByHersteller() {
         try {
-            sortedKuchenList = new SortedList<KuchenVerkaufsObjektImpl>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenVerkaufsObjektImpl>() {
+            sortedKuchenList = new SortedList<KuchenDekorator>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenDekorator>() {
                 @Override
-                public int compare(KuchenVerkaufsObjektImpl o1, KuchenVerkaufsObjektImpl o2) {
+                public int compare(KuchenDekorator o1, KuchenDekorator o2) {
                     return o1.getHersteller().getName().compareTo(o2.getHersteller().getName());
                 }
             });

@@ -1,5 +1,6 @@
 package cli;
 
+import events.GetEventHandler;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -9,9 +10,8 @@ import static org.mockito.Mockito.*;
 
 
 public class ConsoleTest {
-    private final String MODE = "mode";
 
-
+    //TODO fix these tests
     @Test
     public void executeCommandInsertValid(){
         try {

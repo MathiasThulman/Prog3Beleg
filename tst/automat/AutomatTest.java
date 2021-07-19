@@ -48,7 +48,9 @@ class AutomatTest {
     @Test
     public void addKuchenValid() {
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
-        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
+        KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
+        KuchenDekorator kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
+
         Automat auto = new Automat(10);
 
         try {
@@ -56,8 +58,8 @@ class AutomatTest {
             auto.addKuchen(kuch1);
 
             //check if the kuchen was added at first fachnummer 0
-            Assertions.assertEquals(0, auto.getKuchen(0).getFachnummer());
-        } catch (AlreadyExistsException | FullAutomatException | InvalidInputException e) {
+            Assertions.assertEquals(1, auto.getKuchenCounter());
+        } catch (AlreadyExistsException | FullAutomatException e) {
             fail();
         }
     }

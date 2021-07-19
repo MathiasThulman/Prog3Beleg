@@ -7,56 +7,85 @@ import java.util.Date;
 import java.util.HashSet;
 
 public class KuchenBelag implements KuchenDekorator{
-    private KuchenDekorator dekorator;
+    private KuchenDekorator kuchenBelag;
     private HashSet<Allergen> allergens;
     private int naehrwert;
     private Duration haltbarkeit;
     private BigDecimal preis;
     private String name;
 
+    public KuchenBelag(String name,  BigDecimal preis, int naehrwert, Duration haltbarkeit, HashSet<Allergen> allergens, KuchenDekorator kuchenBelag) {
+        this.kuchenBelag = kuchenBelag;
+        this.allergens = allergens;
+        allergens.addAll(this.kuchenBelag.getAllergene());
+        this.naehrwert = naehrwert;
+        this.haltbarkeit = haltbarkeit;
+        this.preis = preis;
+        this.name = name;
+    }
+
 
     @Override
     public Hersteller getHersteller() {
-        return dekorator.getHersteller();
+        return kuchenBelag.getHersteller();
     }
 
     @Override
     public Collection<Allergen> getAllergene() {
-        return null;
+        return this.allergens;
     }
 
     @Override
     public int getNaehrwert() {
-        return 0;
+        return this.kuchenBelag.getNaehrwert() + this.naehrwert;
     }
 
     @Override
     public Duration getHaltbarkeit() {
-        return null;
+        if(0 < this.getHaltbarkeit().compareTo(this.haltbarkeit)){
+            return this.haltbarkeit;
+        } else {
+            return this.kuchenBelag.getHaltbarkeit();
+        }
     }
 
     @Override
     public BigDecimal getPreis() {
-        return null;
+        return this.kuchenBelag.getPreis().add(this.preis);
     }
 
     @Override
     public Date getInspektionsdatum() {
-        return this.dekorator.getInspektionsdatum();
+        return this.kuchenBelag.getInspektionsdatum();
     }
 
     @Override
     public int getFachnummer() {
-        return this.dekorator.getFachnummer();
+        return this.kuchenBelag.getFachnummer();
     }
 
     @Override
     public Date getEinfuegeDatum() {
-        return this.dekorator.getEinfuegeDatum();
+        return this.kuchenBelag.getEinfuegeDatum();
     }
 
     @Override
     public String getName() {
-        return this.dekorator.getName() + " " + this.name;
+        return this.kuchenBelag.getName() + " " + this.name;
+    }
+
+    @Override
+    public void setInspektionsDatum(Date date) {
+        this.kuchenBelag.setInspektionsDatum(date);
+    }
+
+    @Override
+    public void setFachNummer(int fachnummer) {
+        this.kuchenBelag.setFachNummer(fachnummer);
+    }
+
+    @Override
+    public void setEinfuegeDatum(Date date) {
+        this.kuchenBelag.setEinfuegeDatum(date);
     }
 }

@@ -22,6 +22,8 @@ public class KuchenVerkaufsObjektImpl implements KuchenDekorator {
         this.naehrwert = naehrwert;
         this.haltbarkeit = haltbarkeit;
         this.preis = preis;
+//        this.einfuegeDatum = new Date(1982, 6,9);//to avoid nullpointer exceptions
+//        this.inspektionsDatum = new Date(1982, 6,9);
     }
 
     @Override
@@ -59,19 +61,21 @@ public class KuchenVerkaufsObjektImpl implements KuchenDekorator {
         return this.fachNummer;
     }
 
-    void setInspektionsDatum(Date inspektionsDatum) {
+    //TODO why does this have to be public
+    public void setInspektionsDatum(Date inspektionsDatum) {
         this.inspektionsDatum = inspektionsDatum;
     }
 
-    void setFachNummer(int fachNummer) {
+    public void setFachNummer(int fachNummer) {
         this.fachNummer = fachNummer;
     }
 
-    public String toString(){
-        return this.hersteller.getName() + ", " + this.allergene.toString()  + ", " + this.haltbarkeit.toDays()  + ", "+ this.inspektionsDatum.toString() + ", "+ this.preis.toString();
-    }
+//    public String toString(){
+//        return this.hersteller.getName() + ", " + this.allergene.toString()  + ", " + this.haltbarkeit.toDays()  + ", "+ this.inspektionsDatum.toString() + ", "+ this.preis.toString();
+//    }
 
-    void setEinfuegeDatum(Date einfuegeDatum) {
+    //TODO why is this public too
+    public void setEinfuegeDatum(Date einfuegeDatum) {
         this.einfuegeDatum = einfuegeDatum;
     }
 

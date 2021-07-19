@@ -6,7 +6,7 @@ import java.time.Duration;
 import java.util.Collection;
 import java.util.Date;
 
-public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt, Serializable {
+public class KuchenVerkaufsObjektImpl implements KuchenDekorator {
     private final Hersteller hersteller;
     private final Collection<Allergen> allergene;
     private final int naehrwert;
@@ -23,15 +23,6 @@ public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt, Serializa
         this.haltbarkeit = haltbarkeit;
         this.preis = preis;
     }
-
-    //for beans persistence
-//    public KuchenVerkaufsObjektImpl(Hersteller hersteller, Collection<Allergen> allergene, int naehrwert, long haltbarkeit, String preis) {
-//        this.hersteller = hersteller;
-//        this.allergene = allergene;
-//        this.naehrwert = naehrwert;
-//        this.haltbarkeit = Duration.ofMillis(haltbarkeit);
-//        this.preis = new BigDecimal(preis);
-//    }
 
     @Override
     public Hersteller getHersteller() {
@@ -88,13 +79,8 @@ public class KuchenVerkaufsObjektImpl implements KuchenVerkaufsObjekt, Serializa
         return einfuegeDatum;
     }
 
-
-//    public long getDurationInMS(){
-//        return this.haltbarkeit.toMillis();
-//    }
-//
-//    public String getStringBigDecimal(){
-//        return this.preis.toString();
-//    }
-
+    @Override
+    public String getName() {
+        return "Langweiliger Kuchenboden";
+    }
 }

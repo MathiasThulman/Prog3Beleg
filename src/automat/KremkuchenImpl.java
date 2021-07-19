@@ -22,4 +22,8 @@ public class KremkuchenImpl extends KuchenVerkaufsObjektImpl implements Kremkuch
         return this.kremsorte.getDescription() + ", " + super.toString();
     }
 
+    @Override
+    public String getName(){
+        return "Kremkuchen";
+    }
 }

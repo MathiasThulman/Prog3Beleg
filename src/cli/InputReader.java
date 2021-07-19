@@ -27,7 +27,10 @@ public class InputReader {
         } else if (this.kuchenHandler != null) {
             if (input.split(" ").length == 7 || input.split(" ").length == 8) {
                 String[] ps = input.split(" ");
-                //TODO change price string to you can write bigdecimal with , and make it safer to put in nonsense
+                if(ps[2].contains(",")){
+                    ps[2] = ps[2].replace(",",".");
+                }
+                //TODO make it safer to put in nonsense
 
                 switch (ps[0]) {
                     case OBSTKUCHEN:

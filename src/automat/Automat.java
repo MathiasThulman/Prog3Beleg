@@ -148,7 +148,7 @@ public class Automat implements Observable, Serializable {
             }
         }
 
-        for (KuchenVerkaufsObjekt kuch : this.kuchenList) {
+        for (KuchenVerkaufsObjektImpl kuch : this.kuchenList) {
             if (kuch == null) {
                 break; // dont go into objekt if null to avoid NullPointerException
             }
@@ -198,7 +198,7 @@ public class Automat implements Observable, Serializable {
 
         HashSet<Allergen> res = new HashSet<Allergen>();
 
-        for (KuchenVerkaufsObjekt kuch : kuchenList) {
+        for (KuchenVerkaufsObjektImpl kuch : kuchenList) {
             if (kuch != null) {
                 res.addAll(kuch.getAllergene());
             }
@@ -215,7 +215,7 @@ public class Automat implements Observable, Serializable {
         res.add(Allergen.Gluten);
         res.add(Allergen.Sesamsamen);
 
-        for (KuchenVerkaufsObjekt kuch : kuchenList) {
+        for (KuchenVerkaufsObjektImpl kuch : kuchenList) {
             if (kuch != null) {
                 res.removeAll(kuch.getAllergene());
             }

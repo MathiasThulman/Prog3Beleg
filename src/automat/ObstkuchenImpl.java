@@ -21,4 +21,9 @@ public class ObstkuchenImpl extends KuchenVerkaufsObjektImpl implements Obstkuch
     public String toString(){
         return this.obstsorte.getDescription() + ", " + super.toString();
     }
+
+    @Override
+    public String getName(){
+        return "Obstkuchen";
+    }
 }

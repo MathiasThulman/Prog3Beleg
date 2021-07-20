@@ -26,12 +26,12 @@ public class JoSMain {
         try {
             auto.addHersteller(Frank);
             auto.addHersteller(Faustulus);
-            auto.addKuchen(new ObstkuchenImpl(Frank, new HashSet<>(Arrays.asList(Allergen.Gluten, Allergen.Sesamsamen)), 600, Duration.ofDays(5), new BigDecimal(200), new Obstsorte("Tomate")));
-            auto.addKuchen(new ObsttorteImpl(Faustulus, new HashSet<>(Arrays.asList(Allergen.Gluten, Allergen.Erdnuss)), 900, Duration.ofDays(2), new BigDecimal(500), new Kremsorte("Mayo"), new Obstsorte("Mayo")));
+            auto.addKuchen(new ObstkuchenImpl(Frank, new HashSet<>(Arrays.asList(Allergen.Gluten, Allergen.Sesamsamen)), 600, Duration.ofDays(5), new BigDecimal(200)));
+            auto.addKuchen(new ObsttorteImpl(Faustulus, new HashSet<>(Arrays.asList(Allergen.Gluten, Allergen.Erdnuss)), 900, Duration.ofDays(2), new BigDecimal(500)));
             System.out.println(auto + auto.checkKuchen().toString() + auto.checkHersteller().toString());
 
-            serializer.serialize("JoSFile", auto);
-            Automat loadedAutomat = serializer.deserialize("JoSFile");
+            serializer.serialize("JoSMainFile", auto);
+            Automat loadedAutomat = serializer.deserialize("JoSMainFile");
 
             System.out.println(loadedAutomat + loadedAutomat.checkKuchen().toString() + loadedAutomat.checkHersteller().toString());
         } catch (AlreadyExistsException | FullAutomatException | EmptyListException e) {

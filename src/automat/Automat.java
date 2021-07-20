@@ -175,7 +175,7 @@ public class Automat implements Observable, Serializable {
         return res;
     }
 
-    synchronized public LinkedList<KuchenDekorator> checkKuchen(Class kuchen) throws NoSuchElementException, EmptyListException {
+    synchronized public List<KuchenDekorator> checkKuchen(Class kuchen) throws NoSuchElementException, EmptyListException {
         if(kuchListEmpty()) throw new EmptyListException();
 
         LinkedList<KuchenDekorator> res = new LinkedList<>();

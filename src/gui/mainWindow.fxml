@@ -2,6 +2,7 @@
 
 <?import java.lang.*?>
 <?import javafx.collections.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -9,6 +10,14 @@
    <top>
       <HBox alignment="CENTER" minWidth="100.0" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
+            <VBox prefHeight="100.0" prefWidth="143.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#onPressSaveAutomat" text="Automat Speichern" />
+                  <Button mnemonicParsing="false" onAction="#onPressLoadAutomat" text="Automat laden" />
+               </children>
+               <HBox.margin>
+                  <Insets right="100.0" />
+               </HBox.margin></VBox>
             <Label text="Sortieren nach...." />
             <Button fx:id="sortByFachnummer" mnemonicParsing="false" onAction="#onPressSortByFachnummer" text="Fachnummer" />
             <Button fx:id="sortByHersteller" mnemonicParsing="false" onAction="#onPressSortByHersteller" text="Hersteller" />

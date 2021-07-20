@@ -4,5 +4,4 @@ import automat.Verkaufsobjekt;
 import automat.Kuchen;
 
 public interface Obstkuchen extends Kuchen, Verkaufsobjekt {
-    String getObstsorte();
 }

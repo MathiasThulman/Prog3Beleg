@@ -15,6 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import util.JoSSerializer;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -64,6 +65,7 @@ public class MainWindowController {
     private ObservableList<HerstellerNummer> observableHerstellerList;
     @FXML
     private Label allergenLabel;
+    JoSSerializer serializer;
 
     public StringProperty textProperty() {
         return this.errorTextString;
@@ -77,9 +79,11 @@ public class MainWindowController {
         this.errorTextString.setValue(value);
     }
 
+    //TODO save and load JoS
 
     public void initialize() {
         this.errorText.textProperty().bindBidirectional(errorTextString);
+        serializer = new JoSSerializer();
 
         this.automat = new Automat(20);
 
@@ -205,16 +209,18 @@ public class MainWindowController {
     }
 
     public void onPressAddKuchen() {
-        if(fieldHersteller.getText().isEmpty() || fieldPreis.getText().isEmpty() || fieldNaehrwert.getText().isEmpty() || fieldHaltbarkeit.getText().isEmpty()){
+        if(fieldHersteller.getText().isEmpty() || fieldPreis.getText().isEmpty() || fieldNaehrwert.getText().isEmpty() || fieldHaltbarkeit.getText().isEmpty() || choiceKuchen.getValue() == null){
             return; //dont allow processing of empty input
         }
         if (choiceKremkuchen.equals(choiceKuchen.getValue())) {
             if(fieldKremsorte.getText().isEmpty()){
                 return;
             }
-            KremkuchenImpl kremkuchen = new KremkuchenImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
+            KremkuchenImpl boden = new KremkuchenImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
                     Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())),
-                    new BigDecimal(Integer.parseInt(fieldPreis.getText())), new Kremsorte(fieldKremsorte.getText()));
+                    new BigDecimal(Integer.parseInt(fieldPreis.getText())));//TODO fix the creation of cakes in gui
+            KuchenBelag kremkuchen = new KuchenBelag(this.fieldKremsorte.getText(), new BigDecimal(0), 0,
+                    Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())), new HashSet<>(), boden);
             try {
                 this.automat.addKuchen(kremkuchen);
                 clearKuchenFields(); //clear only if the kuchen as been added succesfully
@@ -227,9 +233,11 @@ public class MainWindowController {
             if(fieldObstsorte.getText().isEmpty()){
                 return;
             }
-            ObstkuchenImpl obstkuchen = new ObstkuchenImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
+            ObstkuchenImpl boden = new ObstkuchenImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
                     Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())),
-                    new BigDecimal(Integer.parseInt(fieldPreis.getText())), new Obstsorte(fieldObstsorte.getText()));
+                    new BigDecimal(Integer.parseInt(fieldPreis.getText())));
+            KuchenBelag obstkuchen = new KuchenBelag(this.fieldObstsorte.getText(), new BigDecimal(0), 0,
+                    Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())), new HashSet<>(), boden);
             try {
                 this.automat.addKuchen(obstkuchen);
                 clearKuchenFields(); //clear only if the kuchen as been added succesfully
@@ -242,9 +250,11 @@ public class MainWindowController {
             if(fieldObstsorte.getText().isEmpty() || fieldKremsorte.getText().isEmpty()){
                 return;
             }
-            ObsttorteImpl obsttorte = new ObsttorteImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
+            ObsttorteImpl boden = new ObsttorteImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
                     Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())),
-                    new BigDecimal(Integer.parseInt(fieldPreis.getText())), new Kremsorte(fieldKremsorte.getText()), new Obstsorte(fieldObstsorte.getText()));
+                    new BigDecimal(Integer.parseInt(fieldPreis.getText())));
+            KuchenBelag obsttorte = new KuchenBelag(this.fieldKremsorte.getText() + " " + this.fieldObstsorte.getText(), new BigDecimal(0), 0,
+                    Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())), new HashSet<>(), boden);
             try {
                 this.automat.addKuchen(obsttorte);
                 clearKuchenFields(); //clear only if the kuchen as been added succesfully
@@ -327,6 +337,14 @@ public class MainWindowController {
         } catch (EmptyListException e) {
             this.errorTextString.setValue("keine Kuchen im Automaten enhalten");
         }
+    }
+
+    public void onPressSaveAutomat(){
+        serializer.serialize("GuiSaveFile", this.automat);
+    }
+
+    public void onPressLoadAutomat(){
+        this.automat = serializer.deserialize("GuiSaveFile");
     }
 
     private HashSet<Allergen> stringToSet(String in) {

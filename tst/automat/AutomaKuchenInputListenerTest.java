@@ -20,7 +20,7 @@ public class AutomaKuchenInputListenerTest {
 
         AutomatInputKuchenListener listener = new AutomatInputKuchenListener();
         listener.setAutomatWrapper(wrapper);
-        InputKuchenEvent<KremkuchenImpl> event = new InputKuchenEvent(this, EventType.addKuchen, kuch);
+        InputKuchenEvent event = new InputKuchenEvent(this, EventType.addKuchen, kuch);
 
         listener.addEvent(event);
         try {

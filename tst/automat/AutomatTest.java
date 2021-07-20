@@ -48,7 +48,7 @@ class AutomatTest {
     @Test
     public void addKuchenValid() {
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
-        KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
+        KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
         KuchenDekorator kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
 
         Automat auto = new Automat(10);
@@ -67,8 +67,8 @@ class AutomatTest {
     @Test
     public void addKuchenFullAutomat() {
         Hersteller herst3 = new HerstellerImpl(MOSES);
-        ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst3, allergList1, 400, dur1, new BigDecimal(250), new Obstsorte(KIRSCHE));
-        KremkuchenImpl kuch4 = new KremkuchenImpl(herst3, allergList1, 250, dur1, new BigDecimal(400), new Kremsorte(SENF));
+        ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst3, allergList1, 400, dur1, new BigDecimal(250));
+        KremkuchenImpl kuch4 = new KremkuchenImpl(herst3, allergList1, 250, dur1, new BigDecimal(400));
 
         Automat auto = new Automat(2); //create automate with fewer slots so just 3 have to be added
 
@@ -85,8 +85,8 @@ class AutomatTest {
     @Test
     public void addKuchenFullAutomatFringe() {
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
-        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
-        ObsttorteImpl kuch3 = new ObsttorteImpl(herst1, allergList1, 500, dur1, new BigDecimal(300), new Kremsorte(MASCARPONE), new Obstsorte(KIRSCHE));
+        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
+        ObsttorteImpl kuch3 = new ObsttorteImpl(herst1, allergList1, 500, dur1, new BigDecimal(300));
 
         Automat auto = new Automat(2);
 
@@ -104,7 +104,7 @@ class AutomatTest {
     public void AddKuchenNoHerstellerTest() {
         Automat auto = new Automat(10);
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
-        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
+        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
 
         Assertions.assertThrows(NoSuchElementException.class, () -> auto.addKuchen(kuch1));
     }
@@ -114,7 +114,7 @@ class AutomatTest {
         Automat auto = new Automat(10);
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         Hersteller herst3 = new HerstellerImpl(MOSES);
-        ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst3, allergList1, 400, dur1, new BigDecimal(250), new Obstsorte(KIRSCHE));
+        ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst3, allergList1, 400, dur1, new BigDecimal(250));
 
         try {
             auto.addHersteller(herst1);
@@ -130,7 +130,7 @@ class AutomatTest {
     public void getKuchenTestValid() {
         Automat auto = new Automat(10);
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
-        ObsttorteImpl kuch3 = new ObsttorteImpl(herst1, allergList1, 500, dur1, new BigDecimal(300), new Kremsorte(MASCARPONE), new Obstsorte(KIRSCHE));
+        ObsttorteImpl kuch3 = new ObsttorteImpl(herst1, allergList1, 500, dur1, new BigDecimal(300));
 
         try {
             auto.addHersteller(herst1);
@@ -163,7 +163,7 @@ class AutomatTest {
     public void removeKuchenValid() {
         Automat auto = new Automat(10);
         Hersteller herst3 = new HerstellerImpl(MOSES);
-        KremkuchenImpl kuch4 = new KremkuchenImpl(herst3, allergList1, 250, dur1, new BigDecimal(400), new Kremsorte(SENF));
+        KremkuchenImpl kuch4 = new KremkuchenImpl(herst3, allergList1, 250, dur1, new BigDecimal(400));
 
         try {
             auto.addHersteller(herst3);
@@ -237,9 +237,9 @@ class AutomatTest {
         Automat auto = new Automat(10);
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         Hersteller herst3 = new HerstellerImpl(MOSES);
-        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
-        ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst3, allergList1, 400, dur1, new BigDecimal(250), new Obstsorte(KIRSCHE));
-        ObsttorteImpl kuch3 = new ObsttorteImpl(herst1, allergList1, 500, dur1, new BigDecimal(300), new Kremsorte(MASCARPONE), new Obstsorte(KIRSCHE));
+        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
+        ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst3, allergList1, 400, dur1, new BigDecimal(250));
+        ObsttorteImpl kuch3 = new ObsttorteImpl(herst1, allergList1, 500, dur1, new BigDecimal(300));
 
         try {
             auto.addHersteller(herst1);
@@ -261,8 +261,8 @@ class AutomatTest {
     public void checkKuchenSpecificValid() {
         Automat auto = new Automat(10);
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
-        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
-        KremkuchenImpl kuch4 = new KremkuchenImpl(herst1, allergList1, 250, dur1, new BigDecimal(400), new Kremsorte(SENF));
+        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
+        KremkuchenImpl kuch4 = new KremkuchenImpl(herst1, allergList1, 250, dur1, new BigDecimal(400));
 
         try {
             auto.addHersteller(herst1);
@@ -288,8 +288,8 @@ class AutomatTest {
     public void checkKuchenNoSuchElement() {
         Automat auto = new Automat(10);
         Hersteller herst3 = new HerstellerImpl(MOSES);
-        ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst3, allergList1, 400, dur1, new BigDecimal(250), new Obstsorte(KIRSCHE));
-        KremkuchenImpl kuch4 = new KremkuchenImpl(herst3, allergList1, 250, dur1, new BigDecimal(400), new Kremsorte(SENF));
+        ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst3, allergList1, 400, dur1, new BigDecimal(250));
+        KremkuchenImpl kuch4 = new KremkuchenImpl(herst3, allergList1, 250, dur1, new BigDecimal(400));
 
         try {
             auto.addHersteller(herst3);
@@ -373,7 +373,7 @@ class AutomatTest {
     public void removeHerstellerWithKuchen() {
         Automat auto = new Automat(10);
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
-        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
+        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
 
         try {
             auto.addHersteller(herst1);
@@ -415,9 +415,9 @@ class AutomatTest {
         Automat auto = new Automat(10);
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         Hersteller herst3 = new HerstellerImpl(MOSES);;
-        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
-        ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst3, allergList1, 400, dur1, new BigDecimal(250), new Obstsorte(KIRSCHE));
-        ObsttorteImpl kuch3 = new ObsttorteImpl(herst1, allergList1, 500, dur1, new BigDecimal(300), new Kremsorte(MASCARPONE), new Obstsorte(KIRSCHE));
+        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
+        ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst3, allergList1, 400, dur1, new BigDecimal(250));
+        ObsttorteImpl kuch3 = new ObsttorteImpl(herst1, allergList1, 500, dur1, new BigDecimal(300));
 
         try {
             auto.addHersteller(herst1);
@@ -448,8 +448,8 @@ class AutomatTest {
         Automat auto = new Automat(10);
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         Hersteller herst3 = new HerstellerImpl(MOSES);;
-        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
-        ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst3, allergList1, 400, dur1, new BigDecimal(250), new Obstsorte(KIRSCHE));
+        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
+        ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst3, allergList1, 400, dur1, new BigDecimal(250));
 
         try {
             auto.addHersteller(herst1);
@@ -477,7 +477,7 @@ class AutomatTest {
     void swapKuchenNoSuchElement()  {
         Automat auto = new Automat(10);
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
-        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
+        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
 
         try {
             auto.addHersteller(herst1);
@@ -559,7 +559,7 @@ class AutomatTest {
     public void checkAbsentAllergenValid() {
         Automat auto = new Automat(10);
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
-        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
+        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
 
         try {
             auto.addHersteller(herst1);
@@ -611,7 +611,7 @@ class AutomatTest {
     public void getKuchenCounterValid(){
         Automat auto = new Automat(10);
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
-        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
+        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
 
 
         try {
@@ -669,5 +669,28 @@ class AutomatTest {
         auto.notifyObservers();
 
         verify(obs).update();
+    }
+
+    @Test
+    public void kapselungTest(){
+        Automat auto = new Automat(10);
+        Hersteller herst1 = new HerstellerImpl(BENJAMIN);
+        Hersteller herst3 = new HerstellerImpl(MOSES);;
+        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
+        ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst3, allergList1, 400, dur1, new BigDecimal(250));
+
+        try {
+            auto.addHersteller(herst1);
+            auto.addHersteller(herst3);
+            auto.addKuchen(kuch1);
+            auto.addKuchen(kuch2);
+
+            List<KuchenDekorator> tempList = auto.checkKuchen();
+            tempList.clear();
+
+            assertFalse(auto.checkKuchen().isEmpty());
+        } catch (AlreadyExistsException | FullAutomatException | EmptyListException e) {
+            e.printStackTrace();
+        }
     }
 }

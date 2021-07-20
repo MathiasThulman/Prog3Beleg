@@ -10,7 +10,7 @@ public class DeleteThread extends Thread {
 
     public void run() {
         while (true) {
-            this.simulationWrapper.removeRandomCake(new Random(System.currentTimeMillis()));
+            this.simulationWrapper.removeRandomCake();
         }
     }
 

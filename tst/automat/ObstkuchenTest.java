@@ -14,8 +14,8 @@ public class ObstkuchenTest {
     @Test
     public void getObstsorteValidTest(){
         HashSet<Allergen> allergene = new HashSet<>(Arrays.asList(Allergen.Gluten, Allergen.Erdnuss));
-        Obstkuchen kuchen = new ObstkuchenImpl(new HerstellerImpl("Guido"), allergene, 500, Duration.ofDays(4), new BigDecimal("4.50"), new Obstsorte("Melone"));
+        ObstkuchenImpl kuchen = new ObstkuchenImpl(new HerstellerImpl("Guido"), allergene, 500, Duration.ofDays(4), new BigDecimal("4.50"));
 
-        Assertions.assertEquals("Melone", kuchen.getObstsorte());
+        Assertions.assertEquals("Obstkuchen", kuchen.getName());
     }
 }

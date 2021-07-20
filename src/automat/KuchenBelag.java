@@ -40,9 +40,10 @@ public class KuchenBelag implements KuchenDekorator{
         return this.kuchenBelag.getNaehrwert() + this.naehrwert;
     }
 
+    //TODO fix this
     @Override
     public Duration getHaltbarkeit() {
-        if(0 < this.getHaltbarkeit().compareTo(this.haltbarkeit)){
+        if(0 > this.haltbarkeit.compareTo(this.kuchenBelag.getHaltbarkeit())){
             return this.haltbarkeit;
         } else {
             return this.kuchenBelag.getHaltbarkeit();
@@ -87,5 +88,9 @@ public class KuchenBelag implements KuchenDekorator{
     @Override
     public void setEinfuegeDatum(Date date) {
         this.kuchenBelag.setEinfuegeDatum(date);
+    }
+
+    public String toString(){
+        return this.name + " "  + this.kuchenBelag.toString();
     }
 }

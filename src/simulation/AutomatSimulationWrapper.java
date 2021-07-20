@@ -31,16 +31,16 @@ public class AutomatSimulationWrapper {
     private final Duration dur1 = Duration.ofDays(4);
     private final LinkedList<Allergen> allergList1 = new LinkedList<>(Arrays.asList(Allergen.Erdnuss, Allergen.Haselnuss));
     private final LinkedList<Allergen> allergList2 = new LinkedList<>(Arrays.asList(Allergen.Gluten, Allergen.Sesamsamen));
-    private final KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 350, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
-    private final ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst1, allergList2, 400, dur1, new BigDecimal(250), new Obstsorte(KIRSCHE));
-    private final ObsttorteImpl kuch3 = new ObsttorteImpl(herst1, allergList2, 700, dur1, new BigDecimal(300), new Kremsorte(MASCARPONE), new Obstsorte(ERDBEERE));
-    private final KremkuchenImpl kuch4 = new KremkuchenImpl(herst1, allergList1, 250, dur1, new BigDecimal(400), new Kremsorte(SENF));
-    private final KremkuchenImpl kuch5 = new KremkuchenImpl(herst2, allergList2, 300, dur1, new BigDecimal(500), new Kremsorte(MASCARPONE));
-    private final ObstkuchenImpl kuch6 = new ObstkuchenImpl(herst2, allergList1, 400, dur1, new BigDecimal(250), new Obstsorte(KIRSCHE));
-    private final ObsttorteImpl kuch7 = new ObsttorteImpl(herst2, allergList2, 500, dur1, new BigDecimal(300), new Kremsorte(MASCARPONE), new Obstsorte(ERDBEERE));
-    private final KremkuchenImpl kuch8 = new KremkuchenImpl(herst3, allergList1, 250, dur1, new BigDecimal(400), new Kremsorte(SENF));
-    private final ObsttorteImpl kuch9 = new ObsttorteImpl(herst3, allergList2, 600, dur1, new BigDecimal(300), new Kremsorte(MASCARPONE), new Obstsorte(ERDBEERE));
-    private final KremkuchenImpl kuch10 = new KremkuchenImpl(herst3, allergList1, 250, dur1, new BigDecimal(400), new Kremsorte(SENF));
+    private final KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 350, dur1, new BigDecimal(500));
+    private final ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst1, allergList2, 400, dur1, new BigDecimal(250));
+    private final ObsttorteImpl kuch3 = new ObsttorteImpl(herst1, allergList2, 700, dur1, new BigDecimal(300));
+    private final KremkuchenImpl kuch4 = new KremkuchenImpl(herst1, allergList1, 250, dur1, new BigDecimal(400));
+    private final KremkuchenImpl kuch5 = new KremkuchenImpl(herst2, allergList2, 300, dur1, new BigDecimal(500));
+    private final ObstkuchenImpl kuch6 = new ObstkuchenImpl(herst2, allergList1, 400, dur1, new BigDecimal(250));
+    private final ObsttorteImpl kuch7 = new ObsttorteImpl(herst2, allergList2, 500, dur1, new BigDecimal(300));
+    private final KremkuchenImpl kuch8 = new KremkuchenImpl(herst3, allergList1, 250, dur1, new BigDecimal(400));
+    private final ObsttorteImpl kuch9 = new ObsttorteImpl(herst3, allergList2, 600, dur1, new BigDecimal(300));
+    private final KremkuchenImpl kuch10 = new KremkuchenImpl(herst3, allergList1, 250, dur1, new BigDecimal(400));
     private final KuchenVerkaufsObjektImpl[] kuchList = {kuch1, kuch2, kuch3, kuch4, kuch5, kuch6, kuch7, kuch8, kuch9, kuch10};
 
     synchronized void createRandomCake() {
@@ -52,9 +52,9 @@ public class AutomatSimulationWrapper {
         System.out.println("simulation added Cake");
     }
 
-    synchronized void removeRandomCake(Random random) {
+    synchronized void removeRandomCake() {
         try {
-            this.automat.removeKuchen(random.nextInt(this.automat.getKuchenCounter()));
+            this.automat.removeKuchen((int) (Math.random() *(this.automat.getSize())));
         } catch (InvalidInputException e) {
             System.out.println("simulation invalid input");
         }
@@ -83,9 +83,9 @@ public class AutomatSimulationWrapper {
         }
     }
 
-    synchronized void causeInspection(Random random) {
+    synchronized void causeInspection() {
         try {
-            this.automat.setInspectionDate(random.nextInt(this.automat.getKuchenCounter()));
+            this.automat.setInspectionDate((int) (Math.random() * (this.automat.getKuchenCounter())));
             System.out.println("Simulation inspektion");
         } catch (InvalidInputException e) {
             System.out.println("simulation inspektion: invalid input");

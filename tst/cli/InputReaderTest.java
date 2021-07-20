@@ -26,16 +26,31 @@ public class InputReaderTest {
     }
 
     @Test
-    public void readInsertKuchenValid(){
+    public void readInsertKuchenMultipleBelägeValid(){
         InputReader reader = new InputReader();
         InputKuchenEventHandler<InputKuchenEvent> handler = mock(InputKuchenEventHandler.class);
         reader.setKuchenHandler(handler);
 
-        reader.readInsert("Kremkuchen Friedrich 4 400 20 Gluten,Erdnuss Senf");
+        reader.readInsert("Obstkuchen Friedrich 4 400 20 Gluten,Erdnuss Senf 2.50 200 12 Gluten Mayo 3.70 300 4 ,");
         ArgumentCaptor<InputKuchenEvent> argument = ArgumentCaptor.forClass(InputKuchenEvent.class);
         verify(handler).handle(argument.capture());
 
-        Assertions.assertEquals(KremkuchenImpl.class, argument.getValue().getKuchenObjekt().getClass());
+//        Assertions.assertEquals("Friedrich", argument.getValue().getKuchenObjekt().getHersteller().getName());
+        Assertions.assertEquals(900, argument.getValue().getKuchenObjekt().getNaehrwert());
+    }
+
+
+    @Test
+    public void readInsertKuchenOnlyBodenValid(){
+        InputReader reader = new InputReader();
+        InputKuchenEventHandler<InputKuchenEvent> handler = mock(InputKuchenEventHandler.class);
+        reader.setKuchenHandler(handler);
+
+        reader.readInsert("Obsttorte Friedrich 4 400 20 Gluten,Erdnuss");
+        ArgumentCaptor<InputKuchenEvent> argument = ArgumentCaptor.forClass(InputKuchenEvent.class);
+        verify(handler).handle(argument.capture());
+
+        Assertions.assertEquals(400, argument.getValue().getKuchenObjekt().getNaehrwert());
     }
 
     @Test

@@ -12,20 +12,12 @@ import java.util.HashSet;
 public class ObsttorteTest {
 
     @Test
-    public void getObstsorteValid(){
+    public void getNameValid() {
         HashSet<Allergen> allergene = new HashSet<>(Arrays.asList(Allergen.Gluten, Allergen.Erdnuss));
         ObsttorteImpl kuchen = new ObsttorteImpl(new HerstellerImpl("Guido"), allergene, 500, Duration.ofDays(4),
-                new BigDecimal("4.50"), new Kremsorte("Humus") ,new Obstsorte("Melone"));
+                new BigDecimal("4.50"));
 
-        Assertions.assertEquals("Melone", kuchen.getObstsorte());
+        Assertions.assertEquals("Obsttorte", kuchen.getName());
     }
 
-    @Test
-    public void getKremsorteValid(){
-        HashSet<Allergen> allergene = new HashSet<>(Arrays.asList(Allergen.Gluten, Allergen.Erdnuss));
-        ObsttorteImpl kuchen = new ObsttorteImpl(new HerstellerImpl("Guido"), allergene, 500, Duration.ofDays(4),
-                new BigDecimal("4.50"), new Kremsorte("Humus") ,new Obstsorte("Melone"));
-
-        Assertions.assertEquals("Humus", kuchen.getKremsorte());
-    }
 }

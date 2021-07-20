@@ -15,10 +15,10 @@ import java.util.HashSet;
 public class KremkuchenTest {
 
     @Test
-    public void getKremsorteValid(){
+    public void getNameValid(){
         HashSet<Allergen> allergene = new HashSet<>(Arrays.asList(Allergen.Gluten, Allergen.Erdnuss));
-        KremkuchenImpl kuchen = new KremkuchenImpl(new HerstellerImpl("Guido"), allergene, 500, Duration.ofDays(4), new BigDecimal("4.50"), new Kremsorte("Humus"));
+        KremkuchenImpl kuchen = new KremkuchenImpl(new HerstellerImpl("Guido"), allergene, 500, Duration.ofDays(4), new BigDecimal("4.50"));
 
-        Assertions.assertEquals("Humus", kuchen.getKremsorte());
+        Assertions.assertEquals("Kremkuchen", kuchen.getName());
     }
 }

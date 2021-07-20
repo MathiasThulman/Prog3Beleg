@@ -1,16 +1,17 @@
 package events;
 
+import automat.KuchenDekorator;
 import automat.KuchenVerkaufsObjektImpl;
 
-public class InputKuchenEvent<T extends KuchenVerkaufsObjektImpl> extends Event {
-    T kuchenObjekt;
+public class InputKuchenEvent extends Event {
+    KuchenDekorator kuchenObjekt;
 
-    public InputKuchenEvent(Object source, EventType type, T kuchenObjekt) {
+    public InputKuchenEvent(Object source, EventType type, KuchenDekorator kuchenObjekt) {
         super(source, type);
         this.kuchenObjekt = kuchenObjekt;
     }
 
-    public T getKuchenObjekt() {
+    public KuchenDekorator getKuchenObjekt() {
         return kuchenObjekt;
     }
 }

@@ -16,10 +16,7 @@ public class Console {
             changeMode(input);
         } else if (input.length() >= 1) {
             executeCommand(input);
-        } else {
-            return;
         }
-
     }
 
     private void changeMode(String input) {

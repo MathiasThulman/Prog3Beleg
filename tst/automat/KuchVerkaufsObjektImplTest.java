@@ -23,8 +23,6 @@ class KuchVerkaufsObjektImplTest {
         allergList1 = new LinkedList<>(Arrays.asList(Allergen.Erdnuss, Allergen.Haselnuss));
     }
 
-
-
     @Test
     void getHerstellerValid() {
         KuchenVerkaufsObjektImpl kuch1 = new KuchenVerkaufsObjektImpl(new HerstellerImpl("Adidas"), allergList1, 300, Duration.ofDays(3), new BigDecimal(20));
@@ -77,13 +75,5 @@ class KuchVerkaufsObjektImplTest {
         kuch1.setFachNummer(fn1);
 
         Assertions.assertEquals(fn1, kuch1.getFachnummer());
-    }
-
-    @Test
-    public void toStringValid(){
-        KuchenVerkaufsObjektImpl kuch1 = new KuchenVerkaufsObjektImpl(new HerstellerImpl("Adidas"), allergList1, 300, Duration.ofDays(3), new BigDecimal(20));
-
-        kuch1.setInspektionsDatum(date1);//to avoid nullpointer exception
-        Assertions.assertEquals("Adidas, [Erdnuss, Haselnuss], 3, Sun May 09 00:00:00 CEST 3920, 20", kuch1.toString());
     }
 }

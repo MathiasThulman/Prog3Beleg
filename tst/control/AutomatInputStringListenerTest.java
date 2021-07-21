@@ -1,5 +1,7 @@
-package automat;
+package control;
 
+import automat.Automat;
+import automat.HerstellerImpl;
 import events.EventType;
 import events.InputStringEvent;
 import exceptions.AlreadyExistsException;

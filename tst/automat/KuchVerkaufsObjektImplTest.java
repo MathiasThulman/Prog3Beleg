@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 class KuchVerkaufsObjektImplTest {
@@ -20,7 +21,7 @@ class KuchVerkaufsObjektImplTest {
     public void setUp(){
         date1 = new Date(2020, 4, 9);
         fn1 = 4;
-        allergList1 = new LinkedList<>(Arrays.asList(Allergen.Erdnuss, Allergen.Haselnuss));
+        allergList1 = new LinkedList<>(Arrays.asList(Allergen.Erdnuss));
     }
 
     @Test
@@ -32,9 +33,10 @@ class KuchVerkaufsObjektImplTest {
 
     @Test
     void getAllergeneValid() {
-        KuchenVerkaufsObjektImpl kuch1 = new KuchenVerkaufsObjektImpl(new HerstellerImpl("Adidas"), allergList1, 300, Duration.ofDays(3), new BigDecimal(20));
-        //expected to contain erdnuss and haselnuss
-        Assertions.assertTrue(kuch1.getAllergene().contains(Allergen.Erdnuss) && kuch1.getAllergene().contains(Allergen.Haselnuss));
+        HashSet<Allergen> allergList2 = new HashSet(Arrays.asList(Allergen.Haselnuss, Allergen.Sesamsamen));
+        KuchenVerkaufsObjektImpl kuch1 = new KuchenVerkaufsObjektImpl(new HerstellerImpl("Adidas"), allergList2, 300, Duration.ofDays(3), new BigDecimal(20));
+        //expected to contain Sesamsamen and haselnuss
+        Assertions.assertTrue(kuch1.getAllergene().contains(Allergen.Sesamsamen) && kuch1.getAllergene().contains(Allergen.Haselnuss));
     }
 
     @Test
@@ -75,5 +77,27 @@ class KuchVerkaufsObjektImplTest {
         kuch1.setFachNummer(fn1);
 
         Assertions.assertEquals(fn1, kuch1.getFachnummer());
+    }
+
+    @Test
+    public void getNameValid(){
+        KuchenVerkaufsObjektImpl kuch1 = new KuchenVerkaufsObjektImpl(new HerstellerImpl("Adidas"), allergList1, 300, Duration.ofDays(3), new BigDecimal(20));
+
+        Assertions.assertEquals("Langweiliger Kuchenboden", kuch1.getName());
+    }
+
+    @Test
+    public void toStringWithDatumValid(){
+        KuchenVerkaufsObjektImpl kuch1 = new KuchenVerkaufsObjektImpl(new HerstellerImpl("Adidas"), allergList1, 300, Duration.ofDays(3), new BigDecimal(20));
+        kuch1.setInspektionsDatum(new Date(2020,6,6));
+
+        Assertions.assertEquals("Langweiliger Kuchenboden, Adidas, [Erdnuss], 3, Tue Jul 06 00:00:00 CEST 3920, 20", kuch1.toString());
+    }
+
+    @Test
+    public void toStringWithoutDatumValid(){
+        KuchenVerkaufsObjektImpl kuch1 = new KuchenVerkaufsObjektImpl(new HerstellerImpl("Adidas"), allergList1, 300, Duration.ofDays(3), new BigDecimal(20));
+
+        Assertions.assertEquals("Langweiliger Kuchenboden, Adidas, [Erdnuss], 3, kein Inspektionsdatum, 20", kuch1.toString());
     }
 }

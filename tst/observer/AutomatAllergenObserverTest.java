@@ -1,7 +1,9 @@
-package automat;
+package observer;
 
+import automat.*;
 import exceptions.AlreadyExistsException;
 import exceptions.FullAutomatException;
+import observer.AutomatAllergenObserver;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +37,8 @@ public class AutomatAllergenObserverTest {
             auto.addKuchen(kuch1);
         } catch (AlreadyExistsException | FullAutomatException e) {
             fail();
+        } finally {
+            System.setOut(System.out);
         }
 
 

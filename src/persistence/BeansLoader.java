@@ -1,4 +1,4 @@
-package util;
+package persistence;
 
 import automat.Automat;
 import automat.HerstellerImpl;
@@ -6,7 +6,6 @@ import automat.KuchenVerkaufsObjektImpl;
 
 import java.beans.*;
 import java.io.*;
-import java.util.List;
 
 public class BeansLoader {
 

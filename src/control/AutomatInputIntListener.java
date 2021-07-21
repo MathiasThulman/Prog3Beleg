@@ -1,4 +1,4 @@
-package automat;
+package control;
 
 import events.*;
 import exceptions.InvalidInputException;

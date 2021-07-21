@@ -4,11 +4,9 @@ import automat.HerstellerImpl;
 import exceptions.AlreadyExistsException;
 import exceptions.EmptyListException;
 import exceptions.FullAutomatException;
-import automat.Kremsorte;
 import automat.ObstkuchenImpl;
-import automat.Obstsorte;
 import automat.ObsttorteImpl;
-import util.JoSSerializer;
+import persistence.JoSSerializer;
 
 import java.math.BigDecimal;
 import java.time.Duration;

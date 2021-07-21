@@ -1,5 +1,6 @@
-package automat;
+package control;
 
+import automat.HerstellerImpl;
 import events.*;
 import exceptions.AlreadyExistsException;
 

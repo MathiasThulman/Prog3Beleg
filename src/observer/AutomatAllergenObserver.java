@@ -1,5 +1,7 @@
-package automat;
+package observer;
 
+import automat.Allergen;
+import automat.Automat;
 import exceptions.EmptyListException;
 import observer.Observer;
 

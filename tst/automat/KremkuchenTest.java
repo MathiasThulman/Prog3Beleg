@@ -1,9 +1,5 @@
 package automat;
 
-import automat.Allergen;
-import automat.HerstellerImpl;
-import automat.KremkuchenImpl;
-import automat.Kremsorte;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

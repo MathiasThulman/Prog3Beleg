@@ -1,4 +1,4 @@
-import automat.AutomatChangeObserver;
+import observer.AutomatChangeObserver;
 import automat.Automat;
 import automat.Hersteller;
 import automat.HerstellerImpl;

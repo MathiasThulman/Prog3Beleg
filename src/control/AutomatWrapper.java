@@ -1,6 +1,7 @@
-package automat;
+package control;
 
-import util.JoSSerializer;
+import automat.Automat;
+import persistence.JoSSerializer;
 
 public class AutomatWrapper {
     private Automat automat;

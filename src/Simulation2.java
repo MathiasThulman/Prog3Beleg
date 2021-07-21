@@ -1,5 +1,5 @@
 import automat.Automat;
-import automat.AutomatChangeObserver;
+import observer.AutomatChangeObserver;
 import automat.Hersteller;
 import automat.HerstellerImpl;
 import exceptions.AlreadyExistsException;

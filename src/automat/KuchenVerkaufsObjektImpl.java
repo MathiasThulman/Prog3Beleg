@@ -70,8 +70,14 @@ public class KuchenVerkaufsObjektImpl implements KuchenDekorator {
         this.fachNummer = fachNummer;
     }
 
-    public String toString(){
-        return this.getName() + " " + this.hersteller.getName() + ", " + this.allergene.toString()  + ", " + this.haltbarkeit.toDays()  + ", "+ this.inspektionsDatum.toString() + ", "+ this.preis.toString();
+    public String toString() {
+        if (this.inspektionsDatum != null) {
+            return this.getName() + ", " + this.hersteller.getName() + ", " + this.allergene.toString() + ", " + this.haltbarkeit.toDays() +
+                    ", " + this.inspektionsDatum.toString() + ", " + this.preis.toString();
+        } else {
+            return this.getName() + ", " + this.hersteller.getName() + ", " + this.allergene.toString() + ", " + this.haltbarkeit.toDays() +
+                    ", " + "kein Inspektionsdatum" + ", " + this.preis.toString();
+        }
     }
 
     //TODO why is this public too

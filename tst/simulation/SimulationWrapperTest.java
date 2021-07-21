@@ -6,7 +6,6 @@ import exceptions.EmptyListException;
 import exceptions.FullAutomatException;
 import exceptions.InvalidInputException;
 import automat.KremkuchenImpl;
-import automat.Kremsorte;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

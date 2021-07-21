@@ -1,9 +1,8 @@
-package util;
+package persistence;
 
 import automat.Automat;
 import org.junit.jupiter.api.Test;
 
-import java.beans.Transient;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;

@@ -1,9 +1,8 @@
-package util;
+package persistence;
 
 import automat.Automat;
 
 import java.io.*;
-import java.util.Collection;
 
 public class JoSSerializer {
 

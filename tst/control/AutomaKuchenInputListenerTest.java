@@ -1,5 +1,7 @@
-package automat;
+package control;
 
+import automat.Automat;
+import automat.KremkuchenImpl;
 import events.EventType;
 import events.InputKuchenEvent;
 import exceptions.FullAutomatException;

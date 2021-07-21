@@ -1,5 +1,7 @@
-package automat;
+package control;
 
+import automat.Automat;
+import automat.KremkuchenImpl;
 import events.*;
 import exceptions.EmptyListException;
 import org.junit.jupiter.api.Test;

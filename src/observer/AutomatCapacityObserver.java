@@ -1,5 +1,6 @@
-package automat;
+package observer;
 
+import automat.Automat;
 import observer.Observer;
 
 public class AutomatCapacityObserver implements Observer {

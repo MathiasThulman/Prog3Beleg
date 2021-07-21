@@ -1,13 +1,9 @@
 import automat.*;
-import exceptions.AlreadyExistsException;
-import exceptions.FullAutomatException;
-import util.BeansLoader;
+import persistence.BeansLoader;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 
 public class BeansMain {

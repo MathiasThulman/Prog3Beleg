@@ -15,7 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import util.JoSSerializer;
+import persistence.JoSSerializer;
 
 import java.math.BigDecimal;
 import java.time.Duration;

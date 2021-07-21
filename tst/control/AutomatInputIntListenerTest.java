@@ -1,5 +1,6 @@
-package automat;
+package control;
 
+import automat.Automat;
 import events.CollectionOutputEvent;
 import events.CollectionOutputHandler;
 import events.EventType;

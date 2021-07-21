@@ -1,7 +1,10 @@
 import automat.*;
 import cli.*;
+import control.*;
 import events.*;
-import util.JoSSerializer;
+import observer.AutomatAllergenObserver;
+import observer.AutomatCapacityObserver;
+import persistence.JoSSerializer;
 
 public class alternativeCLI {
 

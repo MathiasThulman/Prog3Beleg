@@ -40,7 +40,6 @@ public class KuchenBelag implements KuchenDekorator{
         return this.kuchenBelag.getNaehrwert() + this.naehrwert;
     }
 
-    //TODO fix this
     @Override
     public Duration getHaltbarkeit() {
         if(0 > this.haltbarkeit.compareTo(this.kuchenBelag.getHaltbarkeit())){

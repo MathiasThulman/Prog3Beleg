@@ -3,7 +3,7 @@ package automat;
 import java.io.Serializable;
 import java.util.Date;
 
-public interface KuchenDekorator extends Kuchen, Verkaufsobjekt, Serializable {
+public interface KuchenKomponente extends Kuchen, Verkaufsobjekt, Serializable {
     Date getEinfuegeDatum();
     String getName();
     void setInspektionsDatum(Date date);

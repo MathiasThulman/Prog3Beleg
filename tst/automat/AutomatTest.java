@@ -23,8 +23,6 @@ class AutomatTest {
 
     private int negFn = -444;
     private String MASCARPONE;
-    private String SENF;
-    private String KIRSCHE;
     private String BENJAMIN;
     private String BLÜMCHEN;
     private String MOSES;
@@ -35,8 +33,6 @@ class AutomatTest {
     public void setUp(){
         negFn = -444;
         MASCARPONE = "Mascarpone";
-        SENF = "Senf";
-        KIRSCHE = "Kirsche";
         BENJAMIN = "benjamin";
         BLÜMCHEN = "blümchen";
         MOSES = "moses";
@@ -50,7 +46,7 @@ class AutomatTest {
     public void addKuchenValid() {
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
-        KuchenDekorator kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
+        KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
 
         Automat auto = new Automat(10);
 
@@ -174,8 +170,8 @@ class AutomatTest {
         } catch (AlreadyExistsException | FullAutomatException | InvalidInputException e) {
             fail();
         }
-        //after removing check if the kuchen is still there, exception should be thrown since no kuchen is at the position
-        Assertions.assertThrows(NoSuchElementException.class, () -> auto.getKuchen(0));
+        //kuchencounter should be 0 after removen the kuchen
+        Assertions.assertEquals(0, auto.getKuchenCounter());
     }
 
     @Test
@@ -263,16 +259,18 @@ class AutomatTest {
         Automat auto = new Automat(10);
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
+        ObstkuchenImpl kuch2 = new ObstkuchenImpl(herst1, allergList1, 400, dur1, new BigDecimal(250));
         KremkuchenImpl kuch4 = new KremkuchenImpl(herst1, allergList1, 250, dur1, new BigDecimal(400));
 
         try {
             auto.addHersteller(herst1);
             auto.addKuchen(kuch1);
+            auto.addKuchen(kuch2);
             auto.addKuchen(kuch4);
 
             //multiple adds and asserts to see if it can extract multiple kuchen objects properly
-            Assertions.assertEquals(KremkuchenImpl.class, auto.checkKuchen(KremkuchenImpl.class).get(0).getClass());
-            Assertions.assertEquals(KremkuchenImpl.class, auto.checkKuchen(KremkuchenImpl.class).get(1).getClass());
+            Assertions.assertEquals(KremkuchenImpl.class, auto.checkKuchen("Kremkuchen").get(0).getClass());
+            Assertions.assertEquals(KremkuchenImpl.class, auto.checkKuchen("Kremkuchen").get(1).getClass());
         } catch (AlreadyExistsException | FullAutomatException | EmptyListException e) {
             fail();
         }
@@ -300,7 +298,7 @@ class AutomatTest {
             fail();
         }
 
-        Assertions.assertThrows(NoSuchElementException.class, () -> auto.checkKuchen(ObsttorteImpl.class));
+        Assertions.assertThrows(NoSuchElementException.class, () -> auto.checkKuchen("ObsttorteImpl"));
     }
 
     //addHersteller tests
@@ -388,7 +386,7 @@ class AutomatTest {
         Assertions.assertThrows(NoSuchElementException.class, () -> auto.getKuchen(0));
     }
 
-    //getManufacturer tests
+    //getHersteller tests
     @Test
     public void getHerstellerValid() {
         Automat auto = new Automat(10);
@@ -445,7 +443,7 @@ class AutomatTest {
 
     //swapKuchen
     @Test
-    void swapKuchenValidTest() {
+    void swapKuchenValid() {
         Automat auto = new Automat(10);
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         Hersteller herst3 = new HerstellerImpl(MOSES);;
@@ -686,7 +684,7 @@ class AutomatTest {
             auto.addKuchen(kuch1);
             auto.addKuchen(kuch2);
 
-            List<KuchenDekorator> tempList = auto.checkKuchen();
+            List<KuchenKomponente> tempList = auto.checkKuchen();
             tempList.clear();
 
             assertFalse(auto.checkKuchen().isEmpty());

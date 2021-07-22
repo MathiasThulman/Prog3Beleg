@@ -13,11 +13,11 @@ public class InspektionThread extends Thread {
     public void run() {
         while (true) {
             this.wrapper.causeInspection();
-//            try {
-//                sleep(0);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
+            try {
+                sleep(0);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

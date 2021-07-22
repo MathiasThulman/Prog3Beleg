@@ -6,7 +6,6 @@ import events.*;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.HashSet;
-import java.util.Set;
 
 
 public class InputReader {
@@ -25,52 +24,61 @@ public class InputReader {
         if(input.split(" ").length == 1 && this.stringHandler != null){
             this.stringHandler.handle(new InputStringEvent(this, EventType.addHersteller, input));
         } else if (this.kuchenHandler != null) {
-            if ((input.split(" ").length - 6) % 5 == 0) {
+            if ((input.split(" ").length - 2) % 5 == 0) {
+                input = input.replace(",", ".");
                 String[] ps = input.split(" ");
-                if(ps[2].contains(",")){
-                    ps[2] = ps[2].replace(",",".");
-                }
+//                if(ps[2].contains(",")){
+//                    ps[2] = ps[2].replace(",",".");
+//                }
 
                 //TODO make it safer to put in nonsense
+//                if(!isNumeric(ps[3]) || !isNumeric(ps[4]) || !isNumeric(ps[2])){
+//                    return;
+//                }
 
                 switch (ps[0]) {
                     case OBSTKUCHEN:
-                        ObstkuchenImpl boden1 = new ObstkuchenImpl(new HerstellerImpl(ps[1]), stringToAllergen(ps[5]), Integer.parseInt(ps[3]),
-                                Duration.ofDays(Integer.parseInt(ps[4])), new BigDecimal((ps[2])));
-                        if(ps.length == 6){
-                            this.kuchenHandler.handle(new InputKuchenEvent(this, EventType.addKuchen, boden1));
-                        } else {
-                            this.kuchenHandler.handle(new InputKuchenEvent(this, EventType.addKuchen, buildKuchen(boden1, ps)));
+                        try {
+                            ObstkuchenImpl boden1 = new ObstkuchenImpl(new HerstellerImpl(ps[1]), new HashSet<>(), 0,
+                                    Duration.ofDays(0), new BigDecimal(0));
+                            if(ps.length == 2){
+                                this.kuchenHandler.handle(new InputKuchenEvent(this, EventType.addKuchen, boden1));
+                            } else {
+                                this.kuchenHandler.handle(new InputKuchenEvent(this, EventType.addKuchen, buildKuchen(boden1, ps)));
+                            }
+                        } catch (IllegalArgumentException e) {
+                            return;
                         }
-//                        int counter = 6;
-//                        KuchenDekorator boden = new ObstkuchenImpl(new HerstellerImpl(ps[1]), stringToAllergen(ps[5]), Integer.parseInt(ps[3]), Duration.ofDays(Integer.parseInt(ps[4])), new BigDecimal((ps[2])));
-//                        KuchenDekorator kuchen1 = boden;
-//                        while(counter < ps.length){
-//                            kuchen1 = new KuchenBelag( ps[counter] , new BigDecimal(ps[counter + 1]) , Integer.parseInt(ps[counter + 2]),
-//                                    stringToDuration(ps[counter + 3]), stringToAllergen(ps[counter  + 4]), kuchen1);
-//                            counter += 5;
-//                        }
+
                         break;
                     case KREMKUCHEN:
-                        KremkuchenImpl boden2 = new KremkuchenImpl(new HerstellerImpl(ps[1]), stringToAllergen(ps[5]), Integer.parseInt(ps[3]),
-                                Duration.ofDays(Integer.parseInt(ps[4])), new BigDecimal((ps[2])));
-                        if(ps.length == 6){
-                            this.kuchenHandler.handle(new InputKuchenEvent(this, EventType.addKuchen, boden2));
-                        } else {
-                            this.kuchenHandler.handle(new InputKuchenEvent(this, EventType.addKuchen, buildKuchen(boden2, ps)));
+                        try {
+                            KremkuchenImpl boden2 = new KremkuchenImpl(new HerstellerImpl(ps[1]), new HashSet<>(), 0,
+                                    Duration.ofDays(0), new BigDecimal(0));
+                            if(ps.length == 2){
+                                this.kuchenHandler.handle(new InputKuchenEvent(this, EventType.addKuchen, boden2));
+                            } else {
+                                this.kuchenHandler.handle(new InputKuchenEvent(this, EventType.addKuchen, buildKuchen(boden2, ps)));
+                            }
+                        } catch (IllegalArgumentException e) {
+                            return;
                         }
                         break;
-                    case OBSTTORTE:
-                        Duration dur3 = Duration.ofDays(Integer.parseInt(ps[4]));
-                        ObsttorteImpl boden3 = new ObsttorteImpl(new HerstellerImpl(ps[1]), stringToAllergen(ps[5]), Integer.parseInt(ps[3]),
-                                dur3, new BigDecimal((ps[2])));
 
-                        if(ps.length == 6){
-                            this.kuchenHandler.handle(new InputKuchenEvent(this, EventType.addKuchen, boden3));
-                        } else {
-                            this.kuchenHandler.handle(new InputKuchenEvent(this, EventType.addKuchen, buildKuchen(boden3, ps)));
+                    case OBSTTORTE:
+                        try {
+                            ObsttorteImpl boden3 = new ObsttorteImpl(new HerstellerImpl(ps[1]), new HashSet<>(), 0,
+                                    Duration.ofDays(0), new BigDecimal(0));
+
+                            if(ps.length == 2){
+                                this.kuchenHandler.handle(new InputKuchenEvent(this, EventType.addKuchen, boden3));
+                            } else {
+                                this.kuchenHandler.handle(new InputKuchenEvent(this, EventType.addKuchen, buildKuchen(boden3, ps)));
+                            }
+                        } catch (IllegalArgumentException e) {
+                            return;
                         }
-//                        this.kuchenHandler.handle(new InputKuchenEvent<ObsttorteImpl>(this, EventType.addKuchen, obsttorte));
+
                         break;
                 }
             }
@@ -101,13 +109,13 @@ public class InputReader {
                 if (input.split(" ")[0].equals(KUCHEN)) {
                     switch (input.split(" ")[1]) {
                         case KREMKUCHEN:
-                            this.getHandler.handle(new InputGetEvent(this, EventType.getKuchenSpecific, KremkuchenImpl.class));
+                            this.getHandler.handle(new InputGetEvent(this, EventType.getKuchenSpecific, "Kremkuchen"));
                             break;
                         case OBSTKUCHEN:
-                            this.getHandler.handle(new InputGetEvent(this, EventType.getKuchenSpecific, ObstkuchenImpl.class));
+                            this.getHandler.handle(new InputGetEvent(this, EventType.getKuchenSpecific, "Obstkuchen"));
                             break;
                         case OBSTTORTE:
-                            this.getHandler.handle(new InputGetEvent(this, EventType.getKuchenSpecific, ObsttorteImpl.class));
+                            this.getHandler.handle(new InputGetEvent(this, EventType.getKuchenSpecific, "Obsttorte"));
                             break;
                     }
                 } else if (input.split(" ")[0].equals("allergene")) {
@@ -170,12 +178,15 @@ public class InputReader {
         this.stringHandler = stringHandler;
     }
 
-    private KuchenDekorator buildKuchen(KuchenVerkaufsObjektImpl boden, String[] ps){
-        int counter = 6;
-        KuchenDekorator kuchen1 = boden;
+    private KuchenKomponente buildKuchen(KuchenVerkaufsObjektImpl boden, String[] ps){
+        int counter = 2;
+        KuchenKomponente kuchen1 = boden;
         while(counter < ps.length){
-            kuchen1 = new KuchenBelag( ps[counter] , new BigDecimal(ps[counter + 1]) , Integer.parseInt(ps[counter + 2]),
-                    stringToDuration(ps[counter + 3]), stringToAllergen(ps[counter  + 4]), kuchen1);
+            if(!isNumeric(ps[counter]) || !isNumeric(ps[counter + 1]) || !isNumeric(ps[counter + 2])){
+                throw new IllegalArgumentException();
+            }
+            kuchen1 = new KuchenBelag( ps[counter + 4] , new BigDecimal(ps[counter]) , Integer.parseInt(ps[counter + 1]),
+                    stringToDuration(ps[counter + 2]), stringToAllergen(ps[counter  + 3]), kuchen1);
             counter += 5;
         }
         return kuchen1;
@@ -183,12 +194,12 @@ public class InputReader {
 
     private HashSet<Allergen> stringToAllergen(String s) {
         HashSet<Allergen> set = new HashSet<>();
-        if(s.equals(",")){
+        if(s.equals(".")){
             return set;
         }
 
         try {
-            String[] paraString = s.split(",");
+            String[] paraString = s.split("\\.");
             for (int i = 0; i < paraString.length; i++) {
                 set.add(Allergen.valueOf(paraString[i]));
             }

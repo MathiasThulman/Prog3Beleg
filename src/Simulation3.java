@@ -24,11 +24,13 @@ public class Simulation3 {
         DeleteMultipleThread deleteThread1 = new DeleteMultipleThread();
         DeleteMultipleThread deleteThread2 = new DeleteMultipleThread();
         InspektionThread inspektionThread1 = new InspektionThread();
+//        InspektionThread inspektionThread2 = new InspektionThread();
         createThread1.setSimulationWrapper(wrapper);
         createThread2.setSimulationWrapper(wrapper);
         deleteThread1.setSimulationWrapper(wrapper);
         deleteThread2.setSimulationWrapper(wrapper);
         inspektionThread1.setWrapper(wrapper);
+//        inspektionThread2.setWrapper(wrapper);
 
         try {
             automat.addHersteller(herst1);
@@ -42,5 +44,6 @@ public class Simulation3 {
         createThread2.start();
         deleteThread2.start();
         createThread3.start();
+//        inspektionThread2.start();
     }
 }

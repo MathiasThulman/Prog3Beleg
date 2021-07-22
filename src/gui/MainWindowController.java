@@ -50,18 +50,18 @@ public class MainWindowController {
     @FXML
     private TextField fieldKremsorte;
     @FXML
-    private ListView<KuchenDekorator> listViewKuchen;
+    private ListView<KuchenKomponente> listViewKuchen;
     @FXML
     private Label errorText;
     public StringProperty errorTextString = new SimpleStringProperty();
     @FXML
     private ChoiceBox choiceKuchen;
     private Automat automat;
-    private Comparator<KuchenDekorator> fachnummerComp;
-    private Comparator<KuchenDekorator> herstellerComp;
-    private Comparator<KuchenDekorator> haltbarKeitComp;
-    private ObservableList<KuchenDekorator> observableKuchenList;
-    private SortedList<KuchenDekorator> sortedKuchenList;
+    private Comparator<KuchenKomponente> fachnummerComp;
+    private Comparator<KuchenKomponente> herstellerComp;
+    private Comparator<KuchenKomponente> haltbarKeitComp;
+    private ObservableList<KuchenKomponente> observableKuchenList;
+    private SortedList<KuchenKomponente> sortedKuchenList;
     private ObservableList<HerstellerNummer> observableHerstellerList;
     @FXML
     private Label allergenLabel;
@@ -79,13 +79,13 @@ public class MainWindowController {
         this.errorTextString.setValue(value);
     }
 
-    //TODO save and load JoS
 
     public void initialize() {
         this.errorText.textProperty().bindBidirectional(errorTextString);
         serializer = new JoSSerializer();
 
         this.automat = new Automat(20);
+
 
         //just to test initial loading
 //        try {
@@ -107,21 +107,21 @@ public class MainWindowController {
             //e.printStackTrace(); this will always happen when the automat is empty and means nothing
         }
 
-        this.fachnummerComp = new Comparator<KuchenDekorator>() {
+        this.fachnummerComp = new Comparator<KuchenKomponente>() {
             @Override
-            public int compare(KuchenDekorator o1, KuchenDekorator o2) {
+            public int compare(KuchenKomponente o1, KuchenKomponente o2) {
                 return o1.getFachnummer() - o2.getFachnummer();
             }
         };
 
-        this.haltbarKeitComp = new Comparator<KuchenDekorator>() {
+        this.haltbarKeitComp = new Comparator<KuchenKomponente>() {
             @Override
-            public int compare(KuchenDekorator o1, KuchenDekorator o2) {
+            public int compare(KuchenKomponente o1, KuchenKomponente o2) {
                 return o1.getHaltbarkeit().compareTo(o2.getHaltbarkeit());
             }
         };
 
-        SortedList<KuchenDekorator> sortedList = new SortedList<KuchenDekorator>(listViewKuchen.getItems(), fachnummerComp);
+        SortedList<KuchenKomponente> sortedList = new SortedList<KuchenKomponente>(listViewKuchen.getItems(), fachnummerComp);
 
         //let all numeric fields only accept numbers source: https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
         fachnummerField.textProperty().addListener(new ChangeListener<String>() {
@@ -289,10 +289,10 @@ public class MainWindowController {
 
     public void onPressSortByHaltbarkeit() {
         try {
-            sortedKuchenList = new SortedList<KuchenDekorator>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenDekorator>() {
+            sortedKuchenList = new SortedList<KuchenKomponente>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenKomponente>() {
                 @Override
-                public int compare(KuchenDekorator o1, KuchenDekorator o2) {
-                    return o1.getHaltbarkeit().compareTo(o2.getHaltbarkeit());
+                public int compare(KuchenKomponente o1, KuchenKomponente o2) {
+                    return getRemainingDuration(o1).compareTo(getRemainingDuration(o2));
                 }
             });
         } catch (EmptyListException e) {
@@ -301,11 +301,15 @@ public class MainWindowController {
         listViewKuchen.setItems(sortedKuchenList);
     }
 
+    private Duration getRemainingDuration(KuchenKomponente kuchen){
+        return kuchen.getHaltbarkeit().minusDays((new Date().getTime() - kuchen.getEinfuegeDatum().getTime()) / (86400000));
+    }
+
     public void onPressSortByFachnummer() {
         try {
-            sortedKuchenList = new SortedList<KuchenDekorator>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenDekorator>() {
+            sortedKuchenList = new SortedList<KuchenKomponente>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenKomponente>() {
                 @Override
-                public int compare(KuchenDekorator o1, KuchenDekorator o2) {
+                public int compare(KuchenKomponente o1, KuchenKomponente o2) {
                     return o2.getFachnummer() - o1.getFachnummer();
                 }
             });
@@ -319,9 +323,9 @@ public class MainWindowController {
 
     public void onPressSortByHersteller() {
         try {
-            sortedKuchenList = new SortedList<KuchenDekorator>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenDekorator>() {
+            sortedKuchenList = new SortedList<KuchenKomponente>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenKomponente>() {
                 @Override
-                public int compare(KuchenDekorator o1, KuchenDekorator o2) {
+                public int compare(KuchenKomponente o1, KuchenKomponente o2) {
                     return o1.getHersteller().getName().compareTo(o2.getHersteller().getName());
                 }
             });
@@ -339,12 +343,22 @@ public class MainWindowController {
         }
     }
 
+    public void onPressShowAbsentAllergen(){
+        try {
+            this.allergenLabel.setText(this.automat.checkAbsentAllergen().toString());
+        } catch (EmptyListException e) {
+            this.errorTextString.setValue("keine Kuchen im Automaten enhalten");
+        }
+    }
+
     public void onPressSaveAutomat(){
         serializer.serialize("GuiSaveFile", this.automat);
     }
 
     public void onPressLoadAutomat(){
         this.automat = serializer.deserialize("GuiSaveFile");
+        updateKuchen();
+        updateHersteller();
     }
 
     private HashSet<Allergen> stringToSet(String in) {

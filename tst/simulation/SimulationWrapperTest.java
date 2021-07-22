@@ -74,10 +74,10 @@ public class SimulationWrapperTest {
         AutomatSimulationWrapper wrapper = new AutomatSimulationWrapper();
         wrapper.setAutomat(auto);
 
-        List<KuchenDekorator> mockList = new LinkedList<>();
+        List<KuchenKomponente> mockList = new LinkedList<>();
         mockList.add(mock(KuchenBelag.class));
 
-        when(auto.getKuchenCounter()).thenReturn(10);
+        when(auto.getSize()).thenReturn(1);
         when(auto.checkKuchen()).thenReturn(mockList);
 //        Hersteller herst1 = new HerstellerImpl(BENJAMIN);
 //        KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
@@ -93,7 +93,7 @@ public class SimulationWrapperTest {
         //list should be empty since only one cake can be remove, exceptions should not occur
 //        Assertions.assertTrue(auto.kuchListEmpty());
         try {
-            verify(auto, times(1)).removeKuchen(any());
+            verify(auto).removeKuchen(any());
         } catch (InvalidInputException e) {
             fail();
         }
@@ -154,10 +154,10 @@ public class SimulationWrapperTest {
 
 
         try {
-            List<KuchenDekorator> mockList = new LinkedList<>();
+            List<KuchenKomponente> mockList = new LinkedList<>();
             mockList.add(mock(KuchenBelag.class));
 
-            when(auto.getKuchenCounter()).thenReturn(10);
+            when(auto.getKuchenCounter()).thenReturn(1);
             when(auto.checkKuchen()).thenReturn(mockList);
         } catch (EmptyListException e) {
             e.printStackTrace();

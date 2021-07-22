@@ -3,17 +3,17 @@ package events;
 import java.util.EventObject;
 
 public class InputGetEvent extends Event {
-    Class kuchenClass;
+    String kuchenClass;
 
     public InputGetEvent(Object source, EventType eventType) {
         super(source, eventType);
     }
-    public InputGetEvent(Object source, EventType eventType, Class kuchen){
+    public InputGetEvent(Object source, EventType eventType, String kuchen){
         super(source, eventType);
         this.kuchenClass = kuchen;
     }
 
-    public Class getKuchenClass() {
+    public String getKuchenClass() {
         return kuchenClass;
     }
 }

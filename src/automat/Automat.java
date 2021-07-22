@@ -13,12 +13,12 @@ import java.util.*;
 
 public class Automat implements Observable, Serializable {
     private final LinkedList<Hersteller> herstellerList = new LinkedList<>();
-    private final KuchenDekorator[] kuchenList;
+    private final KuchenKomponente[] kuchenList;
     private final transient LinkedList<Observer> observerList = new LinkedList<>();
     private volatile int kuchenCounter = 0;
 
     public Automat(int fachzahl) {
-        this.kuchenList = new KuchenDekorator[fachzahl];
+        this.kuchenList = new KuchenKomponente[fachzahl];
     }
 
     synchronized public void addHersteller(Hersteller hersteller) throws AlreadyExistsException {
@@ -49,7 +49,7 @@ public class Automat implements Observable, Serializable {
         throw new NoSuchElementException();
     }
 
-    synchronized public void addKuchen(KuchenDekorator kuchen) throws NoSuchElementException, FullAutomatException {
+    synchronized public void addKuchen(KuchenKomponente kuchen) throws NoSuchElementException, FullAutomatException {
 
         //check if there is already a hersteller with boolean flag
         boolean herstFlag = false;
@@ -84,7 +84,7 @@ public class Automat implements Observable, Serializable {
         }
     }
 
-    synchronized public KuchenDekorator getKuchen(int fachnummer) throws NoSuchElementException, InvalidInputException {
+    synchronized public KuchenKomponente getKuchen(int fachnummer) throws NoSuchElementException, InvalidInputException {
         checkNumber(fachnummer);
 
         if (kuchenList[fachnummer] == null) {
@@ -114,14 +114,14 @@ public class Automat implements Observable, Serializable {
             throw new NoSuchElementException();
         }
 
-        KuchenDekorator tempKuchen = getKuchen(fachNummer1);
+        KuchenKomponente tempKuchen = getKuchen(fachNummer1);
 
         changeKuchen(fachNummer1, getKuchen(fachNummer2));
         changeKuchen(fachNummer2, tempKuchen);
     }
 
     //only needed for swapping not modifying the automat
-    synchronized private void changeKuchen(int fachnummer, KuchenDekorator kuchen) throws InvalidInputException {
+    synchronized private void changeKuchen(int fachnummer, KuchenKomponente kuchen) throws InvalidInputException {
         checkNumber(fachnummer);
         kuchen.setFachNummer(fachnummer);
 
@@ -148,7 +148,7 @@ public class Automat implements Observable, Serializable {
             }
         }
 
-        for (KuchenDekorator kuch : this.kuchenList) {
+        for (KuchenKomponente kuch : this.kuchenList) {
             if (kuch == null) {
                 break; // dont go into objekt if null to avoid NullPointerException
             }
@@ -161,10 +161,10 @@ public class Automat implements Observable, Serializable {
         return manufacturerHashmap;
     }
 
-    synchronized public List<KuchenDekorator> checkKuchen() throws EmptyListException {
+    synchronized public List<KuchenKomponente> checkKuchen() throws EmptyListException {
         if(kuchListEmpty()) throw new EmptyListException();
 
-        LinkedList<KuchenDekorator> res = new LinkedList<>();
+        LinkedList<KuchenKomponente> res = new LinkedList<>();
 
         for(int i = 0; i < this.kuchenList.length; i++) {
             if (this.kuchenList[i] != null) {
@@ -175,13 +175,13 @@ public class Automat implements Observable, Serializable {
         return res;
     }
 
-    synchronized public List<KuchenDekorator> checkKuchen(Class kuchen) throws NoSuchElementException, EmptyListException {
+    synchronized public List<KuchenKomponente> checkKuchen(String kuchen) throws NoSuchElementException, EmptyListException {
         if(kuchListEmpty()) throw new EmptyListException();
 
-        LinkedList<KuchenDekorator> res = new LinkedList<>();
+        LinkedList<KuchenKomponente> res = new LinkedList<>();
 
         for (int i = 0; i < this.kuchenList.length; i++) {
-            if (this.kuchenList[i] != null && this.kuchenList[i].getClass().equals(kuchen)) {
+            if (this.kuchenList[i] != null && this.kuchenList[i].getName().contains(kuchen)) {
                 res.add(this.kuchenList[i]);
             }
         }
@@ -198,7 +198,7 @@ public class Automat implements Observable, Serializable {
 
         HashSet<Allergen> res = new HashSet<Allergen>();
 
-        for (KuchenDekorator kuch : kuchenList) {
+        for (KuchenKomponente kuch : kuchenList) {
             if (kuch != null) {
                 res.addAll(kuch.getAllergene());
             }
@@ -215,7 +215,7 @@ public class Automat implements Observable, Serializable {
         res.add(Allergen.Gluten);
         res.add(Allergen.Sesamsamen);
 
-        for (KuchenDekorator kuch : kuchenList) {
+        for (KuchenKomponente kuch : kuchenList) {
             if (kuch != null) {
                 res.removeAll(kuch.getAllergene());
             }
@@ -244,7 +244,7 @@ public class Automat implements Observable, Serializable {
 
     synchronized public boolean kuchListEmpty() {
         boolean flag = false;
-        for (KuchenDekorator kuchen : this.kuchenList) {
+        for (KuchenKomponente kuchen : this.kuchenList) {
             if (kuchen != null) {
                 flag = true;
                 break;

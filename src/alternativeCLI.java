@@ -8,6 +8,7 @@ import persistence.JoSSerializer;
 
 public class alternativeCLI {
 
+    //Inthandler was left out, cannot remove kuchen or setInspection Date
     public static void main(String[] args) {
         int automatCap = 50;
         if(args.length == 1){

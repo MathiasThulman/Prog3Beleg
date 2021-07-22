@@ -64,11 +64,11 @@ public class AutomatGetEvenListenerTest {
         listener.setAutomatWrapper(wrapper);
         CollectionOutputHandler<CollectionOutputEvent> handler = new CollectionOutputHandler<>(); //needed to avoid nullpointer since it gets called with automat
         listener.setCollectionHandler(handler);
-        InputGetEvent event = new InputGetEvent(this, EventType.getKuchenSpecific, KremkuchenImpl.class);
+        InputGetEvent event = new InputGetEvent(this, EventType.getKuchenSpecific, "Kremkuchen");
         listener.addEvent(event);
 
         try {
-            verify(auto).checkKuchen(KremkuchenImpl.class);
+            verify(auto).checkKuchen("Kremkuchen");
         } catch (EmptyListException e) {
             fail();
         }

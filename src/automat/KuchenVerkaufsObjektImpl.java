@@ -1,12 +1,11 @@
 package automat;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Date;
 
-public class KuchenVerkaufsObjektImpl implements KuchenDekorator {
+public class KuchenVerkaufsObjektImpl implements KuchenKomponente {
     private final Hersteller hersteller;
     private final Collection<Allergen> allergene;
     private final int naehrwert;
@@ -22,8 +21,6 @@ public class KuchenVerkaufsObjektImpl implements KuchenDekorator {
         this.naehrwert = naehrwert;
         this.haltbarkeit = haltbarkeit;
         this.preis = preis;
-//        this.einfuegeDatum = new Date(1982, 6,9);//to avoid nullpointer exceptions
-//        this.inspektionsDatum = new Date(1982, 6,9);
     }
 
     @Override
@@ -71,8 +68,8 @@ public class KuchenVerkaufsObjektImpl implements KuchenDekorator {
     }
 
     public String toString() {
-        if (this.inspektionsDatum != null) {
-            return this.getName() + ", " + this.hersteller.getName() + ", " + this.allergene.toString() + ", " + this.haltbarkeit.toDays() +
+        if (this.inspektionsDatum != null && this.einfuegeDatum != null) {
+            return this.getName() + ", " + this.hersteller.getName() + ", " + this.allergene.toString() + ", " + this.getRemainingDuration().toDays() +
                     ", " + this.inspektionsDatum.toString() + ", " + this.preis.toString();
         } else {
             return this.getName() + ", " + this.hersteller.getName() + ", " + this.allergene.toString() + ", " + this.haltbarkeit.toDays() +
@@ -80,7 +77,10 @@ public class KuchenVerkaufsObjektImpl implements KuchenDekorator {
         }
     }
 
-    //TODO why is this public too
+    private Duration getRemainingDuration(){
+        return this.haltbarkeit.minusDays((new Date().getTime() - this.einfuegeDatum.getTime()) / (86400000));
+    }
+
     public void setEinfuegeDatum(Date einfuegeDatum) {
         this.einfuegeDatum = einfuegeDatum;
     }

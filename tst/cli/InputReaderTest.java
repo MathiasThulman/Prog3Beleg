@@ -31,7 +31,7 @@ public class InputReaderTest {
         InputKuchenEventHandler<InputKuchenEvent> handler = mock(InputKuchenEventHandler.class);
         reader.setKuchenHandler(handler);
 
-        reader.readInsert("Obstkuchen Friedrich 4 400 20 Gluten,Erdnuss Senf 2.50 200 12 Gluten Mayo 3.70 300 4 ,");
+        reader.readInsert("Obstkuchen Friedrich 4,70 400 20 Gluten,Erdnuss Senf 2.50 200 12 Gluten Mayo 3.70 300 4 , Ketchup");
         ArgumentCaptor<InputKuchenEvent> argument = ArgumentCaptor.forClass(InputKuchenEvent.class);
         verify(handler).handle(argument.capture());
 
@@ -46,11 +46,11 @@ public class InputReaderTest {
         InputKuchenEventHandler<InputKuchenEvent> handler = mock(InputKuchenEventHandler.class);
         reader.setKuchenHandler(handler);
 
-        reader.readInsert("Obsttorte Friedrich 4 400 20 Gluten,Erdnuss");
+        reader.readInsert("Obsttorte Friedrich");
         ArgumentCaptor<InputKuchenEvent> argument = ArgumentCaptor.forClass(InputKuchenEvent.class);
         verify(handler).handle(argument.capture());
 
-        Assertions.assertEquals(400, argument.getValue().getKuchenObjekt().getNaehrwert());
+        Assertions.assertEquals(0, argument.getValue().getKuchenObjekt().getNaehrwert());
     }
 
     @Test

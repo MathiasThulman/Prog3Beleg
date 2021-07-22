@@ -47,18 +47,23 @@ public class AutomatSimulationWrapper {
         try {
             this.automat.addKuchen(copyCake(kuchList[(int) (Math.random() * 10)]));
         } catch (FullAutomatException e) {
-            System.out.println("simulation: automat ist voll");
+            System.out.println("simulation: automat is full");
         }
         System.out.println("simulation added Cake");
     }
 
     synchronized void removeRandomCake() {
         try {
-            this.automat.removeKuchen((int) (Math.random() *(this.automat.getSize())));
+            int randomKuchen = this.automat.checkKuchen().get((int) (Math.random() *(this.automat.getKuchenCounter()))).getFachnummer();
+            this.automat.removeKuchen((randomKuchen));
         } catch (InvalidInputException e) {
             System.out.println("simulation invalid input");
+        } catch (NoSuchElementException e){
+            System.out.println("Simulation removed random: NoSuchElement ");
+        } catch (EmptyListException e) {
+            System.out.println("Simulation emptylist");
         }
-        System.out.println("Simulation removed cake");
+        System.out.println("simulation removed cake");
     }
 
     synchronized void removeOldestCake() {
@@ -66,7 +71,7 @@ public class AutomatSimulationWrapper {
         Date oldestDate = new Date(3000, Calendar.FEBRUARY, 6);
 
         try {
-            for (KuchenDekorator kuchen : this.automat.checkKuchen()) {
+            for (KuchenKomponente kuchen : this.automat.checkKuchen()) {
                 if (kuchen.getEinfuegeDatum().before(oldestDate)) {
                     oldestDate = kuchen.getInspektionsdatum();
                     oldestFachnummer = kuchen.getFachnummer();
@@ -85,10 +90,15 @@ public class AutomatSimulationWrapper {
 
     synchronized void causeInspection() {
         try {
-            this.automat.setInspectionDate((int) (Math.random() * (this.automat.getKuchenCounter())));
+            int randomKuchen = this.automat.checkKuchen().get((int) (Math.random() *(this.automat.getKuchenCounter()))).getFachnummer();
+            this.automat.setInspectionDate((randomKuchen));
             System.out.println("Simulation inspektion");
         } catch (InvalidInputException e) {
             System.out.println("simulation inspektion: invalid input");
+        } catch (NoSuchElementException e){
+            System.out.println("Simulation inspektion NoSuchElement");
+        } catch (EmptyListException e) {
+            System.out.println("Simulation inspektion EmptyList");
         }
     }
 
@@ -139,6 +149,7 @@ public class AutomatSimulationWrapper {
         this.automat = automat;
     }
 
+    //to avoid reference chaos when adding the same cake over and over again
     private KuchenVerkaufsObjektImpl copyCake(KuchenVerkaufsObjektImpl kuchen) {
         return new KuchenVerkaufsObjektImpl(kuchen.getHersteller(), kuchen.getAllergene(), kuchen.getNaehrwert(), kuchen.getHaltbarkeit(), kuchen.getPreis());
     }

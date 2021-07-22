@@ -90,6 +90,7 @@ class KuchVerkaufsObjektImplTest {
     public void toStringWithDatumValid(){
         KuchenVerkaufsObjektImpl kuch1 = new KuchenVerkaufsObjektImpl(new HerstellerImpl("Adidas"), allergList1, 300, Duration.ofDays(3), new BigDecimal(20));
         kuch1.setInspektionsDatum(new Date(2020,6,6));
+        kuch1.setEinfuegeDatum(new Date(2021,07,22));
 
         Assertions.assertEquals("Langweiliger Kuchenboden, Adidas, [Erdnuss], 3, Tue Jul 06 00:00:00 CEST 3920, 20", kuch1.toString());
     }

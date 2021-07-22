@@ -9,7 +9,6 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 
 public class KuchenBelagTest {
     private String BENJAMIN;
@@ -29,7 +28,7 @@ public class KuchenBelagTest {
     public void getHerstellerValid(){
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
-        KuchenDekorator kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal(500), 300, Duration.ofDays(4), allergList1 , boden);
+        KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal(500), 300, Duration.ofDays(4), allergList1 , boden);
 
         Assertions.assertEquals(BENJAMIN, kuch1.getHersteller().getName());
     }
@@ -39,7 +38,7 @@ public class KuchenBelagTest {
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
         HashSet<Allergen> allergList2 = new HashSet(Arrays.asList(Allergen.Haselnuss));
-        KuchenDekorator kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal(500), 300, Duration.ofDays(4), allergList2 , boden);
+        KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal(500), 300, Duration.ofDays(4), allergList2 , boden);
 
         Assertions.assertTrue(kuch1.getAllergene().contains(Allergen.Erdnuss) && kuch1.getAllergene().contains(Allergen.Haselnuss));
     }
@@ -48,7 +47,7 @@ public class KuchenBelagTest {
     public void getNaehrwertValid(){
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
-        KuchenDekorator kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal(500), 300, Duration.ofDays(4), allergList1 , boden);
+        KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal(500), 300, Duration.ofDays(4), allergList1 , boden);
 
         Assertions.assertEquals(600, kuch1.getNaehrwert());
     }
@@ -57,8 +56,8 @@ public class KuchenBelagTest {
     public void getHaltbarkeitBottomValid(){
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, Duration.ofDays(3), new BigDecimal(500));
-        KuchenDekorator kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal(500), 300, Duration.ofDays(5), allergList1 , boden);
-        KuchenDekorator kuch2 = new KuchenBelag("Ayran", new BigDecimal(400), 200, Duration.ofDays(4), allergList1, kuch1);
+        KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal(500), 300, Duration.ofDays(5), allergList1 , boden);
+        KuchenKomponente kuch2 = new KuchenBelag("Ayran", new BigDecimal(400), 200, Duration.ofDays(4), allergList1, kuch1);
         //multiple layers to see if it can grab the lowest from the bottom
 
         Assertions.assertEquals(Duration.ofDays(3).getSeconds(), kuch2.getHaltbarkeit().getSeconds());
@@ -68,7 +67,7 @@ public class KuchenBelagTest {
     public void getHaltbarkeitTopValid(){
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, Duration.ofDays(5), new BigDecimal(500));
-        KuchenDekorator kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal(500), 300, Duration.ofDays(3), allergList1 , boden);
+        KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal(500), 300, Duration.ofDays(3), allergList1 , boden);
 
         //to see if the function fetches the right duration when its at the highest layer
         Assertions.assertEquals(Duration.ofDays(3).getSeconds(), kuch1.getHaltbarkeit().getSeconds());
@@ -78,7 +77,7 @@ public class KuchenBelagTest {
     public void getPreisValid(){
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
-        KuchenDekorator kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal(500), 300, Duration.ofDays(4), allergList1 , boden);
+        KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal(500), 300, Duration.ofDays(4), allergList1 , boden);
 
         Assertions.assertEquals("1000", kuch1.getPreis().toString());
     }
@@ -87,7 +86,7 @@ public class KuchenBelagTest {
     public void setFachnummerValid(){
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
-        KuchenDekorator kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
+        KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
 
         kuch1.setFachNummer(1);
         Assertions.assertEquals(1, kuch1.getFachnummer());
@@ -99,7 +98,7 @@ public class KuchenBelagTest {
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
         boden.setFachNummer(1);
-        KuchenDekorator kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
+        KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
 
         Assertions.assertEquals(1, kuch1.getFachnummer());
     }
@@ -108,7 +107,7 @@ public class KuchenBelagTest {
     public void getNameValid(){
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
-        KuchenDekorator kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
+        KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
 
         Assertions.assertEquals("Kremkuchen Mascarpone", kuch1.getName());
     }
@@ -119,7 +118,7 @@ public class KuchenBelagTest {
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
         Date date = new Date(2020,6,6);
         boden.setInspektionsDatum(date);
-        KuchenDekorator kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
+        KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
 
         Assertions.assertEquals(new Date(2020,6,6).getTime(), kuch1.getInspektionsdatum().getTime());
     }
@@ -128,7 +127,7 @@ public class KuchenBelagTest {
     public void setInspeaktionsDatumValid(){
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
-        KuchenDekorator kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
+        KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
         Date date = new Date(2020,6,6);
         kuch1.setInspektionsDatum(date);
 
@@ -142,7 +141,7 @@ public class KuchenBelagTest {
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
         Date date = new Date(2020,6,6);
         boden.setEinfuegeDatum(date);
-        KuchenDekorator kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
+        KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
 
         Assertions.assertEquals(date.getTime(), kuch1.getEinfuegeDatum().getTime());
     }
@@ -152,7 +151,7 @@ public class KuchenBelagTest {
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
         Date date = new Date(2020,6,6);
-        KuchenDekorator kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
+        KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
         kuch1.setEinfuegeDatum(date);
 
         //test to see if the highest layer passes down the function properly
@@ -164,7 +163,7 @@ public class KuchenBelagTest {
     public void toStringValid(){
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
-        KuchenDekorator kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
+        KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
 
         Assertions.assertEquals("Mascarpone Kremkuchen, benjamin, [Erdnuss], 3, kein Inspektionsdatum, 500", kuch1.toString());
     }

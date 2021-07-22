@@ -6,15 +6,15 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 
-public class KuchenBelag implements KuchenDekorator{
-    private KuchenDekorator kuchenBelag;
+public class KuchenBelag implements KuchenKomponente {
+    private KuchenKomponente kuchenBelag;
     private HashSet<Allergen> allergens;
     private int naehrwert;
     private Duration haltbarkeit;
     private BigDecimal preis;
     private String name;
 
-    public KuchenBelag(String name,  BigDecimal preis, int naehrwert, Duration haltbarkeit, HashSet<Allergen> allergens, KuchenDekorator kuchenBelag) {
+    public KuchenBelag(String name,  BigDecimal preis, int naehrwert, Duration haltbarkeit, HashSet<Allergen> allergens, KuchenKomponente kuchenBelag) {
         this.kuchenBelag = kuchenBelag;
         this.allergens = allergens;
         allergens.addAll(this.kuchenBelag.getAllergene());

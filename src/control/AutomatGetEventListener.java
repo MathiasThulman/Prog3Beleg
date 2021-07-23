@@ -61,7 +61,7 @@ public class AutomatGetEventListener implements EventListener<InputGetEvent> {
                 break;
             case loadAutomat:
                 try {
-                    this.serializer.deserialize("CLISaveFile");
+                    this.automatWrapper.setAutomat(this.serializer.deserialize("CLISaveFile"));
                 } catch (Exception e ) {
                     e.printStackTrace();
                 }

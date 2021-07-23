@@ -85,14 +85,35 @@ public class ConsoleTest {
             InputReader reader = mock(InputReader.class);
             console.setInputReader(reader);
 
-            final String r = ":u";
-            System.setIn(new ByteArrayInputStream(r.getBytes()));
+            final String u = ":u";
+            System.setIn(new ByteArrayInputStream(u.getBytes()));
             console.read();
 
             System.setIn( new ByteArrayInputStream("5".getBytes()));
             console.read();
 
             verify(reader).readChange("5");
+            System.setIn(System.in);
+        }  finally {
+            System.setIn(System.in);
+        }
+    }
+
+    @Test
+    public void executeCommandPersistenceValid(){
+        try {
+            Console console = new Console();
+            InputReader reader = mock(InputReader.class);
+            console.setInputReader(reader);
+
+            final String p = ":p";
+            System.setIn(new ByteArrayInputStream(p.getBytes()));
+            console.read();
+
+            System.setIn( new ByteArrayInputStream("saveJOS".getBytes()));
+            console.read();
+
+            verify(reader).readPersistence("saveJOS");
             System.setIn(System.in);
         }  finally {
             System.setIn(System.in);

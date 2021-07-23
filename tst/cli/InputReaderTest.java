@@ -144,4 +144,17 @@ public class InputReaderTest {
         Assertions.assertEquals(EventType.getAbsentAllergene, argument.getValue().getType());
     }
 
+    @Test
+    public void readPersistenceSaveJOSValid(){
+        InputReader reader = new InputReader();
+        GetEventHandler<InputGetEvent> handler = mock(GetEventHandler.class);
+        reader.setGetHandler(handler);
+
+        reader.readPersistence("saveJOS");
+        ArgumentCaptor<InputGetEvent> argument = ArgumentCaptor.forClass(InputGetEvent.class);
+        verify(handler).handle(argument.capture());
+
+        Assertions.assertEquals(EventType.saveAutomat, argument.getValue().getType());
+    }
+
 }

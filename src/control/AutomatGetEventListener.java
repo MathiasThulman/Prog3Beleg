@@ -3,6 +3,7 @@ package control;
 import events.*;
 import events.EventListener;
 import exceptions.EmptyListException;
+import persistence.JoSSerializer;
 
 import java.util.*;
 
@@ -10,6 +11,7 @@ public class AutomatGetEventListener implements EventListener<InputGetEvent> {
     private AutomatWrapper automatWrapper;
     private ErrorEventHandler<ErrorEvent> errorHandler;
     private CollectionOutputHandler<CollectionOutputEvent> collectionHandler;
+    private JoSSerializer serializer;
 
     @Override
     public void addEvent(InputGetEvent event) {
@@ -35,6 +37,7 @@ public class AutomatGetEventListener implements EventListener<InputGetEvent> {
                 } catch (EmptyListException e) {
                     this.errorHandler.handle(new ErrorEvent(this, "Der Automat ist leer"));
                 }
+                break;
             case getKuchen:
                 try {
                     this.collectionHandler.handle(new CollectionOutputEvent(this, this.automatWrapper.getAutomat().checkKuchen()));
@@ -51,17 +54,18 @@ public class AutomatGetEventListener implements EventListener<InputGetEvent> {
                 break;
             case saveAutomat:
                 try {
-                    this.automatWrapper.getSerializer().serialize("AutomatSaveFile", this.automatWrapper.getAutomat());
+                    this.serializer.serialize("CLISaveFile", this.automatWrapper.getAutomat());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
             case loadAutomat:
                 try {
-                    this.automatWrapper.setAutomat(this.automatWrapper.getSerializer().deserialize("AutomatSaveFile"));
+                    this.serializer.deserialize("CLISaveFile");
                 } catch (Exception e ) {
                     e.printStackTrace();
                 }
+                break;
         }
     }
 
@@ -82,7 +86,10 @@ public class AutomatGetEventListener implements EventListener<InputGetEvent> {
         for(String key : hashMap.keySet()){
             hnList.add(new HerstellerNummer(key, hashMap.get(key)));
         }
-
         return hnList;
+    }
+
+    public void setSerializer(JoSSerializer serializer) {
+        this.serializer = serializer;
     }
 }

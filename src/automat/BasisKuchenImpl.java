@@ -5,7 +5,7 @@ import java.time.Duration;
 import java.util.Collection;
 import java.util.Date;
 
-public class KuchenVerkaufsObjektImpl implements KuchenKomponente {
+public class BasisKuchenImpl implements KuchenKomponente {
     private final Hersteller hersteller;
     private final Collection<Allergen> allergene;
     private final int naehrwert;
@@ -15,7 +15,7 @@ public class KuchenVerkaufsObjektImpl implements KuchenKomponente {
     private int fachNummer;
     private Date einfuegeDatum;
 
-    public KuchenVerkaufsObjektImpl(Hersteller hersteller, Collection<Allergen> allergene, int naehrwert, Duration haltbarkeit, BigDecimal preis) {
+    public BasisKuchenImpl(Hersteller hersteller, Collection<Allergen> allergene, int naehrwert, Duration haltbarkeit, BigDecimal preis) {
         this.hersteller = hersteller;
         this.allergene = allergene;
         this.naehrwert = naehrwert;
@@ -58,7 +58,6 @@ public class KuchenVerkaufsObjektImpl implements KuchenKomponente {
         return this.fachNummer;
     }
 
-    //TODO why does this have to be public
     public void setInspektionsDatum(Date inspektionsDatum) {
         this.inspektionsDatum = inspektionsDatum;
     }
@@ -69,10 +68,10 @@ public class KuchenVerkaufsObjektImpl implements KuchenKomponente {
 
     public String toString() {
         if (this.inspektionsDatum != null && this.einfuegeDatum != null) {
-            return this.getName() + ", " + this.hersteller.getName() + ", " + this.allergene.toString() + ", " + this.getRemainingDuration().toDays() +
+            return this.fachNummer + ", " + this.getName() + ", " + this.hersteller.getName() + ", " + this.allergene.toString() + ", " + this.getRemainingDuration().toDays() +
                     ", " + this.inspektionsDatum.toString() + ", " + this.preis.toString();
         } else {
-            return this.getName() + ", " + this.hersteller.getName() + ", " + this.allergene.toString() + ", " + this.haltbarkeit.toDays() +
+            return this.fachNummer + ", " + this.getName() + ", " + this.hersteller.getName() + ", " + this.allergene.toString() + ", " + this.haltbarkeit.toDays() +
                     ", " + "kein Inspektionsdatum" + ", " + this.preis.toString();
         }
     }

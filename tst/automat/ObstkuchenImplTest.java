@@ -9,15 +9,13 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public class ObsttorteTest {
+public class ObstkuchenImplTest {
 
     @Test
-    public void getNameValid() {
+    public void getObstsorteValidTest(){
         HashSet<Allergen> allergene = new HashSet<>(Arrays.asList(Allergen.Gluten, Allergen.Erdnuss));
-        ObsttorteImpl kuchen = new ObsttorteImpl(new HerstellerImpl("Guido"), allergene, 500, Duration.ofDays(4),
-                new BigDecimal("4.50"));
+        ObstkuchenImpl kuchen = new ObstkuchenImpl(new HerstellerImpl("Guido"), allergene, 500, Duration.ofDays(4), new BigDecimal("4.50"));
 
-        Assertions.assertEquals("Obsttorte", kuchen.getName());
+        Assertions.assertEquals("Obstkuchen", kuchen.getName());
     }
-
 }

@@ -1,6 +1,5 @@
 package automat;
 
-import automat.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -9,13 +8,13 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public class ObstkuchenTest {
+public class KremkuchenImplTest {
 
     @Test
-    public void getObstsorteValidTest(){
+    public void getNameValid(){
         HashSet<Allergen> allergene = new HashSet<>(Arrays.asList(Allergen.Gluten, Allergen.Erdnuss));
-        ObstkuchenImpl kuchen = new ObstkuchenImpl(new HerstellerImpl("Guido"), allergene, 500, Duration.ofDays(4), new BigDecimal("4.50"));
+        KremkuchenImpl kuchen = new KremkuchenImpl(new HerstellerImpl("Guido"), allergene, 500, Duration.ofDays(4), new BigDecimal("4.50"));
 
-        Assertions.assertEquals("Obstkuchen", kuchen.getName());
+        Assertions.assertEquals("Kremkuchen", kuchen.getName());
     }
 }

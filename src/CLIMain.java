@@ -9,8 +9,12 @@ import persistence.JoSSerializer;
 public class CLIMain {
     public static void main(String[] args) {
         int automatCap = 50;
-        if(args.length == 1){
-             automatCap =Integer.parseInt(args[1]);
+        if(args.length > 0){
+            try {
+                automatCap =Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }
         Automat automat = new Automat(automatCap);
         Console console = new Console();
@@ -60,7 +64,7 @@ public class CLIMain {
         autoIntListener.setErrorhandler(errorHandler);
         autoGetListner.setAutomatWrapper(automatWrapper);
         JoSSerializer serializer = new JoSSerializer();
-        automatWrapper.setSerializer(serializer);
+        autoGetListner.setSerializer(serializer);
 
         AutomatCapacityObserver capacityObserver = new AutomatCapacityObserver(automat);
         AutomatAllergenObserver allergenObserver = new AutomatAllergenObserver(automat);

@@ -40,6 +40,7 @@ public class Automat implements Observable, Serializable {
                 for (int i = 0; i < this.kuchenList.length; i++) {
                     if (this.kuchenList[i] != null && this.kuchenList[i].getHersteller().getName().equals(hersteller)) {
                         this.kuchenList[i] = null;
+                        kuchenCounter--;
                     }
                 }
                 notifyObservers();
@@ -70,8 +71,8 @@ public class Automat implements Observable, Serializable {
         for (int i = 0; i < this.kuchenList.length; i++) {
             if (this.kuchenList[i] == null) {
                 kuchen.setFachNummer(i);    //put this somewhere else?
-                kuchen.setInspektionsDatum(Calendar.getInstance().getTime());
-                kuchen.setEinfuegeDatum(Calendar.getInstance().getTime());
+                kuchen.setInspektionsDatum(new Date());
+                kuchen.setEinfuegeDatum(new Date());
                 this.kuchenList[i] = kuchen;
                 fullFlag = false;
                 this.kuchenCounter++;
@@ -230,7 +231,7 @@ public class Automat implements Observable, Serializable {
         if(this.kuchenList[fachnummer] == null){
             throw new NoSuchElementException();
         } else {
-            this.kuchenList[fachnummer].setInspektionsDatum(Calendar.getInstance().getTime());
+            this.kuchenList[fachnummer].setInspektionsDatum(new Date());
             notifyObservers();
         }
     }

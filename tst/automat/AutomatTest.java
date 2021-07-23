@@ -499,9 +499,9 @@ class AutomatTest {
         LinkedList<Allergen> allerList2 = new LinkedList<>(Arrays.asList(Allergen.Haselnuss, Allergen.Erdnuss));
         LinkedList<Allergen> allerList3 = new LinkedList<>(Arrays.asList(Allergen.Gluten, Allergen.Erdnuss));
 
-        KuchenVerkaufsObjektImpl kuch6 = mock(KremkuchenImpl.class);
+        BasisKuchenImpl kuch6 = mock(KremkuchenImpl.class);
         when(kuch6.getAllergene()).thenReturn(allerList2);
-        KuchenVerkaufsObjektImpl kuch7 = mock(KremkuchenImpl.class);
+        BasisKuchenImpl kuch7 = mock(KremkuchenImpl.class);
         when(kuch7.getAllergene()).thenReturn(allerList3);
 
         when(kuch6.getHersteller()).thenReturn(herst1);//mock hersteller so we can actually add them to the automat
@@ -536,9 +536,9 @@ class AutomatTest {
 
             LinkedList<Allergen> allerList0 = new LinkedList<>();
 
-            KuchenVerkaufsObjektImpl kuch6 = mock(KremkuchenImpl.class);
+            BasisKuchenImpl kuch6 = mock(KremkuchenImpl.class);
             when(kuch6.getAllergene()).thenReturn(allerList0);
-            KuchenVerkaufsObjektImpl kuch7 = mock(KremkuchenImpl.class);
+            BasisKuchenImpl kuch7 = mock(KremkuchenImpl.class);
             when(kuch7.getAllergene()).thenReturn(allerList0);
 
             when(kuch6.getHersteller()).thenReturn(herst1);//mock hersteller so we can actually add them to the automat
@@ -593,7 +593,7 @@ class AutomatTest {
     }
 
     @Test
-    public void setInspectionDateNosuchElement(){
+    public void setInspectionDateNoSuchElement(){
         Automat auto = new Automat(10);
 
         assertThrows(NoSuchElementException.class, () -> auto.setInspectionDate(2));

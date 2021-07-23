@@ -1,7 +1,5 @@
 package events;
 
-import automat.KuchenVerkaufsObjektImpl;
-
 import java.util.LinkedList;
 import java.util.List;
 

@@ -40,8 +40,6 @@ public class AutomatAllergenObserverTest {
         } finally {
             System.setOut(System.out);
         }
-
-
         String testString = "Die Allergene im Automat haben sich verändert" + System.lineSeparator();
 
         Assertions.assertEquals(testString , bos1.toString());

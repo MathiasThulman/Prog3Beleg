@@ -13,10 +13,14 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.*;
 import persistence.JoSSerializer;
 
+import java.awt.dnd.DragGestureEvent;
+import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.*;
@@ -62,22 +66,10 @@ public class MainWindowController {
     private Comparator<KuchenKomponente> haltbarKeitComp;
     private ObservableList<KuchenKomponente> observableKuchenList;
     private SortedList<KuchenKomponente> sortedKuchenList;
-    private ObservableList<HerstellerNummer> observableHerstellerList;
     @FXML
     private Label allergenLabel;
     JoSSerializer serializer;
 
-    public StringProperty textProperty() {
-        return this.errorTextString;
-    }
-
-    public String getText() {
-        return this.errorTextString.get();
-    }
-
-    public void setErrorText(String value) {
-        this.errorTextString.setValue(value);
-    }
 
 
     public void initialize() {
@@ -134,15 +126,16 @@ public class MainWindowController {
             }
         });
 
-        fieldPreis.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    fieldPreis.setText(newValue.replaceAll("[^\\d]", ""));
-                }
-            }
-        });
+            //if i want to use decimals i cannot use this on the fieldPreis
+//        fieldPreis.textProperty().addListener(new ChangeListener<String>() {
+//            @Override
+//            public void changed(ObservableValue<? extends String> observable, String oldValue,
+//                                String newValue) {
+//                if (!newValue.matches("\\d*")) {
+//                    fieldPreis.setText(newValue.replaceAll("[^\\d]", ""));
+//                }
+//            }
+//        });
 
         fieldHaltbarkeit.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -184,12 +177,12 @@ public class MainWindowController {
         }
         try {
             this.automat.removeHersteller(herstellerField.getText());
-            updateHersteller();
         } catch (NoSuchElementException e) {
             errorTextString.setValue("Hersteller nicht bekannt");
         }
         herstellerField.clear();
         updateKuchen();
+        updateHersteller();
     }
 
     //TODO this causes an Error
@@ -212,13 +205,20 @@ public class MainWindowController {
         if(fieldHersteller.getText().isEmpty() || fieldPreis.getText().isEmpty() || fieldNaehrwert.getText().isEmpty() || fieldHaltbarkeit.getText().isEmpty() || choiceKuchen.getValue() == null){
             return; //dont allow processing of empty input
         }
+        String preisString = fieldPreis.getText().replaceAll(",",".");
+        try {
+            Double.parseDouble(preisString);
+        } catch (NumberFormatException e) {
+            return;     //return when anything other than number and , or . have been entered
+        }
+
         if (choiceKremkuchen.equals(choiceKuchen.getValue())) {
             if(fieldKremsorte.getText().isEmpty()){
                 return;
             }
             KremkuchenImpl boden = new KremkuchenImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
                     Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())),
-                    new BigDecimal(Integer.parseInt(fieldPreis.getText())));//TODO fix the creation of cakes in gui
+                    new BigDecimal(preisString));
             KuchenBelag kremkuchen = new KuchenBelag(this.fieldKremsorte.getText(), new BigDecimal(0), 0,
                     Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())), new HashSet<>(), boden);
             try {
@@ -235,7 +235,7 @@ public class MainWindowController {
             }
             ObstkuchenImpl boden = new ObstkuchenImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
                     Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())),
-                    new BigDecimal(Integer.parseInt(fieldPreis.getText())));
+                    new BigDecimal(preisString));
             KuchenBelag obstkuchen = new KuchenBelag(this.fieldObstsorte.getText(), new BigDecimal(0), 0,
                     Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())), new HashSet<>(), boden);
             try {
@@ -252,7 +252,7 @@ public class MainWindowController {
             }
             ObsttorteImpl boden = new ObsttorteImpl(new HerstellerImpl(this.fieldHersteller.getText()), stringToSet(fieldAllergene.getText()),
                     Integer.parseInt(fieldNaehrwert.getText()), Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())),
-                    new BigDecimal(Integer.parseInt(fieldPreis.getText())));
+                    new BigDecimal(preisString));
             KuchenBelag obsttorte = new KuchenBelag(this.fieldKremsorte.getText() + " " + this.fieldObstsorte.getText(), new BigDecimal(0), 0,
                     Duration.ofDays(Long.parseLong(fieldHaltbarkeit.getText())), new HashSet<>(), boden);
             try {
@@ -310,7 +310,7 @@ public class MainWindowController {
             sortedKuchenList = new SortedList<KuchenKomponente>(FXCollections.observableList(this.automat.checkKuchen()), new Comparator<KuchenKomponente>() {
                 @Override
                 public int compare(KuchenKomponente o1, KuchenKomponente o2) {
-                    return o2.getFachnummer() - o1.getFachnummer();
+                    return o1.getFachnummer() - o2.getFachnummer();
                 }
             });
         } catch (EmptyListException e) {
@@ -361,6 +361,7 @@ public class MainWindowController {
         updateHersteller();
     }
 
+
     private HashSet<Allergen> stringToSet(String in) {
         HashSet<Allergen> set = new HashSet<>();
         if(in.length() == 0){
@@ -392,7 +393,8 @@ public class MainWindowController {
             observableKuchenList = FXCollections.observableList(this.automat.checkKuchen());
             this.listViewKuchen.setItems(observableKuchenList);
         } catch (EmptyListException e) {
-            e.printStackTrace();
+            this.errorTextString.setValue("Der Automat ist leer");
+            this.listViewKuchen.getItems().clear();//clear the list this way since checkKuchen throws emptyListException when empty and cannot return empty list
         }
     }
 
@@ -402,8 +404,10 @@ public class MainWindowController {
             //this.observableHerstellerList = FXCollections.observableList(hashmapToList(automat.checkHersteller()));
         } catch (EmptyListException e) {
             errorTextString.setValue("Keine Hersteller");
+            listViewHersteller.getItems().clear();
         }
     }
+
 
     private void clearKuchenFields() {
         this.fieldHersteller.clear();

@@ -11,8 +11,8 @@ public class alternativeCLI {
     //Inthandler was left out, cannot remove kuchen or setInspection Date
     public static void main(String[] args) {
         int automatCap = 50;
-        if(args.length == 1){
-            automatCap =Integer.parseInt(args[1]);
+        if(args.length > 0){
+            automatCap =Integer.parseInt(args[0]);
         }
         Automat automat = new Automat(automatCap);
         Console console = new Console();
@@ -59,7 +59,7 @@ public class alternativeCLI {
         autoIntListener.setErrorhandler(errorHandler);
         autoGetListner.setAutomatWrapper(automatWrapper);
         JoSSerializer serializer = new JoSSerializer();
-        automatWrapper.setSerializer(serializer);
+        autoGetListner.setSerializer(serializer);
 
         AutomatCapacityObserver capacityObserver = new AutomatCapacityObserver(automat);
         AutomatAllergenObserver allergenObserver = new AutomatAllergenObserver(automat);

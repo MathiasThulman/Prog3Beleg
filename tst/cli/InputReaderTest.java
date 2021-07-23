@@ -26,7 +26,7 @@ public class InputReaderTest {
     }
 
     @Test
-    public void readInsertKuchenMultipleBelägeValid(){
+    public void readInsertKuchenMultipleBelaegeValid(){
         InputReader reader = new InputReader();
         InputKuchenEventHandler<InputKuchenEvent> handler = mock(InputKuchenEventHandler.class);
         reader.setKuchenHandler(handler);

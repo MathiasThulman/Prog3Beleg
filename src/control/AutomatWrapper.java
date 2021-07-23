@@ -5,7 +5,6 @@ import persistence.JoSSerializer;
 
 public class AutomatWrapper {
     private Automat automat;
-    private JoSSerializer serializer;
 
     public Automat getAutomat() {
         return automat;
@@ -15,12 +14,4 @@ public class AutomatWrapper {
         this.automat = automat;
     }
 
-
-    public JoSSerializer getSerializer() {
-        return serializer;
-    }
-
-    public void setSerializer(JoSSerializer serializer) {
-        this.serializer = serializer;
-    }
 }

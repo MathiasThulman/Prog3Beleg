@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 
 public class KuchenBelagTest {
@@ -109,18 +110,19 @@ public class KuchenBelagTest {
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
         KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
 
-        Assertions.assertEquals("Kremkuchen Mascarpone", kuch1.getName());
+        Assertions.assertEquals("Mascarpone Kremkuchen", kuch1.getName());
     }
 
     @Test
     public void getInspektionDatumValid(){
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
-        Date date = new Date(2020,6,6);
+        Date date = new GregorianCalendar(2020,6,6).getTime();
         boden.setInspektionsDatum(date);
         KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
 
-        Assertions.assertEquals(new Date(2020,6,6).getTime(), kuch1.getInspektionsdatum().getTime());
+        System.out.println(kuch1.getInspektionsdatum());
+        Assertions.assertEquals(date.getTime(), kuch1.getInspektionsdatum().getTime());
     }
 
     @Test
@@ -128,7 +130,7 @@ public class KuchenBelagTest {
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
         KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
-        Date date = new Date(2020,6,6);
+        Date date = new GregorianCalendar(2020,6,6).getTime();
         kuch1.setInspektionsDatum(date);
 
         //to see if the function is properly passed down
@@ -136,10 +138,10 @@ public class KuchenBelagTest {
     }
 
     @Test
-    public void getEinfügeDatumValid(){
+    public void getEinfuegeDatumValid(){
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
-        Date date = new Date(2020,6,6);
+        Date date = new GregorianCalendar(2020,6,6).getTime();
         boden.setEinfuegeDatum(date);
         KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
 
@@ -147,7 +149,7 @@ public class KuchenBelagTest {
     }
 
     @Test
-    public void setEinfügeDatum(){
+    public void setEinfuegeDatum(){
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
         Date date = new Date(2020,6,6);
@@ -160,11 +162,27 @@ public class KuchenBelagTest {
     }
 
     @Test
-    public void toStringValid(){
+    public void toStringWithoutDateValid(){
         Hersteller herst1 = new HerstellerImpl(BENJAMIN);
         KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
+        KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal(500), 300, Duration.ofDays(4), allergList1 , boden);
+        kuch1.setFachNummer(1);
+
+        Assertions.assertEquals("1, Mascarpone Kremkuchen, benjamin, [Erdnuss], 3, kein Inspektionsdatum, 1000", kuch1.toString());
+    }
+
+    @Test
+    public void toStringWithDateValid(){
+        Hersteller herst1 = new HerstellerImpl(BENJAMIN);
+        KremkuchenImpl boden = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
+        Date date = new GregorianCalendar(2020,6,6).getTime();
+        boden.setEinfuegeDatum(date);
+        boden.setInspektionsDatum(date);
         KuchenKomponente kuch1 = new KuchenBelag(MASCARPONE, new BigDecimal("500"), 300, Duration.ofDays(4), allergList1 , boden);
 
-        Assertions.assertEquals("Mascarpone Kremkuchen, benjamin, [Erdnuss], 3, kein Inspektionsdatum, 500", kuch1.toString());
+        //two assertions since i cannot test remaining duration of toString as that is based on the current time
+        Assertions.assertTrue(kuch1.toString().contains("0, Mascarpone Kremkuchen, benjamin, [Erdnuss]"));
+        Assertions.assertTrue(kuch1.toString().contains("Mon Jul 06 00:00:00 CEST 2020, 1000"));
     }
+
 }

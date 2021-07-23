@@ -1,18 +1,19 @@
 package automat;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 
-public class KuchenBelag implements KuchenKomponente {
+public class KuchenBelag implements KuchenKomponente, Serializable {
     private KuchenKomponente kuchenBelag;
     private HashSet<Allergen> allergens;
-    private int naehrwert;
-    private Duration haltbarkeit;
-    private BigDecimal preis;
-    private String name;
+    private final int naehrwert;
+    private final Duration haltbarkeit;
+    private final BigDecimal preis;
+    private final String name;
 
     public KuchenBelag(String name,  BigDecimal preis, int naehrwert, Duration haltbarkeit, HashSet<Allergen> allergens, KuchenKomponente kuchenBelag) {
         this.kuchenBelag = kuchenBelag;
@@ -71,7 +72,7 @@ public class KuchenBelag implements KuchenKomponente {
 
     @Override
     public String getName() {
-        return this.kuchenBelag.getName() + " " + this.name;
+        return this.name  + " " + this.kuchenBelag.getName();
     }
 
     @Override
@@ -89,7 +90,18 @@ public class KuchenBelag implements KuchenKomponente {
         this.kuchenBelag.setEinfuegeDatum(date);
     }
 
-    public String toString(){
-        return this.name + " "  + this.kuchenBelag.toString();
+    //this is not very elegant but makes listing in cli and gui a lot easier
+    public String toString() {
+        if (this.getInspektionsdatum() != null && this.getEinfuegeDatum() != null) {  //to avoid nullpointer exceptions when working with cakes out of automat and in debugging
+            return this.getFachnummer() + ", " + this.getName() + ", " + this.getHersteller().getName() + ", " + this.getAllergene() + ", " + this.getRemainingDuration().toDays() +
+                    ", " + this.getInspektionsdatum().toString() + ", " + this.getPreis().toString();
+        } else {
+            return this.getFachnummer() + ", " + this.getName() + ", " + this.getHersteller().getName() + ", " + this.getAllergene().toString() + ", " + this.getHaltbarkeit().toDays() +
+                    ", " + "kein Inspektionsdatum" + ", " + this.getPreis().toString();
+        }
+    }
+
+    private Duration getRemainingDuration(){
+        return this.getHaltbarkeit().minusDays((new Date().getTime() - this.getEinfuegeDatum().getTime()) / (86400000));
     }
 }

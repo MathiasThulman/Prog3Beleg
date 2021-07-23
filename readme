@@ -7,7 +7,7 @@ I/O                                 ja
 
 Funktionalität
 vollständige, threadsichere Gl                       ja
-vollständiges CLI inkl. alternatives CLI             ja
+vollständiges CLI inkl. alternatives CLI             ja (im alternativen cli fehlen die funktionen Kuchen löschen und Inspektionsdatum setzen)
 vollständiges GUI                                    ja
 events (mindestens 3)                                ja
 observer ^ property change propagation 2             ja(observer)
@@ -17,14 +17,16 @@ Simulationen 2 & 3 3                                 ja
 data binding                                         ja (errorText und errorTextString als Property)
 JBP und JOS                                          nein (nur JoS)
 
-Zusatzanforderung
+extra Anforderungen
 Kuchen nach Dekoratormuster         ja
 korrekte Aggregationen              ja
 Erstellung der Kuchen im UI         ja (im cli)
 
 
 Anmerkungen:
-setEinfügeDatum(), setInspektionsDatum, und setFachnummer sind Public da ich dem Automat Interfaces übergebe und somit die Funktionen im Interface brauche um darauf zuzugreifen. verletzt Kapselung
+setEinfügeDatum(), setInspektionsDatum, und setFachnummer sind Public da ich dem Automat Interfaces übergebe um
+sowohl "nackte" Kuchenböden als auch Beläge mit Böden und mögliche neu erstellte dekoratoren die dieses Interface implementieren übergeben kann.
+Somit brauche ich die Funktionen im Interface um darauf zuzugreifen. verletzt allerdings Kapselung
 
 InputReader im cli kennt das KuchenKomponente Interface da die Kuchen hier gebaut werden und dann als Payload dem EventSystem übergeben
 

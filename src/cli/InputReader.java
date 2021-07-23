@@ -27,20 +27,13 @@ public class InputReader {
             if ((input.split(" ").length - 2) % 5 == 0) {
                 input = input.replace(",", ".");
                 String[] ps = input.split(" ");
-//                if(ps[2].contains(",")){
-//                    ps[2] = ps[2].replace(",",".");
-//                }
-
-                //TODO make it safer to put in nonsense
-//                if(!isNumeric(ps[3]) || !isNumeric(ps[4]) || !isNumeric(ps[2])){
-//                    return;
-//                }
 
                 switch (ps[0]) {
                     case OBSTKUCHEN:
                         try {
+                            //duration on all boden high by default so upon aggregating the belaege arent ignored when boden 0
                             ObstkuchenImpl boden1 = new ObstkuchenImpl(new HerstellerImpl(ps[1]), new HashSet<>(), 0,
-                                    Duration.ofDays(0), new BigDecimal(0));
+                                    Duration.ofDays(1000), new BigDecimal(0));
                             if(ps.length == 2){
                                 this.kuchenHandler.handle(new InputKuchenEvent(this, EventType.addKuchen, boden1));
                             } else {
@@ -54,7 +47,7 @@ public class InputReader {
                     case KREMKUCHEN:
                         try {
                             KremkuchenImpl boden2 = new KremkuchenImpl(new HerstellerImpl(ps[1]), new HashSet<>(), 0,
-                                    Duration.ofDays(0), new BigDecimal(0));
+                                    Duration.ofDays(1000), new BigDecimal(0));
                             if(ps.length == 2){
                                 this.kuchenHandler.handle(new InputKuchenEvent(this, EventType.addKuchen, boden2));
                             } else {
@@ -68,7 +61,7 @@ public class InputReader {
                     case OBSTTORTE:
                         try {
                             ObsttorteImpl boden3 = new ObsttorteImpl(new HerstellerImpl(ps[1]), new HashSet<>(), 0,
-                                    Duration.ofDays(0), new BigDecimal(0));
+                                    Duration.ofDays(1000), new BigDecimal(0));
 
                             if(ps.length == 2){
                                 this.kuchenHandler.handle(new InputKuchenEvent(this, EventType.addKuchen, boden3));
@@ -178,11 +171,11 @@ public class InputReader {
         this.stringHandler = stringHandler;
     }
 
-    private KuchenKomponente buildKuchen(KuchenVerkaufsObjektImpl boden, String[] ps){
+    private KuchenKomponente buildKuchen(BasisKuchenImpl boden, String[] ps){
         int counter = 2;
         KuchenKomponente kuchen1 = boden;
         while(counter < ps.length){
-            if(!isNumeric(ps[counter]) || !isNumeric(ps[counter + 1]) || !isNumeric(ps[counter + 2])){
+            if(!isNumeric(ps[counter]) || !isNumeric(ps[counter + 1]) || !isNumeric(ps[counter + 2])){      //to prevent crashed on parseExceptions
                 throw new IllegalArgumentException();
             }
             kuchen1 = new KuchenBelag( ps[counter + 4] , new BigDecimal(ps[counter]) , Integer.parseInt(ps[counter + 1]),

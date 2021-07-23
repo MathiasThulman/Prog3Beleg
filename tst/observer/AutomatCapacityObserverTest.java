@@ -24,22 +24,25 @@ public class AutomatCapacityObserverTest {
         Duration dur1 = Duration.ofDays(4);
         LinkedList<Allergen> allergList1 = new LinkedList<>(Arrays.asList(Allergen.Erdnuss, Allergen.Haselnuss));
         KremkuchenImpl kuch1 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
+        KremkuchenImpl kuch2 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
+        KremkuchenImpl kuch3 = new KremkuchenImpl(herst1, allergList1, 300, dur1, new BigDecimal(500));
 
-        Automat auto = new Automat(20);
+        Automat auto = new Automat(3);
         AutomatCapacityObserver obs = new AutomatCapacityObserver(auto);
+
+        final ByteArrayOutputStream bos2 = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(bos2));
 
         try {
             auto.addHersteller(herst1);
 
             //addkuchen until almost at full capacity
-            for(int i = 0; i < 18; i++){
-                auto.addKuchen(kuch1);
-            }
-            final ByteArrayOutputStream bos2 = new ByteArrayOutputStream();
-            System.setOut(new PrintStream(bos2));
-            String testString = "Dieser Automat hat die Kapazität von 90% überschritten" + System.lineSeparator();//line seperator necessary to properly compary
-
             auto.addKuchen(kuch1);
+            auto.addKuchen(kuch2);
+            auto.addKuchen(kuch3);
+
+            String testString = "Dieser Automat hat die Kapazität von 90% überschritten" + System.lineSeparator();//line seperator necessary to properly compare becuse of println
+
             Assertions.assertEquals(testString, bos2.toString());
         } catch (AlreadyExistsException | FullAutomatException e) {
             fail();

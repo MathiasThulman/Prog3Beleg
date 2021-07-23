@@ -6,6 +6,7 @@ import persistence.JoSSerializer;
 public class AutomatWrapper {
     private Automat automat;
 
+
     public Automat getAutomat() {
         return automat;
     }
